@@ -83,6 +83,9 @@ NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotific
 	JIMCell *contactCell = [[[JIMCell alloc] init] autorelease];
 	[[rosterTable tableColumnWithIdentifier:@"Name"] setDataCell:contactCell];
 	
+	[accountsButton removeAllItems];
+	[accountsButton addItemWithTitle:[xmppService.myJID bareString]];
+	
 	[[self window] makeKeyAndOrderFront:self];
 }
 

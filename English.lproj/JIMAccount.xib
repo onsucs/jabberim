@@ -8,6 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="44"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -490,6 +491,7 @@
 									</object>
 									<string key="NSFrame">{{1, 1}, {251, 250}}</string>
 									<reference key="NSSuperview" ref="787069242"/>
+									<reference key="NSNextKeyView" ref="910543402"/>
 									<reference key="NSDocView" ref="910543402"/>
 									<reference key="NSBGColor" ref="524700474"/>
 									<int key="NScvFlags">4</int>
@@ -518,6 +520,7 @@
 							</object>
 							<string key="NSFrame">{{-1, 34}, {253, 252}}</string>
 							<reference key="NSSuperview" ref="335860431"/>
+							<reference key="NSNextKeyView" ref="443307810"/>
 							<int key="NSsFlags">530</int>
 							<reference key="NSVScroller" ref="1058707521"/>
 							<reference key="NSHScroller" ref="537383649"/>
@@ -585,7 +588,7 @@
 				<nil key="NSViewClass"/>
 				<string key="NSWindowContentMaxSize">{3.40282e+38, 3.40282e+38}</string>
 				<object class="NSView" key="NSWindowView" id="482229956">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -608,7 +611,7 @@
 								<int key="NSPeriodicInterval">75</int>
 								<object class="NSMenuItem" key="NSMenuItem" id="898038379">
 									<reference key="NSMenu" ref="408978066"/>
-									<string key="NSTitle">CooperRS@jabber.org</string>
+									<string key="NSTitle">steve@jabber.org</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -775,6 +778,7 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{338, 156}</string>
+					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
@@ -2321,7 +2325,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{316, 564}, {249, 23}}</string>
+					<string>{{389, 564}, {231, 23}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2429,7 +2433,6 @@
 							<string>addContactToRosterWithNickname</string>
 							<string>addContactWindow</string>
 							<string>authorizeContactWindow</string>
-							<string>chatManager</string>
 							<string>contactAskingForAuthorization</string>
 							<string>contactImageToRemove</string>
 							<string>contactInfoController</string>
@@ -2450,7 +2453,6 @@
 							<string>NSTextField</string>
 							<string>NSWindow</string>
 							<string>NSWindow</string>
-							<string>JIMChatManager</string>
 							<string>NSTextField</string>
 							<string>NSImageView</string>
 							<string>JIMContactInfoController</string>
@@ -2468,33 +2470,6 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/JIMAccount.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">JIMChatManager</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">stopChat:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>chatControllerTable</string>
-							<string>chatControllerView</string>
-							<string>chatWindow</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSTableView</string>
-							<string>NSView</string>
-							<string>NSWindow</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/JIMChatManager.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
