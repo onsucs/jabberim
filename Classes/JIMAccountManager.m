@@ -133,8 +133,8 @@
 {
 	[newAccountJID setStringValue:@""];
 	[newAccountPassword setStringValue:@""];
-	[newAccountResource setStringValue:@""];
-	[newAccountPriority setStringValue:@""];
+	[newAccountResource setStringValue:@"JabberIM"];
+	[newAccountPriority setStringValue:@"1"];
 	[newAccountServer setStringValue:@""];
 	[newAccountPort setStringValue:@"5222"];
 	[newAccountAutoLogin setState:NSOnState];
