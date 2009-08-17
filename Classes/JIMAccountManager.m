@@ -8,7 +8,12 @@
 
 #import "JIMAccountManager.h"
 
+NSString* const JIMAccountManagerDidAddNewAccountNotification = @"JIMAccountManagerDidAddNewAccountNotification";
+NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountManagerDidRemoveAccountNotification";
+
 @implementation JIMAccountManager
+
+@synthesize accounts;
 
 - (id)init
 {
@@ -159,11 +164,11 @@
 	for(oneAccountDict in accountDicts)
 	{		
 		JIMAccount *newAccount = [[JIMAccount alloc] initWithAccountDict:oneAccountDict];
-		newAccount.delegate = self;
 		[accounts addObject:newAccount];
 		[newAccount release];
 	}
 	
+	[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountManagerDidAddNewAccountNotification object:self];
 	[accountTable reloadData];
 }
 
@@ -200,9 +205,10 @@
 									 [NSNumber numberWithInt:[newAccountAllowHostMismatch state]], @"SSLHostMismatch", nil];
 		
 		JIMAccount *newAccount = [[JIMAccount alloc] initWithAccountDict:accountDict];
-		newAccount.delegate = self;
 		[accounts addObject:newAccount];
 		[newAccount release];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountManagerDidAddNewAccountNotification object:self];
 		
 		[accountTable reloadData];
 	}
@@ -228,9 +234,10 @@
 									 [NSNumber numberWithInt:[newAccountAllowHostMismatch state]], @"SSLHostMismatch", nil];
 		
 		JIMAccount *newAccount = [[JIMAccount alloc] initWithAccountDict:accountDict];
-		newAccount.delegate = self;
 		[accounts addObject:newAccount];
 		[newAccount release];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountManagerDidAddNewAccountNotification object:self];
 		
 		[accountTable reloadData];
 	}
@@ -243,6 +250,7 @@
 	if(returnCode == NSOKButton)
 	{
 		[accounts removeObjectAtIndex:[accountTable selectedRow]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountManagerDidRemoveAccountNotification object:self];
 		[accountTable reloadData];
 	}
 }

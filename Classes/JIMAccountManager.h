@@ -10,6 +10,9 @@
 #import <JIMAccount.h>
 #import <JIMCell.h>
 
+extern NSString* const JIMAccountManagerDidAddNewAccountNotification;
+extern NSString* const JIMAccountManagerDidRemoveAccountNotification;
+
 @interface JIMAccountManager : NSObject {
 	IBOutlet NSWindow *mainSettingsWindow;
 	IBOutlet NSWindow *newAccountSheet;
@@ -32,6 +35,8 @@
 	IBOutlet NSTableView *accountTable;
 	NSMutableArray *accounts;
 }
+
+@property (readonly) NSMutableArray *accounts;
 
 - (IBAction)openNewAccountSheet:(id)sender;
 - (IBAction)openRemoveAccountSheet:(id)sender;

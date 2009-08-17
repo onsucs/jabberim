@@ -8,8 +8,6 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="1017"/>
-			<integer value="937"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1086,6 +1084,9 @@
 			<object class="NSCustomObject" id="474898797">
 				<string key="NSClassName">JIMAccountManager</string>
 			</object>
+			<object class="NSCustomObject" id="978853982">
+				<string key="NSClassName">JIMRosterManager</string>
+			</object>
 			<object class="NSCustomObject" id="776931964">
 				<string key="NSClassName">JIMChatManager</string>
 			</object>
@@ -1228,6 +1229,7 @@
 														</object>
 														<string key="NSFrame">{{1, 1}, {480, 224}}</string>
 														<reference key="NSSuperview" ref="821067364"/>
+														<reference key="NSNextKeyView" ref="9099141"/>
 														<reference key="NSDocView" ref="9099141"/>
 														<reference key="NSBGColor" ref="313545027"/>
 														<int key="NScvFlags">4</int>
@@ -1254,6 +1256,7 @@
 												</object>
 												<string key="NSFrame">{{17, 39}, {482, 226}}</string>
 												<reference key="NSSuperview" ref="607578779"/>
+												<reference key="NSNextKeyView" ref="290569177"/>
 												<int key="NSsFlags">530</int>
 												<reference key="NSVScroller" ref="878193421"/>
 												<reference key="NSHScroller" ref="438838109"/>
@@ -1451,7 +1454,7 @@
 				<nil key="NSViewClass"/>
 				<string key="NSWindowContentMaxSize">{3.40282e+38, 3.40282e+38}</string>
 				<object class="NSView" key="NSWindowView" id="38266780">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1836,7 +1839,6 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{440, 373}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
@@ -2974,6 +2976,14 @@
 						<reference key="destination" ref="683049727"/>
 					</object>
 					<int key="connectionID">1050</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">accountManager</string>
+						<reference key="source" ref="978853982"/>
+						<reference key="destination" ref="474898797"/>
+					</object>
+					<int key="connectionID">1052</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -4595,6 +4605,12 @@
 						<reference key="object" ref="741830304"/>
 						<reference key="parent" ref="647414329"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1051</int>
+						<reference key="object" ref="978853982"/>
+						<reference key="parent" ref="1049"/>
+						<string key="objectName">JIMRosterManager</string>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -4637,6 +4653,7 @@
 					<string>1046.IBPluginDependency</string>
 					<string>1046.ImportedFromIB2</string>
 					<string>1047.IBPluginDependency</string>
+					<string>1051.IBPluginDependency</string>
 					<string>106.IBEditorWindowLastContentRect</string>
 					<string>106.IBPluginDependency</string>
 					<string>106.ImportedFromIB2</string>
@@ -4987,6 +5004,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES" id="5"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{624, 262}, {169, 23}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
@@ -5320,7 +5338,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1050</int>
+			<int key="maxID">1059</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5441,6 +5459,113 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/JIMChatManager.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">JIMContactInfoController</string>
+					<string key="superclassName">NSObject</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">setResource:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>availableResources</string>
+							<string>clientID</string>
+							<string>clientOS</string>
+							<string>clientVersion</string>
+							<string>contactInfoPanel</string>
+							<string>priority</string>
+							<string>status</string>
+							<string>statusRecieved</string>
+							<string>timeOfLastActivity</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSPopUpButton</string>
+							<string>NSTextField</string>
+							<string>NSTextField</string>
+							<string>NSTextField</string>
+							<string>NSPanel</string>
+							<string>NSTextField</string>
+							<string>NSTextField</string>
+							<string>NSTextField</string>
+							<string>NSTextField</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/JIMContactInfoController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">JIMRosterManager</string>
+					<string key="superclassName">NSWindowController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>cancleSheet:</string>
+							<string>okSheet:</string>
+							<string>removeContact:</string>
+							<string>segmentedToolsButton:</string>
+							<string>setStatus:</string>
+							<string>showContactInfos:</string>
+							<string>startChat:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>accountManager</string>
+							<string>accountsButton</string>
+							<string>addContactWindow</string>
+							<string>contactImageToRemove</string>
+							<string>contactInfoController</string>
+							<string>jidToRemove</string>
+							<string>newContactJIDField</string>
+							<string>newContactNicknameField</string>
+							<string>nicknameToRemove</string>
+							<string>noUserView</string>
+							<string>removeContactWindow</string>
+							<string>rosterTable</string>
+							<string>segmentedToolsButton</string>
+							<string>statusButton</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>JIMAccountManager</string>
+							<string>NSPopUpButton</string>
+							<string>NSWindow</string>
+							<string>NSImageView</string>
+							<string>JIMContactInfoController</string>
+							<string>NSTextField</string>
+							<string>NSTextField</string>
+							<string>NSTextField</string>
+							<string>NSTextField</string>
+							<string>NSView</string>
+							<string>NSWindow</string>
+							<string>NSOutlineView</string>
+							<string>NSSegmentedControl</string>
+							<string>NSPopUpButton</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/JIMRosterManager.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
