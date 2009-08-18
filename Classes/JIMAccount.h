@@ -12,19 +12,20 @@
 #import <JIMChatManager.h>
 #import <JIMContactInfoController.h>
 
-extern NSString* const JIMAccountDidFailToConnectNotification;
 extern NSString* const JIMAccountDidConnectNotification;
+extern NSString* const JIMAccountDidFailToConnectNotification;
+extern NSString* const JIMAccountDidFailToRegisterNotification;
 
 @interface JIMAccount : NSObject {
 	XMPPChatService *xmppService;
-	NSDictionary *accountDict;
+	NSMutableDictionary *accountDict;
 	NSString *error;
 	
 	XMPPPresenceShow show;
 }
 
 @property (readonly) XMPPChatService *xmppService;
-@property (readonly) NSDictionary *accountDict;
+@property (readonly) NSMutableDictionary *accountDict;
 @property (assign) NSString *error;
 @property (assign) XMPPPresenceShow show;
 

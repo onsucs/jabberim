@@ -25,6 +25,7 @@ extern NSString* const JIMAccountManagerDidRemoveAccountNotification;
 	IBOutlet NSTextField *newAccountServer;
 	IBOutlet NSTextField *newAccountPort;
 	IBOutlet NSButton *newAccountAutoLogin;
+	IBOutlet NSButton *newAccountRegisterUser;
 	IBOutlet NSButton *newAccountForceOldSSL;
 	IBOutlet NSButton *newAccountAllowSelfSignedCerts;
 	IBOutlet NSButton *newAccountAllowHostMismatch;

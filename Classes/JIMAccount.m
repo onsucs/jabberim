@@ -9,8 +9,9 @@
 #import "JIMAccount.h"
 #import "XMPP.h"
 
-NSString* const JIMAccountDidFailToConnectNotification = @"JIMAccountDidFailToConnectNotification";
 NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotification";
+NSString* const JIMAccountDidFailToConnectNotification = @"JIMAccountDidFailToConnectNotification";
+NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToRegisterNotification";
 
 @implementation JIMAccount
 
@@ -23,7 +24,7 @@ NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotific
 {
 	if((self = [super init]))
 	{
-		accountDict = newAccountDict;
+		accountDict = [newAccountDict mutableCopy];
 		[accountDict retain];
 		
 		XMPPJID *jid = [XMPPJID jidWithString:[accountDict objectForKey:@"JabberID"] resource:[accountDict objectForKey:@"Resource"]];
@@ -39,15 +40,28 @@ NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotific
 		[xmppService setAllowsSSLHostNameMismatch:[[accountDict objectForKey:@"SSLHostMismatch"] boolValue]];
 		[xmppService setPriority:[[accountDict objectForKey:@"Priority"] intValue]];
 		
-		[xmppService setAutoLogin:YES];
-		[xmppService setAutoRoster:YES];
-		[xmppService setAutoPresence:YES];
-		
-		if([[accountDict objectForKey:@"AutoLogin"] boolValue])
+		if([[accountDict objectForKey:@"Register"] boolValue])
+		{
+			[xmppService setAutoLogin:NO];
+			[xmppService setAutoRoster:YES];
+			[xmppService setAutoPresence:YES];
+			
 			[xmppService connect];
+		}
+		else
+		{
+			[xmppService setAutoLogin:YES];
+			[xmppService setAutoRoster:YES];
+			[xmppService setAutoPresence:YES];
+			
+			if([[accountDict objectForKey:@"AutoLogin"] boolValue])
+				[xmppService connect];
+		}
 		
-		//if(![xmppService isConnected])
-		//	[xmppService connect];
+		
+		
+		
+		
 		
 		self.show = XMPPPresenceShowUnknown;
 	}
@@ -117,6 +131,12 @@ NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotific
 
 - (void)serviceDidConnect:(NSNotification *)note
 {
+	if([[accountDict objectForKey:@"Register"] boolValue])
+	{
+		NSLog(@"Registering...");
+		[self.xmppService registerUser];
+	}
+	
 	//[xmppService authenticateUser];
 	//[statusButton selectItemWithTitle:@"Available"];
 }
@@ -156,33 +176,24 @@ NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotific
 
 - (void)serviceDidRegister:(NSNotification *)note
 {
-	/*
-	 // Update tracking variables
-	 isRegistering = NO;
-	 
-	 // Update GUI
-	 [signInButton setEnabled:YES];
-	 [registerButton setEnabled:YES];
-	 [messageField setStringValue:@"Registered new user"];
-	 */
+	[self.xmppService setAutoLogin:YES];
+	[self.accountDict setObject:[NSNumber numberWithInt:NSOffState] forKey:@"Register"];
+	
+	if([[self.accountDict objectForKey:@"AutoLogin"] boolValue])
+		[self.xmppService authenticateUser];
 }
 
 - (void)serviceDidFailRegister:(NSNotification *)note
 {
-	/*
-	 NSLog(@"---------- serviceDidNotConnect ----------");
-	 if([note error])
-	 {
-	 NSLog(@"           error: %@", [note error]);
-	 }
-	 
-	 // Update tracking variables
-	 isRegistering = NO;
-	 
-	 // Update GUI
-	 [signInButton setEnabled:YES];
-	 [registerButton setEnabled:YES];
-	 [messageField setStringValue:@"Username is taken"];*/
+	self.error = @"Unable to register account";
+	[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountDidFailToRegisterNotification object:self];
+	
+	
+	NSLog(@"---------- serviceDidNotConnect ----------");
+	if([note error])
+	{
+		NSLog(@"           error: %@", [note error]);
+	}
 }
 
 - (void)serviceDidAuthenticate:(NSNotification *)note

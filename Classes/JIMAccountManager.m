@@ -29,8 +29,9 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 	JIMCell *accountCell = [[[JIMCell alloc] init] autorelease];
 	[[accountTable tableColumnWithIdentifier:@"Name"] setDataCell:accountCell];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountDidFailToConnect:) name:JIMAccountDidFailToConnectNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountDidConnect:) name:JIMAccountDidConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountDidFailToConnect:) name:JIMAccountDidFailToConnectNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountDidFailToRegister:) name:JIMAccountDidFailToRegisterNotification object:nil];
 }
 
 - (void)dealloc
@@ -130,6 +131,7 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 		[newAccountPriority setStringValue:[accountDict objectForKey:@"Priority"]];
 		[newAccountServer setStringValue:[accountDict objectForKey:@"Server"]];
 		[newAccountPort setStringValue:[accountDict objectForKey:@"Port"]];
+		[newAccountRegisterUser setIntValue:[[accountDict objectForKey:@"Register"] intValue]];
 		[newAccountAutoLogin setIntValue:[[accountDict objectForKey:@"AutoLogin"] intValue]];
 		[newAccountForceOldSSL setIntValue:[[accountDict objectForKey:@"ForceOldSSL"] intValue]];
 		[newAccountAllowSelfSignedCerts setIntValue:[[accountDict objectForKey:@"SelfSignedCerts"] intValue]];
@@ -168,6 +170,7 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 	[newAccountServer setStringValue:@""];
 	[newAccountPort setStringValue:@"5222"];
 	[newAccountAutoLogin setState:NSOnState];
+	[newAccountRegisterUser setState:NSOffState];
 	[newAccountForceOldSSL setState:NSOffState];
 	[newAccountAllowSelfSignedCerts setState:NSOffState];
 	[newAccountAllowHostMismatch setState:NSOffState];
@@ -224,6 +227,7 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 									 [newAccountPriority stringValue], @"Priority",
 									 [newAccountServer stringValue], @"Server",
 									 [newAccountPort stringValue], @"Port",
+									 [NSNumber numberWithInt:[newAccountRegisterUser state]], @"Register",
 									 [NSNumber numberWithInt:[newAccountAutoLogin state]], @"AutoLogin",
 									 [NSNumber numberWithInt:[newAccountForceOldSSL state]], @"ForceOldSSL",
 									 [NSNumber numberWithInt:[newAccountAllowSelfSignedCerts state]], @"SelfSignedCerts",
@@ -253,6 +257,7 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 									 [newAccountPriority stringValue], @"Priority",
 									 [newAccountServer stringValue], @"Server",
 									 [newAccountPort stringValue], @"Port",
+									 [NSNumber numberWithInt:[newAccountRegisterUser state]], @"Register",
 									 [NSNumber numberWithInt:[newAccountAutoLogin state]], @"AutoLogin",
 									 [NSNumber numberWithInt:[newAccountForceOldSSL state]], @"ForceOldSSL",
 									 [NSNumber numberWithInt:[newAccountAllowSelfSignedCerts state]], @"SelfSignedCerts",
@@ -337,6 +342,11 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 }
 
 - (void)accountDidFailToConnect:(NSNotification *)note
+{
+	[accountTable reloadData];
+}
+
+- (void)accountDidFailToRegister:(NSNotification *)note
 {
 	[accountTable reloadData];
 }
