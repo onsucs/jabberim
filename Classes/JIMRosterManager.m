@@ -234,7 +234,7 @@
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item;
 {
 	if(item)
-		return [item objectAtIndex:index];	
+		return [[(NSArray *)item sortedArrayUsingSelector:@selector(compareByAvailabilityName:)] objectAtIndex:index];	
 	
 	return [[self buddies] objectAtIndex:index];
 }

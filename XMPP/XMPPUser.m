@@ -437,9 +437,9 @@ NSString* const XMPPUsersKey = @"users";
 **/
 - (NSComparisonResult)compareByAvailabilityName:(XMPPUser *)another options:(NSStringCompareOptions)mask
 {
-	if([self isOnline])
+	if([self presenceShow] == XMPPPresenceShowAvailable)
 	{
-		if([another isOnline])
+		if([another presenceShow] == XMPPPresenceShowAvailable)
 		{
 			return [self compareByName:another options:mask];
 		}
@@ -450,7 +450,7 @@ NSString* const XMPPUsersKey = @"users";
 	}
 	else
 	{
-		if([another isOnline])
+		if([another presenceShow] == XMPPPresenceShowAvailable)
 		{
 			return NSOrderedDescending;
 		}
