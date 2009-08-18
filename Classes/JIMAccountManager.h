@@ -40,6 +40,7 @@ extern NSString* const JIMAccountManagerDidRemoveAccountNotification;
 
 - (IBAction)openNewAccountSheet:(id)sender;
 - (IBAction)openRemoveAccountSheet:(id)sender;
+- (IBAction)setStatus:(id)sender;
 - (IBAction)okSheet:(id)sender;
 - (IBAction)cancleSheet:(id)sender;
 

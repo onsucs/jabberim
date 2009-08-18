@@ -382,16 +382,9 @@ enum XMPPServiceFlags
 	[[self stream] disconnect];
 }
 
-- (void)setShow:(NSString *)show andStatus:(NSString *)status
-{	
-	NSXMLElement *presence = [NSXMLElement elementWithName:@"presence"];
-	if(show)
-		[presence addChild:[NSXMLElement elementWithName:@"show" stringValue:show]];
-	if(status)
-		[presence addChild:[NSXMLElement elementWithName:@"status" stringValue:status]];
-	[presence addChild:[NSXMLElement elementWithName:@"priority" stringValue:[NSString stringWithFormat:@"%i", self.priority]]];
-	
-	[[self stream] sendElement:presence];
+- (void)sendElement:(NSXMLElement *)element
+{
+	[[self stream] sendElement:element];
 }
 
 - (void)sendStanza:(XMPPStanza *)stanza

@@ -19,12 +19,18 @@ extern NSString* const JIMAccountDidConnectNotification;
 	XMPPChatService *xmppService;
 	NSDictionary *accountDict;
 	NSString *error;
+	
+	XMPPPresenceShow show;
 }
 
 @property (readonly) XMPPChatService *xmppService;
 @property (readonly) NSDictionary *accountDict;
 @property (assign) NSString *error;
+@property (assign) XMPPPresenceShow show;
 
 - (id)initWithAccountDict:(NSDictionary *)newAccountDict;
+
+- (void)setShow:(XMPPPresenceShow)newShow andStatus:(NSString *)newStatus;
+- (void)goOffline;
 
 @end

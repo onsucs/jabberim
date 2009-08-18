@@ -102,7 +102,7 @@
 	{
 		JIMAccount *oneAccount;
 		for(oneAccount in accountManager.accounts)
-			[oneAccount.xmppService goOffline];
+			[oneAccount goOffline];
 	}
 	else
 	{
@@ -113,15 +113,15 @@
 				[oneAccount.xmppService authenticateUser];
 			
 			if([[sender titleOfSelectedItem] isEqualToString:@"Available"])
-				[oneAccount.xmppService setShow:nil andStatus:nil];
+				[oneAccount setShow:XMPPPresenceShowAvailable andStatus:nil];
 			else if([[sender titleOfSelectedItem] isEqualToString:@"Away"])
-				[oneAccount.xmppService setShow:@"away" andStatus:@"Away"];
+				[oneAccount setShow:XMPPPresenceShowAway andStatus:@"Away"];
 			else if([[sender titleOfSelectedItem] isEqualToString:@"Chat"])
-				[oneAccount.xmppService setShow:@"chat" andStatus:@"I want to chat"];
+				[oneAccount setShow:XMPPPresenceShowChat andStatus:@"I want to chat"];
 			else if([[sender titleOfSelectedItem] isEqualToString:@"Extended away"])
-				[oneAccount.xmppService setShow:@"xa" andStatus:@"Extended away"];
+				[oneAccount setShow:XMPPPresenceShowExtendedAway andStatus:@"Extended away"];
 			else if([[sender titleOfSelectedItem] isEqualToString:@"Do not Disturb"])
-				[oneAccount.xmppService setShow:@"dnd" andStatus:@"Do not Disturb"];
+				[oneAccount setShow:XMPPPresenceShowDoNotDisturb andStatus:@"Do not Disturb"];
 		}
 	}
 }
@@ -150,7 +150,7 @@
 
 - (IBAction)mainMenuItemPressed:(id)sender
 {
-	/*if([sender tag] == 42)
+	if([sender tag] == 43)
 	{
 		if(![[statusButton titleOfSelectedItem] isEqualToString:@"Offline"])
 		{
@@ -161,7 +161,7 @@
 		}
 		else
 			NSBeep();
-	}*/
+	}
 }
 
 - (IBAction)removeContact:(id)sender

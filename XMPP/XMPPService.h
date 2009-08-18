@@ -38,7 +38,7 @@ extern NSString* const XMPPServiceDidReceiveIQStanzaNotification;
 	NSString *_domain;
 	UInt16 _port;
 	NSString *_password;
-
+	
 	struct
 	{
 		unsigned int usesOldStyleSSL:1;
@@ -115,8 +115,8 @@ extern NSString* const XMPPServiceDidReceiveIQStanzaNotification;
 //
 // Stanza actions
 //
+- (void)sendElement:(NSXMLElement *)element;
 - (void)sendStanza:(XMPPStanza *)stanza;
-- (void)setShow:(NSString *)show andStatus:(NSString *)status;
 
 @end
 

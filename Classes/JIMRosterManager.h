@@ -39,6 +39,7 @@
 - (IBAction)setStatus:(id)sender;
 - (IBAction)segmentedToolsButton:(id)sender;
 - (IBAction)removeContact:(id)sender;
+- (IBAction)mainMenuItemPressed:(id)sender;
 
 - (IBAction)showContactInfos:(id)sender;
 - (IBAction)startChat:(id)sender;

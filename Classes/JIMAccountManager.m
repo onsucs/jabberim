@@ -79,6 +79,31 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 		NSBeep();
 }
 
+- (IBAction)setStatus:(id)sender
+{
+	if([accountTable selectedRow] == -1)
+	{
+		NSBeep();
+		return;
+	}
+	
+	if([[sender title] isEqualToString:@"Offline"])
+		[(JIMAccount *)[accounts objectAtIndex:[accountTable selectedRow]] goOffline];
+	else
+	{
+		if([[sender title] isEqualToString:@"Available"])
+			[(JIMAccount *)[accounts objectAtIndex:[accountTable selectedRow]] setShow:XMPPPresenceShowAvailable andStatus:nil];
+		else if([[sender title] isEqualToString:@"Away"])
+			[(JIMAccount *)[accounts objectAtIndex:[accountTable selectedRow]] setShow:XMPPPresenceShowAway andStatus:@"Away"];
+		else if([[sender title] isEqualToString:@"Chat"])
+			[(JIMAccount *)[accounts objectAtIndex:[accountTable selectedRow]] setShow:XMPPPresenceShowChat andStatus:@"I want to chat"];
+		else if([[sender title] isEqualToString:@"Extended away"])
+			[(JIMAccount *)[accounts objectAtIndex:[accountTable selectedRow]] setShow:XMPPPresenceShowExtendedAway andStatus:@"Extended away"];
+		else if([[sender title] isEqualToString:@"Do not Disturb"])
+			[(JIMAccount *)[accounts objectAtIndex:[accountTable selectedRow]] setShow:XMPPPresenceShowDoNotDisturb andStatus:@"Do not Disturb"];
+	}
+}
+
 - (IBAction)okSheet:(id)sender
 {
 	[NSApp endSheet:newAccountSheet returnCode:NSOKButton];
@@ -280,8 +305,19 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 		
 		[itemCell setImage:account.xmppService.serviceIcon];
 		
-		if([account.xmppService isAuthenticated])
-			[itemCell setStatusImage:[NSImage imageNamed:@"available"]];
+		if(account.show != XMPPPresenceShowUnknown)
+		{
+			if(account.show == XMPPPresenceShowAvailable)
+				[itemCell setStatusImage:[NSImage imageNamed:@"available"]];
+			else if(account.show == XMPPPresenceShowChat)
+				[itemCell setStatusImage:[NSImage imageNamed:@"available"]];
+			else if(account.show == XMPPPresenceShowAway)
+				[itemCell setStatusImage:[NSImage imageNamed:@"away"]];
+			else if(account.show == XMPPPresenceShowExtendedAway)
+				[itemCell setStatusImage:[NSImage imageNamed:@"away"]];
+			else if(account.show == XMPPPresenceShowDoNotDisturb)
+				[itemCell setStatusImage:[NSImage imageNamed:@"busy"]];
+		}
 		else
 			[itemCell setStatusImage:[NSImage imageNamed:@"offline"]];
 		

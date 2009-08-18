@@ -17,6 +17,7 @@ NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotific
 @synthesize xmppService;
 @synthesize accountDict;
 @synthesize error;
+@synthesize show;
 
 - (id)initWithAccountDict:(NSDictionary *)newAccountDict
 {
@@ -38,16 +39,17 @@ NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotific
 		[xmppService setAllowsSSLHostNameMismatch:[[accountDict objectForKey:@"SSLHostMismatch"] boolValue]];
 		[xmppService setPriority:[[accountDict objectForKey:@"Priority"] intValue]];
 		
-		[xmppService setAutoLogin:[[accountDict objectForKey:@"AutoLogin"] boolValue]];
+		[xmppService setAutoLogin:YES];
 		[xmppService setAutoRoster:YES];
 		[xmppService setAutoPresence:YES];
 		
-		if(![xmppService isConnected])
+		if([[accountDict objectForKey:@"AutoLogin"] boolValue])
 			[xmppService connect];
 		
-		/*NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-		[nc addObserver:self selector:@selector(rosterDidAddUsers:) name:XMPPRosterDidAddUsersNotification object:[xmppService roster]];
-		[nc addObserver:self selector:@selector(rosterDidRemoveUsers:) name:XMPPRosterDidRemoveUsersNotification object:[xmppService roster]];*/
+		//if(![xmppService isConnected])
+		//	[xmppService connect];
+		
+		self.show = XMPPPresenceShowUnknown;
 	}
 	return self;
 }
@@ -62,6 +64,47 @@ NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotific
 	[accountDict release];
 	
 	[super dealloc];
+}
+
+- (void)setShow:(XMPPPresenceShow)newShow andStatus:(NSString *)newStatus
+{	
+	
+	if(newShow == XMPPPresenceShowAvailable)
+	{
+		if([xmppService isConnected])
+			[xmppService goOnline];
+		else
+			[xmppService connect];
+	}
+	else
+	{
+		NSXMLElement *presence = [NSXMLElement elementWithName:@"presence"];
+		
+		if(newShow == XMPPPresenceShowAway)
+			[presence addChild:[NSXMLElement elementWithName:@"show" stringValue:@"away"]];
+		else if(newShow == XMPPPresenceShowExtendedAway)
+			[presence addChild:[NSXMLElement elementWithName:@"show" stringValue:@"xa"]];
+		else if(newShow == XMPPPresenceShowChat)
+			[presence addChild:[NSXMLElement elementWithName:@"show" stringValue:@"chat"]];
+		else if(newShow == XMPPPresenceShowDoNotDisturb)
+			[presence addChild:[NSXMLElement elementWithName:@"show" stringValue:@"dnd"]];
+		
+		if(newStatus)
+			[presence addChild:[NSXMLElement elementWithName:@"status" stringValue:newStatus]];
+		
+		[presence addChild:[NSXMLElement elementWithName:@"priority" stringValue:[NSString stringWithFormat:@"%i", [xmppService priority]]]];
+		
+		[xmppService sendElement:presence];
+	}
+	
+	self.show = newShow;
+}
+
+- (void)goOffline
+{
+	[xmppService disconnect];
+	
+	self.show = XMPPPresenceShowUnknown;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,6 +189,9 @@ NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotific
 {
 	self.error = nil;
 	[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountDidConnectNotification object:self];
+	
+	if([xmppService autoPresence])
+		self.show = XMPPPresenceShowAvailable;
 	
 	/*
 	 // Update tracking variables

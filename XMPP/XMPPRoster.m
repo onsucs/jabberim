@@ -48,6 +48,7 @@ NSString* const XMPPRosterDidRemoveUsersNotification = @"XMPPRosterDidRemoveUser
 	{
 		self.service = aService;
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serviceDidReceiveIQStanza:) name:XMPPServiceDidReceiveIQStanzaNotification object:aService];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(serviceDidDisconnect:) name:XMPPServiceDidDisconnectNotification object:aService];
 	}
 	return self;
 }
@@ -127,6 +128,17 @@ NSString* const XMPPRosterDidRemoveUsersNotification = @"XMPPRosterDidRemoveUser
 	}	
 }
 
+- (void)serviceDidDisconnect:(NSNotification *)note
+{
+	NSMutableSet *removedUsers = [NSMutableSet set];
+	for(XMPPUser *user in [self users])
+		[removedUsers addObject:user];
+	
+	[_usersForJID removeAllObjects];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:XMPPRosterDidRemoveUsersNotification object:self users:removedUsers];
+}
+
 - (void)addUsersFromQuery:(XMPPRosterInfoQuery *)query
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -168,7 +180,7 @@ NSString* const XMPPRosterDidRemoveUsersNotification = @"XMPPRosterDidRemoveUser
 	}
 	if ([removedUsers count] > 0)
 	{
-		[nc postNotificationName:XMPPRosterDidRemoveUsersNotification object:self users:removedUsers]; //Boy this was a bug. It took me 4 hours to find out that the author of the Framework accidently wrote addedUsers instead of removedUsers. IT CAN'T WORK X(...
+		[nc postNotificationName:XMPPRosterDidRemoveUsersNotification object:self users:removedUsers]; //Boy, what a bug. It took me 4 hours to find out that the author of the Framework accidently wrote addedUsers instead of removedUsers. IT CAN'T WORK X(...
 	}
 }
 
