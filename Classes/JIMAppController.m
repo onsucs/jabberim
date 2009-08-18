@@ -13,6 +13,35 @@
 - (void)awakeFromNib
 {
 	[accountManager loadAccounts];
+	
+	[self setSelectedSettingsView:accountSettingsView];
+}
+
+- (IBAction)switchToAccountSettings:(id)sender
+{
+	[self setSelectedSettingsView:accountSettingsView];
+}
+
+- (IBAction)switchToAdvancedSettings:(id)sender
+{
+	[self setSelectedSettingsView:advancedSettingsView];
+}
+
+- (void)setSelectedSettingsView:(NSView *)newSelectedView
+{
+	if(!(selectedView == newSelectedView))
+	{
+		[selectedView removeFromSuperview];
+		selectedView = newSelectedView;
+		
+		NSRect settingsViewFrame = NSMakeRect(selectedView.frame.origin.x,
+											  selectedView.frame.origin.y,
+											  viewToInsertSettingsView.frame.size.width,
+											  viewToInsertSettingsView.frame.size.height);
+		
+		selectedView.frame = settingsViewFrame;
+		[viewToInsertSettingsView addSubview:selectedView];
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

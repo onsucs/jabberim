@@ -12,6 +12,17 @@
 @interface JIMAppController : NSObject {
 	IBOutlet NSUserDefaultsController *userDefaultsController;
 	IBOutlet JIMAccountManager *accountManager;
+	
+	IBOutlet NSView *viewToInsertSettingsView;
+	IBOutlet NSView *accountSettingsView;
+	IBOutlet NSView *advancedSettingsView;
+	
+	NSView *selectedView;
 }
+
+- (IBAction)switchToAccountSettings:(id)sender;
+- (IBAction)switchToAdvancedSettings:(id)sender;
+
+- (void)setSelectedSettingsView:(NSView *)newSelectedView;
 
 @end

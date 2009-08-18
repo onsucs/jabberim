@@ -96,9 +96,7 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 - (void)setSelectedChatView:(NSView *)newView
 {
 	[selectedChatView removeFromSuperview];
-	[selectedChatView release];
 	selectedChatView = newView;
-	[selectedChatView retain];
 	
 	NSRect chatControllerViewFrame = NSMakeRect(selectedChatView.frame.origin.x,
 												selectedChatView.frame.origin.y,
