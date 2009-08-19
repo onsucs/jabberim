@@ -29,14 +29,58 @@
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
 	[requests release];
 	[requestsAlsoAdd release];
 	
 	[super dealloc];
 }
 
-#pragma mark NSTaleView Delegate
+#pragma mark IBActions
+- (IBAction)approve:(id)sender
+{
+	XMPPSubscriptionRequest *request = [requests objectAtIndex:[subscriptionTable selectedRow]];
+	[request approve];
+	
+	if([[[subscriptionTable tableColumnWithIdentifier:@"Add"] dataCellForRow:[subscriptionTable selectedRow]] state] == NSOnState)
+	{
+		XMPPSubscriptionRequest *alsoAddRequest = [[XMPPSubscriptionRequest alloc] initWithToJID:request.fromJID service:request.service];
+		[alsoAddRequest send];
+		[alsoAddRequest release];
+	}
+	
+	[requests removeObject:request];
+	[subscriptionTable reloadData];
+	
+	if([requests count] == 0)
+		[subscriptionWindow close];
+}
 
+- (IBAction)reject:(id)sender
+{
+	XMPPSubscriptionRequest *request = [requests objectAtIndex:[subscriptionTable selectedRow]];
+	[request refuse];
+	[requests removeObject:request];
+	[subscriptionTable reloadData];
+	
+	if([requests count] == 0)
+		[subscriptionWindow close];
+}
+
+- (IBAction)setAddRequestingUser:(id)sender
+{
+	NSLog(@"Setting Add");
+	
+	if([[[subscriptionTable tableColumnWithIdentifier:@"Add"] dataCellForRow:[subscriptionTable selectedRow]] state] == NSOnState)
+		[requestsAlsoAdd replaceObjectAtIndex:[subscriptionTable selectedRow] withObject:[NSNumber numberWithInt:NSOffState]];
+	else
+		[requestsAlsoAdd replaceObjectAtIndex:[subscriptionTable selectedRow] withObject:[NSNumber numberWithInt:NSOnState]];
+	
+	[subscriptionTable reloadData];
+}
+
+#pragma mark NSTaleView Delegate
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return [requests count];
@@ -54,43 +98,7 @@
 	return nil;
 }
 
-- (IBAction)approve:(id)sender
-{
-	XMPPSubscriptionRequest *request = [requests objectAtIndex:[subscriptionTable selectedRow]];
-	[request approve];
-	
-	if([[[subscriptionTable tableColumnWithIdentifier:@"Add"] dataCellForRow:[subscriptionTable selectedRow]] state] == NSOnState)
-	{
-		XMPPSubscriptionRequest *alsoAddRequest = [[XMPPSubscriptionRequest alloc] initWithToJID:request.fromJID service:request.service];
-		[alsoAddRequest send];
-		[alsoAddRequest release];
-	}
-	
-	[requests removeObject:request];
-	[subscriptionTable reloadData];
-}
-
-- (IBAction)reject:(id)sender
-{
-	XMPPSubscriptionRequest *request = [requests objectAtIndex:[subscriptionTable selectedRow]];
-	[request refuse];
-	[requests removeObject:request];
-	[subscriptionTable reloadData];
-}
-
-- (IBAction)setAddRequestingUser:(id)sender
-{
-	NSLog(@"Setting Add");
-	
-	if([[[subscriptionTable tableColumnWithIdentifier:@"Add"] dataCellForRow:[subscriptionTable selectedRow]] state] == NSOnState)
-		[requestsAlsoAdd replaceObjectAtIndex:[subscriptionTable selectedRow] withObject:[NSNumber numberWithInt:NSOffState]];
-	else
-		[requestsAlsoAdd replaceObjectAtIndex:[subscriptionTable selectedRow] withObject:[NSNumber numberWithInt:NSOnState]];
-	
-	[subscriptionTable reloadData];
-}
-
-#pragma mark XMPP Delegate
+#pragma mark Notifications
 
 - (void)subscriptionRequestDidArrive:(NSNotification *)note
 {
@@ -102,6 +110,15 @@
 		[subscriptionWindow makeKeyAndOrderFront:self];
 	
 	[subscriptionTable reloadData];
+}
+
+- (void)accountManagerAllAccountsDidDisconnect:(NSNotification *)note
+{
+	[requests removeAllObjects];
+	[subscriptionTable reloadData];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:nil object:nil];
+	[subscriptionWindow close];
 }
 
 @end
