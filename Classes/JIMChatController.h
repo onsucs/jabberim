@@ -7,6 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <JIMSmallCell.h>
 #import <XMPP/XMPP.h>
 
 @interface JIMChatController : NSObject {

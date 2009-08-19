@@ -20,14 +20,15 @@
 	
 	IBOutlet NSTextField *newContactJIDField;
 	IBOutlet NSTextField *newContactNicknameField;
-	IBOutlet NSPopUpButton *accountsButton;
+	IBOutlet NSPopUpButton *newContactAccountsButton;
 	
 	IBOutlet NSTextField *jidToRemove;
 	IBOutlet NSTextField *nicknameToRemove;
 	IBOutlet NSImageView *contactImageToRemove;
 	
-	IBOutlet NSPopUpButton *accountsButton2;
+	IBOutlet NSPopUpButton *newChatroomAccountsButton;
 	IBOutlet NSTextField *newChatroomName;
+	IBOutlet NSTextField *newChatroomService;
 	
 	IBOutlet NSOutlineView *rosterTable;
 	IBOutlet NSPopUpButton *statusButton;
@@ -41,6 +42,8 @@
 	
 	NSMutableArray *chatrooms;
 }
+
+- (IBAction)newChatroomAccountButton:(id)sender;
 
 - (IBAction)setStatus:(id)sender;
 - (IBAction)segmentedToolsButton:(id)sender;

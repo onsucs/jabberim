@@ -123,11 +123,16 @@
 	}
 }
 
+- (IBAction)newChatroomAccountButton:(id)sender
+{
+	[[newChatroomService cell] setPlaceholderString:[NSString stringWithFormat:@"conference.%@", [XMPPJID jidWithString:[sender titleOfSelectedItem]].domain]];
+}
+
 - (IBAction)segmentedToolsButton:(id)sender
 {
 	if([sender selectedSegment] == 0)
 	{
-		if([accountsButton numberOfItems] > 0)
+		if([newContactAccountsButton numberOfItems] > 0)
 		{
 			[NSApp beginSheet:addContactWindow modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(addContactSheetDidEnd: returnCode: contextInfo:) contextInfo:nil];
 			[NSApp runModalForWindow:addContactWindow];
@@ -143,6 +148,10 @@
 	}
 	else if([sender selectedSegment] == 2)
 	{
+		[newChatroomName setStringValue:@""];
+		[newChatroomService setStringValue:@""];
+		[[newChatroomService cell] setPlaceholderString:[NSString stringWithFormat:@"conference.%@", [XMPPJID jidWithString:[newChatroomAccountsButton titleOfSelectedItem]].domain]];
+		
 		[NSApp beginSheet:joinChatroomWindow modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(joinChatroomSheetDidEnd: returnCode: contextInfo:) contextInfo:nil];
 		[NSApp runModalForWindow:joinChatroomWindow];
 		[NSApp endSheet:joinChatroomWindow];
@@ -343,7 +352,7 @@
 	{
 		XMPPService *serviceForAdding;
 		for(JIMAccount *oneAccount in accountManager.accounts)
-			if([[oneAccount.xmppService.myJID bareString] isEqualToString:[accountsButton titleOfSelectedItem]])
+			if([[oneAccount.xmppService.myJID bareString] isEqualToString:[newContactAccountsButton titleOfSelectedItem]])
 				serviceForAdding = oneAccount.xmppService;
 		
 		if(serviceForAdding)
@@ -378,12 +387,17 @@
 		{
 			XMPPService *serviceForJoining;
 			for(JIMAccount *oneAccount in accountManager.accounts)
-				if([[oneAccount.xmppService.myJID bareString] isEqualToString:[accountsButton titleOfSelectedItem]])
+				if([[oneAccount.xmppService.myJID bareString] isEqualToString:[newContactAccountsButton titleOfSelectedItem]])
 					serviceForJoining = oneAccount.xmppService;
 			
 			if(serviceForJoining)
 			{
-				XMPPRoom *chatroom = [XMPPRoom roomWithJID:[XMPPJID jidWithString:[newChatroomName stringValue]] service:serviceForJoining];
+				XMPPRoom *chatroom;
+				if(![[newChatroomService stringValue] isEqualToString:@""])
+					chatroom = [XMPPRoom roomWithJID:[XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@", [newChatroomName stringValue], [newChatroomService stringValue]]] service:serviceForJoining];
+				else
+					chatroom = [XMPPRoom roomWithJID:[XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@", [newChatroomName stringValue], [[newChatroomService cell] placeholderString]]] service:serviceForJoining];
+				
 				[chatroom enter];
 				[[NSNotificationCenter defaultCenter] postNotificationName:JIMChatManagerCreateNewChat object:chatroom];
 			}
@@ -401,43 +415,43 @@
 
 - (void)accountManagerDidAddAccount:(NSNotification *)note
 {
-	[accountsButton removeAllItems];
-	[accountsButton2 removeAllItems];
+	[newContactAccountsButton removeAllItems];
+	[newChatroomAccountsButton removeAllItems];
 	
 	JIMAccount *oneAccount;
 	for(oneAccount in accountManager.accounts)
 		if([oneAccount.xmppService isAuthenticated])
 		{
-			[accountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
-			[accountsButton2 addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+			[newContactAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+			[newChatroomAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
 		}
 }
 
 - (void)accountManagerDidRemoveAccount:(NSNotification *)note
 {
-	[accountsButton removeAllItems];
-	[accountsButton2 removeAllItems];
+	[newContactAccountsButton removeAllItems];
+	[newChatroomAccountsButton removeAllItems];
 	
 	JIMAccount *oneAccount;
 	for(oneAccount in accountManager.accounts)
 		if([oneAccount.xmppService isAuthenticated])
 		{
-			[accountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
-			[accountsButton2 addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+			[newContactAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+			[newChatroomAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
 		}
 }
 
 - (void)accountDidConnect:(NSNotification *)note
 {
-	[accountsButton removeAllItems];
-	[accountsButton2 removeAllItems];
+	[newContactAccountsButton removeAllItems];
+	[newChatroomAccountsButton removeAllItems];
 	
 	JIMAccount *oneAccount;
 	for(oneAccount in accountManager.accounts)
 		if([oneAccount.xmppService isAuthenticated])
 		{
-			[accountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
-			[accountsButton2 addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+			[newContactAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+			[newChatroomAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
 		}
 }
 

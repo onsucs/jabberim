@@ -9,7 +9,6 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="154"/>
-			<integer value="41"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -384,7 +383,7 @@
 				<string key="NSWindowContentMaxSize">{251, 9999}</string>
 				<string key="NSWindowContentMinSize">{251, 283}</string>
 				<object class="NSView" key="NSWindowView" id="626212947">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -573,7 +572,6 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{251, 285}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMinSize">{251, 360}</string>
@@ -955,7 +953,7 @@
 			<object class="NSWindowTemplate" id="23341378">
 				<int key="NSWindowStyleMask">1</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{196, 382}, {376, 128}}</string>
+				<string key="NSWindowRect">{{196, 356}, {323, 154}}</string>
 				<int key="NSWTFlags">1677721600</int>
 				<string key="NSWindowTitle">Window</string>
 				<string key="NSWindowClass">NSWindow</string>
@@ -969,7 +967,7 @@
 						<object class="NSButton" id="165129425">
 							<reference key="NSNextResponder" ref="121720810"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{266, 12}, {96, 32}}</string>
+							<string key="NSFrame">{{213, 12}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="121720810"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="756726507">
@@ -1009,7 +1007,7 @@
 						<object class="NSTextField" id="955376266">
 							<reference key="NSNextResponder" ref="121720810"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{17, 62}, {45, 17}}</string>
+							<string key="NSFrame">{{17, 88}, {45, 17}}</string>
 							<reference key="NSSuperview" ref="121720810"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="337849302">
@@ -1025,7 +1023,7 @@
 						<object class="NSTextField" id="458588709">
 							<reference key="NSNextResponder" ref="121720810"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{82, 60}, {274, 22}}</string>
+							<string key="NSFrame">{{82, 86}, {221, 22}}</string>
 							<reference key="NSSuperview" ref="121720810"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="483235703">
@@ -1039,10 +1037,43 @@
 								<reference key="NSTextColor" ref="448732944"/>
 							</object>
 						</object>
+						<object class="NSTextField" id="1065095957">
+							<reference key="NSNextResponder" ref="121720810"/>
+							<int key="NSvFlags">268</int>
+							<string key="NSFrame">{{17, 60}, {53, 17}}</string>
+							<reference key="NSSuperview" ref="121720810"/>
+							<bool key="NSEnabled">YES</bool>
+							<object class="NSTextFieldCell" key="NSCell" id="791467655">
+								<int key="NSCellFlags">68288064</int>
+								<int key="NSCellFlags2">272630784</int>
+								<string key="NSContents">Service:</string>
+								<reference key="NSSupport" ref="253375599"/>
+								<reference key="NSControlView" ref="1065095957"/>
+								<reference key="NSBackgroundColor" ref="1001966208"/>
+								<reference key="NSTextColor" ref="996265667"/>
+							</object>
+						</object>
+						<object class="NSTextField" id="6284724">
+							<reference key="NSNextResponder" ref="121720810"/>
+							<int key="NSvFlags">268</int>
+							<string key="NSFrame">{{82, 58}, {221, 22}}</string>
+							<reference key="NSSuperview" ref="121720810"/>
+							<bool key="NSEnabled">YES</bool>
+							<object class="NSTextFieldCell" key="NSCell" id="12794084">
+								<int key="NSCellFlags">-1804468671</int>
+								<int key="NSCellFlags2">272630784</int>
+								<string key="NSContents"/>
+								<reference key="NSSupport" ref="253375599"/>
+								<reference key="NSControlView" ref="6284724"/>
+								<bool key="NSDrawsBackground">YES</bool>
+								<reference key="NSBackgroundColor" ref="337706005"/>
+								<reference key="NSTextColor" ref="448732944"/>
+							</object>
+						</object>
 						<object class="NSTextField" id="701293602">
 							<reference key="NSNextResponder" ref="121720810"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{17, 90}, {60, 17}}</string>
+							<string key="NSFrame">{{17, 116}, {60, 17}}</string>
 							<reference key="NSSuperview" ref="121720810"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="165214624">
@@ -1058,7 +1089,7 @@
 						<object class="NSPopUpButton" id="141850290">
 							<reference key="NSNextResponder" ref="121720810"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{79, 84}, {280, 26}}</string>
+							<string key="NSFrame">{{79, 110}, {227, 26}}</string>
 							<reference key="NSSuperview" ref="121720810"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSPopUpButtonCell" key="NSCell" id="267103020">
@@ -1099,7 +1130,7 @@
 							</object>
 						</object>
 					</object>
-					<string key="NSFrameSize">{376, 128}</string>
+					<string key="NSFrameSize">{323, 154}</string>
 					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
@@ -1278,14 +1309,6 @@
 					<int key="connectionID">112</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">accountsButton</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="188651443"/>
-					</object>
-					<int key="connectionID">113</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">segmentedToolsButton:</string>
 						<reference key="source" ref="1001"/>
@@ -1383,11 +1406,35 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">accountsButton2</string>
+						<string key="label">newChatroomService</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="6284724"/>
+					</object>
+					<int key="connectionID">190</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">newChatroomAccountsButton</string>
 						<reference key="source" ref="1001"/>
 						<reference key="destination" ref="141850290"/>
 					</object>
-					<int key="connectionID">185</int>
+					<int key="connectionID">191</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">newContactAccountsButton</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="188651443"/>
+					</object>
+					<int key="connectionID">192</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">newChatroomAccountButton:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="141850290"/>
+					</object>
+					<int key="connectionID">193</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1990,6 +2037,8 @@
 							<reference ref="141850290"/>
 							<reference ref="458588709"/>
 							<reference ref="955376266"/>
+							<reference ref="1065095957"/>
+							<reference ref="6284724"/>
 							<reference ref="165129425"/>
 							<reference ref="522823194"/>
 						</object>
@@ -2097,6 +2146,34 @@
 						<reference key="object" ref="105280483"/>
 						<reference key="parent" ref="382528886"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">186</int>
+						<reference key="object" ref="1065095957"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="791467655"/>
+						</object>
+						<reference key="parent" ref="121720810"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">187</int>
+						<reference key="object" ref="6284724"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="12794084"/>
+						</object>
+						<reference key="parent" ref="121720810"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">188</int>
+						<reference key="object" ref="12794084"/>
+						<reference key="parent" ref="6284724"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">189</int>
+						<reference key="object" ref="791467655"/>
+						<reference key="parent" ref="1065095957"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -2135,6 +2212,10 @@
 					<string>178.IBEditorWindowLastContentRect</string>
 					<string>178.IBPluginDependency</string>
 					<string>179.IBPluginDependency</string>
+					<string>186.IBPluginDependency</string>
+					<string>187.IBPluginDependency</string>
+					<string>188.IBPluginDependency</string>
+					<string>189.IBPluginDependency</string>
 					<string>2.IBEditorWindowLastContentRect</string>
 					<string>2.IBPluginDependency</string>
 					<string>24.IBPluginDependency</string>
@@ -2228,9 +2309,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{295, 447}, {376, 128}}</string>
+					<string>{{295, 421}, {323, 154}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{295, 447}, {376, 128}}</string>
+					<string>{{295, 421}, {323, 154}}</string>
 					<reference ref="6"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2246,6 +2327,10 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{271, 605}, {280, 23}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{441, 417}, {109, 73}}</string>
@@ -2348,7 +2433,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">185</int>
+			<int key="maxID">193</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2519,6 +2604,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>cancleSheet:</string>
 							<string>mainMenuItemPressed:</string>
+							<string>newChatroomAccountButton:</string>
 							<string>okSheet:</string>
 							<string>removeContact:</string>
 							<string>segmentedToolsButton:</string>
@@ -2536,6 +2622,7 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
@@ -2543,14 +2630,15 @@
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>accountManager</string>
-							<string>accountsButton</string>
-							<string>accountsButton2</string>
 							<string>addContactWindow</string>
 							<string>contactImageToRemove</string>
 							<string>contactInfoController</string>
 							<string>jidToRemove</string>
 							<string>joinChatroomWindow</string>
+							<string>newChatroomAccountsButton</string>
 							<string>newChatroomName</string>
+							<string>newChatroomService</string>
+							<string>newContactAccountsButton</string>
 							<string>newContactJIDField</string>
 							<string>newContactNicknameField</string>
 							<string>nicknameToRemove</string>
@@ -2562,14 +2650,15 @@
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>JIMAccountManager</string>
-							<string>NSPopUpButton</string>
-							<string>NSPopUpButton</string>
 							<string>NSWindow</string>
 							<string>NSImageView</string>
 							<string>JIMContactInfoController</string>
 							<string>NSTextField</string>
 							<string>NSWindow</string>
+							<string>NSPopUpButton</string>
 							<string>NSTextField</string>
+							<string>NSTextField</string>
+							<string>NSPopUpButton</string>
 							<string>NSTextField</string>
 							<string>NSTextField</string>
 							<string>NSTextField</string>

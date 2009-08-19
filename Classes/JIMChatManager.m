@@ -227,9 +227,6 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 	{
 		XMPPRoom *room = [note object];
 		
-		NSLog(@"Opening chatroom");
-		NSLog(@"Room JID: %@", [[room jid] fullString]);
-		
 		JIMChatController *newChatController = [[JIMChatController alloc] initWithChatPartner:room message:nil];
 		[chatControllerArray addObject:newChatController];
 		[chatControllerTable reloadData];

@@ -20,6 +20,9 @@
 		if (![NSBundle loadNibNamed:@"JIMChatController" owner:self])
 			NSLog(@"Error loading Nib for document!");
 		
+		JIMSmallCell *buddieCell = [[[JIMSmallCell alloc] init] autorelease];
+		[[chatMembersTable tableColumnWithIdentifier:@"Name"] setDataCell:buddieCell];
+		
 		self.chatSession = [[[XMPPChatManager sharedManager] chatSessionsForChatPartner:aPartner] anyObject];
 		
 		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -128,8 +131,7 @@
 {
 	if(self.chatSession.isGroupChat)
 	{
-		XMPPRoom *room = (XMPPRoom *)self.chatSession.chatPartner;	// FIXME: Non-group chats have occupants too.
-		NSLog(@"Room has %i members", [room.occupants count]);
+		XMPPRoom *room = (XMPPRoom *)self.chatSession.chatPartner;	// FIXME: Non-group chats have occupants too
 		return [room.occupants count];
 	}
 	else
@@ -138,13 +140,26 @@
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)rowIndex
 {
-	if (self.chatSession.isGroupChat)
+	if([[tableColumn identifier] isEqualToString:@"Name"])
 	{
-		XMPPRoom *room = (XMPPRoom *)self.chatSession.chatPartner;
-		return [[room.occupants objectAtIndex:rowIndex] name];
+		JIMCell *itemCell = [[chatMembersTable tableColumnWithIdentifier:@"Name"] dataCell];
+		
+		if (self.chatSession.isGroupChat)
+		{
+			XMPPRoom *room = (XMPPRoom *)self.chatSession.chatPartner;
+			[itemCell setTitle:[[room.occupants objectAtIndex:rowIndex] name]];
+			[itemCell setImage:[NSImage imageNamed:@"NSUser"]];
+			[itemCell setEnabled:YES];
+			
+			return nil;
+		}
+		
+		[itemCell setTitle:@""];
+		[itemCell setImage:nil];
+		[itemCell setEnabled:NO];
 	}
 	
-	return @"";
+	return nil;
 }
 
 #pragma mark Chat Session Delegates

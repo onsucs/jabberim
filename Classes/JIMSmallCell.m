@@ -1,19 +1,28 @@
-#import "JIMOutlineCell.h"
+//
+//  JIMSmallCell.m
+//  JabberIM
+//
+//  Created by Roland Moers on 19.08.09.
+//  Copyright 2009 __MyCompanyName__. All rights reserved.
+//
 
-@implementation JIMOutlineCell
+#import "JIMSmallCell.h"
+
+@implementation JIMSmallCell
 
 - (void)drawInteriorWithFrame:(NSRect)theCellFrame inView:(NSView *)theControlView
 {
+	
 	// Inset the cell frame to give everything a little horizontal padding
-	NSRect		anInsetRect = theCellFrame;
+	NSRect		anInsetRect = NSInsetRect(theCellFrame,3,0);
 	
 	// Flip the icon because the entire cell has a flipped coordinate system
 	[image setFlipped:YES];
 	[statusImage setFlipped:YES];
 	
 	// get the size of the icons for layout
-	NSSize		imageSize = NSMakeSize(25, 25);
-	NSSize statusImageSize = NSMakeSize(12, 12);
+	NSSize		imageSize = NSMakeSize(15, 15);
+	NSSize statusImageSize = NSMakeSize(10, 10);
 	
 	// Make attributes for our strings
 	NSMutableParagraphStyle * aParagraphStyle = [[[NSMutableParagraphStyle alloc] init] autorelease];
@@ -21,19 +30,19 @@
 	
 	// Title attributes: system font, 14pt, black, truncate tail
 	NSMutableDictionary * aTitleAttributes = [[[NSMutableDictionary alloc] initWithObjectsAndKeys:
-											 [NSColor blackColor],NSForegroundColorAttributeName,
-											 [NSFont systemFontOfSize:13.0],NSFontAttributeName,
-											 aParagraphStyle, NSParagraphStyleAttributeName,
-											 nil] autorelease];
-											
+											   [NSColor blackColor],NSForegroundColorAttributeName,
+											   [NSFont systemFontOfSize:13.0],NSFontAttributeName,
+											   aParagraphStyle, NSParagraphStyleAttributeName,
+											   nil] autorelease];
+	
 	NSSize aTitleSize = [title sizeWithAttributes:aTitleAttributes];
 	
 	// subTitle attributes: system font, 14pt, black, truncate tail
 	NSMutableDictionary * aSubtitleAttributes = [[[NSMutableDictionary alloc] initWithObjectsAndKeys:
-											   [NSColor grayColor],NSForegroundColorAttributeName,
-											   [NSFont systemFontOfSize:9.0],NSFontAttributeName,
-											   aParagraphStyle, NSParagraphStyleAttributeName,
-											   nil] autorelease];
+												  [NSColor grayColor],NSForegroundColorAttributeName,
+												  [NSFont systemFontOfSize:9.0],NSFontAttributeName,
+												  aParagraphStyle, NSParagraphStyleAttributeName,
+												  nil] autorelease];
 	
 	NSSize aSubtitleSize = [title sizeWithAttributes:aTitleAttributes];
 	
@@ -43,7 +52,7 @@
 	float		aVerticalPadding = 5.0;
 	
 	// Horizontal padding between icon and text
-	float		aHorizontalPadding = 10.0;
+	float		aHorizontalPadding = 5.0;
 	
 	// Icon box: center the icon vertically inside of the inset rect
 	NSRect		anIconBox = NSMakeRect(anInsetRect.origin.x,
@@ -52,25 +61,27 @@
 									   imageSize.height);
 	
 	// Status Icon box: center the icon vertically inside of the inset rect
-	NSRect		anStatusIconBox = NSMakeRect(theCellFrame.size.width,
-									   anInsetRect.origin.y + anInsetRect.size.height*.5 - statusImageSize.height*.5,
-									   statusImageSize.width,
-									   statusImageSize.height);
+	NSRect		anStatusIconBox = NSMakeRect(theCellFrame.size.width - 15,
+											 anInsetRect.origin.y + anInsetRect.size.height*.5 - statusImageSize.height*.5,
+											 statusImageSize.width,
+											 statusImageSize.height);
 	
 	NSRect aTitleBox;
 	NSRect aSubtitleBox;
 	
 	if(subtitle)
 	{
-		if(image)
+		if(statusImage)
 		{
 			float		aCombinedHeight = aTitleSize.height + aVerticalPadding;
+			
 			aTitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
 								   anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight*.5 - 3,
 								   anInsetRect.size.width - imageSize.width*2 - aHorizontalPadding,
 								   aCombinedHeight);
 			
 			float		aCombinedHeight2 = aSubtitleSize.height + aVerticalPadding;
+			
 			aSubtitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
 									  anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight2*.5 + 13,
 									  anInsetRect.size.width - imageSize.width*2 - aHorizontalPadding,
@@ -79,23 +90,27 @@
 		else
 		{
 			float		aCombinedHeight = aTitleSize.height + aVerticalPadding;
-			aTitleBox = NSMakeRect(anIconBox.origin.x + aHorizontalPadding,
+			
+			aTitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
 								   anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight*.5 - 3,
-								   anInsetRect.size.width - imageSize.width*2 - aHorizontalPadding,
+								   anInsetRect.size.width - aHorizontalPadding - 5,
 								   aCombinedHeight);
 			
 			float		aCombinedHeight2 = aSubtitleSize.height + aVerticalPadding;
-			aSubtitleBox = NSMakeRect(anIconBox.origin.x + aHorizontalPadding,
+			
+			aSubtitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
 									  anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight2*.5 + 13,
-									  anInsetRect.size.width - imageSize.width*2 - aHorizontalPadding,
+									  anInsetRect.size.width - aHorizontalPadding - 5,
 									  aCombinedHeight2);
 		}
+		
 	}
 	else
 	{
-		if(image)
+		if(statusImage)
 		{
 			float		aCombinedHeight = aTitleSize.height + aVerticalPadding;
+			
 			aTitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
 								   anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight*.5 + 2,
 								   anInsetRect.size.width - imageSize.width*2 - aHorizontalPadding,
@@ -104,9 +119,10 @@
 		else
 		{
 			float		aCombinedHeight = aTitleSize.height + aVerticalPadding;
-			aTitleBox = NSMakeRect(anIconBox.origin.x + aHorizontalPadding,
+			
+			aTitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
 								   anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight*.5 + 2,
-								   anInsetRect.size.width - imageSize.width*2 - aHorizontalPadding,
+								   anInsetRect.size.width - aHorizontalPadding - 5,
 								   aCombinedHeight);
 		}
 	}
@@ -123,20 +139,20 @@
 			[aTitleAttributes setValue:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
 			[aSubtitleAttributes setValue:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
 		}
-	else
-	{
-		// if the cell is not highlighted, draw the title black or gray (if not enabled)
-		if(enabled)
-		{
-			[aTitleAttributes setValue:[NSColor blackColor] forKey:NSForegroundColorAttributeName];
-			[aSubtitleAttributes setValue:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
-		}
 		else
 		{
-			[aTitleAttributes setValue:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
-			[aSubtitleAttributes setValue:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
+			// if the cell is not highlighted, draw the title black or gray (if not enabled)
+			if(enabled)
+			{
+				[aTitleAttributes setValue:[NSColor blackColor] forKey:NSForegroundColorAttributeName];
+				[aSubtitleAttributes setValue:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
+			}
+			else
+			{
+				[aTitleAttributes setValue:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
+				[aSubtitleAttributes setValue:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
+			}
 		}
-	}
 	
 	
 	// Draw the image and title

@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="46"/>
+			<integer value="44"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -37,7 +37,7 @@
 			</object>
 			<object class="NSCustomView" id="540715957">
 				<reference key="NSNextResponder"/>
-				<int key="NSvFlags">268</int>
+				<int key="NSvFlags">274</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="NSSplitView" id="324985169">
@@ -47,7 +47,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="NSCustomView" id="242426148">
 								<reference key="NSNextResponder" ref="324985169"/>
-								<int key="NSvFlags">256</int>
+								<int key="NSvFlags">274</int>
 								<object class="NSMutableArray" key="NSSubviews">
 									<bool key="EncodedWithXMLCoder">YES</bool>
 									<object class="NSTextField" id="520986526">
@@ -581,7 +581,7 @@
 																<bytes key="NSWhite">MC41AA</bytes>
 															</object>
 														</object>
-														<double key="NSRowHeight">1.700000e+01</double>
+														<double key="NSRowHeight">2.000000e+01</double>
 														<int key="NSTvFlags">-700448768</int>
 														<int key="NSColumnAutoresizingStyle">4</int>
 														<int key="NSDraggingSourceMaskForLocal">15</int>
@@ -625,7 +625,7 @@
 										<reference key="NSVScroller" ref="667091887"/>
 										<reference key="NSHScroller" ref="522638529"/>
 										<reference key="NSContentView" ref="1045413713"/>
-										<bytes key="NSScrollAmts">QSAAAEEgAABBmAAAQZgAAA</bytes>
+										<bytes key="NSScrollAmts">QSAAAEEgAABBsAAAQbAAAA</bytes>
 									</object>
 								</object>
 								<string key="NSFrame">{{383, 0}, {102, 285}}</string>
@@ -1060,6 +1060,7 @@
 							<string>availableResources</string>
 							<string>chatMembersTable</string>
 							<string>chatSplitView</string>
+							<string>chatTextFieldSplitView</string>
 							<string>chatView</string>
 							<string>newMessageField</string>
 							<string>oldMessagesField</string>
@@ -1068,6 +1069,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSPopUpButton</string>
 							<string>NSTableView</string>
+							<string>NSSplitView</string>
 							<string>NSSplitView</string>
 							<string>NSView</string>
 							<string>NSTextField</string>
