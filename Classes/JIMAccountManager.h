@@ -9,11 +9,14 @@
 #import <Cocoa/Cocoa.h>
 #import <JIMAccount.h>
 #import <JIMCell.h>
+#import <JIMDiscoveryBrowser.h>
 
 extern NSString* const JIMAccountManagerDidAddNewAccountNotification;
 extern NSString* const JIMAccountManagerDidRemoveAccountNotification;
 
 @interface JIMAccountManager : NSObject {
+	IBOutlet JIMDiscoveryBrowser *discoveryBrowser;
+	
 	IBOutlet NSWindow *mainSettingsWindow;
 	IBOutlet NSWindow *newAccountSheet;
 	IBOutlet NSWindow *removeAccountSheet;
@@ -41,6 +44,7 @@ extern NSString* const JIMAccountManagerDidRemoveAccountNotification;
 
 - (IBAction)openNewAccountSheet:(id)sender;
 - (IBAction)openRemoveAccountSheet:(id)sender;
+- (IBAction)openDiscoveryBrowser:(id)sender;
 - (IBAction)setStatus:(id)sender;
 - (IBAction)okSheet:(id)sender;
 - (IBAction)cancleSheet:(id)sender;

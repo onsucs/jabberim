@@ -69,40 +69,60 @@
 	
 	if(subtitle)
 	{
-		// Make a box for our text
-		// Place it next to the icon with horizontal padding
-		// Size it horizontally to fill out the rest of the inset rect
-		// Center it vertically inside of the inset rect
-		float		aCombinedHeight = aTitleSize.height + aVerticalPadding;
+		if(statusImage)
+		{
+			float		aCombinedHeight = aTitleSize.height + aVerticalPadding;
+			
+			aTitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
+								   anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight*.5 - 3,
+								   anInsetRect.size.width - imageSize.width*2 - aHorizontalPadding,
+								   aCombinedHeight);
+			
+			float		aCombinedHeight2 = aSubtitleSize.height + aVerticalPadding;
+			
+			aSubtitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
+									  anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight2*.5 + 13,
+									  anInsetRect.size.width - imageSize.width*2 - aHorizontalPadding,
+									  aCombinedHeight2);
+		}
+		else
+		{
+			float		aCombinedHeight = aTitleSize.height + aVerticalPadding;
+			
+			aTitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
+								   anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight*.5 - 3,
+								   anInsetRect.size.width - aHorizontalPadding - 5,
+								   aCombinedHeight);
+			
+			float		aCombinedHeight2 = aSubtitleSize.height + aVerticalPadding;
+			
+			aSubtitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
+									  anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight2*.5 + 13,
+									  anInsetRect.size.width - aHorizontalPadding - 5,
+									  aCombinedHeight2);
+		}
 		
-		aTitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
-							   anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight*.5 - 3,
-							   anInsetRect.size.width - imageSize.width*2 - aHorizontalPadding,
-							   aCombinedHeight);
-		
-		// Make a box for our subtext
-		// Place it next to the icon with horizontal padding
-		// Size it horizontally to fill out the rest of the inset rect
-		// Center it vertically inside of the inset rect
-		float		aCombinedHeight2 = aSubtitleSize.height + aVerticalPadding;
-		
-		aSubtitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
-								  anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight2*.5 + 13,
-								  anInsetRect.size.width - imageSize.width*2 - aHorizontalPadding,
-								  aCombinedHeight2);
 	}
 	else
 	{
-		// Make a box for our text
-		// Place it next to the icon with horizontal padding
-		// Size it horizontally to fill out the rest of the inset rect
-		// Center it vertically inside of the inset rect
-		float		aCombinedHeight = aTitleSize.height + aVerticalPadding;
-		
-		aTitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
-							   anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight*.5 + 2,
-							   anInsetRect.size.width - imageSize.width*2 - aHorizontalPadding,
-							   aCombinedHeight);
+		if(statusImage)
+		{
+			float		aCombinedHeight = aTitleSize.height + aVerticalPadding;
+			
+			aTitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
+								   anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight*.5 + 2,
+								   anInsetRect.size.width - imageSize.width*2 - aHorizontalPadding,
+								   aCombinedHeight);
+		}
+		else
+		{
+			float		aCombinedHeight = aTitleSize.height + aVerticalPadding;
+			
+			aTitleBox = NSMakeRect(anIconBox.origin.x + anIconBox.size.width + aHorizontalPadding,
+								   anInsetRect.origin.y + anInsetRect.size.height*.5 - aCombinedHeight*.5 + 2,
+								   anInsetRect.size.width - aHorizontalPadding - 5,
+								   aCombinedHeight);
+		}
 	}
 	
 	if([self isHighlighted])

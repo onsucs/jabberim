@@ -10,26 +10,29 @@
 #import <XMPP/XMPP.h>
 
 @interface JIMChatController : NSObject {
-	//IBOutlet NSView *chatView;
+	IBOutlet NSView *chatView;
+	IBOutlet NSSplitView *chatSplitView;
+	IBOutlet NSSplitView *chatTextFieldSplitView;
+	
 	IBOutlet NSTextView *oldMessagesField;
 	IBOutlet NSTextField *newMessageField;
 	IBOutlet NSPopUpButton *availableResources;
-	IBOutlet NSView *chatView;
 	
-	XMPPUser *xmppUser;
+	IBOutlet NSTableView *chatMembersTable;
+	
 	XMPPChatSession *chatSession;
 }
 
-@property (retain) XMPPUser *xmppUser;
-@property (readonly) XMPPChatSession *chatSession;
 @property (readonly) NSView *chatView;
+@property (readwrite, retain) XMPPChatSession *chatSession;
 
-- (id)initWithUser:(XMPPUser *)user message:(XMPPChatMessage *)aMessage;
+- (id)initWithChatPartner:(id<XMPPChatPartner>)aPartner message:(XMPPChatMessage *)aMessage;
 
 - (IBAction)setResource:(id)sender;
 - (IBAction)performSendMessage:(id)sender;
 
 - (void)scrollToBottom;
 - (void)appendMessage:(NSAttributedString *)messageStr alignment:(NSTextAlignment)alignment;
+- (void)observeRoom;
 
 @end

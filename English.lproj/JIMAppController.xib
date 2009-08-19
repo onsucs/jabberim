@@ -8,7 +8,6 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="371"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1165,10 +1164,13 @@
 			<object class="NSCustomObject" id="43075230">
 				<string key="NSClassName">JIMSubscriptionManager</string>
 			</object>
+			<object class="NSCustomObject" id="1026614511">
+				<string key="NSClassName">JIMDiscoveryBrowser</string>
+			</object>
 			<object class="NSWindowTemplate" id="972006081">
 				<int key="NSWindowStyleMask">7</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{335, 462}, {522, 288}}</string>
+				<string key="NSWindowRect">{{469, 455}, {522, 288}}</string>
 				<int key="NSWTFlags">1946157056</int>
 				<string key="NSWindowTitle">Settings</string>
 				<string key="NSWindowClass">NSWindow</string>
@@ -1344,7 +1346,7 @@
 				</object>
 				<string key="NSWindowContentMaxSize">{3.40282e+38, 3.40282e+38}</string>
 				<object class="NSView" key="NSWindowView" id="439893737">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1357,7 +1359,6 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{522, 288}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
@@ -2370,6 +2371,24 @@ cmVhZHkgZXhpc3QuA</string>
 						<reference key="NSOnImage" ref="35465992"/>
 						<reference key="NSMixedImage" ref="502551668"/>
 					</object>
+					<object class="NSMenuItem" id="191161716">
+						<reference key="NSMenu" ref="675995277"/>
+						<string key="NSTitle">Discovery Browser</string>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="35465992"/>
+						<reference key="NSMixedImage" ref="502551668"/>
+					</object>
+					<object class="NSMenuItem" id="779482125">
+						<reference key="NSMenu" ref="675995277"/>
+						<bool key="NSIsDisabled">YES</bool>
+						<bool key="NSIsSeparator">YES</bool>
+						<string key="NSTitle"/>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="35465992"/>
+						<reference key="NSMixedImage" ref="502551668"/>
+					</object>
 					<object class="NSMenuItem" id="683049727">
 						<reference key="NSMenu" ref="675995277"/>
 						<string key="NSTitle">Remove</string>
@@ -3371,6 +3390,22 @@ cmVhZHkgZXhpc3QuA</string>
 						<reference key="destination" ref="659945368"/>
 					</object>
 					<int key="connectionID">1115</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">discoveryBrowser</string>
+						<reference key="source" ref="474898797"/>
+						<reference key="destination" ref="1026614511"/>
+					</object>
+					<int key="connectionID">1117</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openDiscoveryBrowser:</string>
+						<reference key="source" ref="474898797"/>
+						<reference key="destination" ref="191161716"/>
+					</object>
+					<int key="connectionID">1120</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -4707,6 +4742,8 @@ cmVhZHkgZXhpc3QuA</string>
 							<reference ref="683049727"/>
 							<reference ref="138727657"/>
 							<reference ref="716584946"/>
+							<reference ref="191161716"/>
+							<reference ref="779482125"/>
 						</object>
 						<reference key="parent" ref="1049"/>
 						<string key="objectName">JIMAccountRightClickMenu</string>
@@ -5100,6 +5137,22 @@ cmVhZHkgZXhpc3QuA</string>
 						<reference key="object" ref="61776101"/>
 						<reference key="parent" ref="439893737"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1116</int>
+						<reference key="object" ref="1026614511"/>
+						<reference key="parent" ref="1049"/>
+						<string key="objectName">JIMDiscoveryBrowser</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1118</int>
+						<reference key="object" ref="191161716"/>
+						<reference key="parent" ref="675995277"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1119</int>
+						<reference key="object" ref="779482125"/>
+						<reference key="parent" ref="675995277"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -5171,6 +5224,9 @@ cmVhZHkgZXhpc3QuA</string>
 					<string>111.IBPluginDependency</string>
 					<string>111.ImportedFromIB2</string>
 					<string>1110.IBPluginDependency</string>
+					<string>1116.IBPluginDependency</string>
+					<string>1118.IBPluginDependency</string>
+					<string>1119.IBPluginDependency</string>
 					<string>112.IBPluginDependency</string>
 					<string>112.ImportedFromIB2</string>
 					<string>124.IBPluginDependency</string>
@@ -5487,7 +5543,7 @@ cmVhZHkgZXhpc3QuA</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{568, 354}, {109, 73}}</string>
+					<string>{{568, 324}, {179, 103}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5538,6 +5594,9 @@ cmVhZHkgZXhpc3QuA</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
@@ -5861,7 +5920,7 @@ cmVhZHkgZXhpc3QuA</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1115</int>
+			<int key="maxID">1120</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5877,12 +5936,14 @@ cmVhZHkgZXhpc3QuA</string>
 							<string>editAccount:</string>
 							<string>jabberIDEntered:</string>
 							<string>okSheet:</string>
+							<string>openDiscoveryBrowser:</string>
 							<string>openNewAccountSheet:</string>
 							<string>openRemoveAccountSheet:</string>
 							<string>setStatus:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -5897,6 +5958,7 @@ cmVhZHkgZXhpc3QuA</string>
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>accountTable</string>
+							<string>discoveryBrowser</string>
 							<string>mainSettingsWindow</string>
 							<string>newAccountAllowHostMismatch</string>
 							<string>newAccountAllowSelfSignedCerts</string>
@@ -5917,6 +5979,7 @@ cmVhZHkgZXhpc3QuA</string>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSTableView</string>
+							<string>JIMDiscoveryBrowser</string>
 							<string>NSWindow</string>
 							<string>NSButton</string>
 							<string>NSButton</string>
@@ -6044,6 +6107,31 @@ cmVhZHkgZXhpc3QuA</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/JIMContactInfoController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">JIMDiscoveryBrowser</string>
+					<string key="superclassName">NSWindowController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">setServer:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>discoveryBrowser</string>
+							<string>serverField</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSBrowser</string>
+							<string>NSTextField</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/JIMDiscoveryBrowser.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

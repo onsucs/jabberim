@@ -12,11 +12,8 @@
 
 - (id)init
 {
-	if((self = [super init]))
+	if((self = [super initWithWindowNibName:@"JIMRosterManager"]))
 	{
-		if (![NSBundle loadNibNamed:@"JIMRosterManager" owner:self])
-			NSLog(@"Error loading Nib for document!");
-		
 		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 		[nc addObserver:self selector:@selector(rosterDidAddUsers:) name:XMPPRosterDidAddUsersNotification object:nil];
 		[nc addObserver:self selector:@selector(rosterDidRemoveUsers:) name:XMPPRosterDidRemoveUsersNotification object:nil];
@@ -145,7 +142,12 @@
 		[self startChat:self];
 	}
 	else if([sender selectedSegment] == 2)
-	{}
+	{
+		[NSApp beginSheet:joinChatroomWindow modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(joinChatroomSheetDidEnd: returnCode: contextInfo:) contextInfo:nil];
+		[NSApp runModalForWindow:joinChatroomWindow];
+		[NSApp endSheet:joinChatroomWindow];
+		[joinChatroomWindow orderOut:self];
+	}
 }
 
 - (IBAction)mainMenuItemPressed:(id)sender
@@ -168,8 +170,6 @@
 {
 	if([rosterTable selectedRow] > -1 && [rosterTable levelForRow:[rosterTable selectedRow]] > 0)
 	{
-		
-		
 		[jidToRemove setStringValue:[[[rosterTable itemAtRow:[rosterTable selectedRow]] jid] fullString]];
 		[nicknameToRemove setStringValue:[[rosterTable itemAtRow:[rosterTable selectedRow]] displayName]];
 		[contactImageToRemove setImage:[[rosterTable itemAtRow:[rosterTable selectedRow]] image]];
@@ -203,12 +203,14 @@
 {
 	[NSApp endSheet:addContactWindow returnCode:NSOKButton];
 	[NSApp endSheet:removeContactWindow returnCode:NSOKButton];
+	[NSApp endSheet:joinChatroomWindow returnCode:NSOKButton];
 }
 
 - (IBAction)cancleSheet:(id)sender
 {
 	[NSApp endSheet:addContactWindow returnCode:NSCancelButton];
 	[NSApp endSheet:removeContactWindow returnCode:NSCancelButton];
+	[NSApp endSheet:joinChatroomWindow returnCode:NSCancelButton];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -340,8 +342,7 @@
 	if(returnCode == NSOKButton)
 	{
 		XMPPService *serviceForAdding;
-		JIMAccount *oneAccount;
-		for(oneAccount in accountManager.accounts)
+		for(JIMAccount *oneAccount in accountManager.accounts)
 			if([[oneAccount.xmppService.myJID bareString] isEqualToString:[accountsButton titleOfSelectedItem]])
 				serviceForAdding = oneAccount.xmppService;
 		
@@ -367,6 +368,33 @@
 	}
 }
 
+- (void)joinChatroomSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	[NSApp stopModal];
+	
+	if(returnCode == NSOKButton)
+	{
+		if(![[newChatroomName stringValue] isEqualToString:@""])
+		{
+			XMPPService *serviceForJoining;
+			for(JIMAccount *oneAccount in accountManager.accounts)
+				if([[oneAccount.xmppService.myJID bareString] isEqualToString:[accountsButton titleOfSelectedItem]])
+					serviceForJoining = oneAccount.xmppService;
+			
+			if(serviceForJoining)
+			{
+				XMPPRoom *chatroom = [XMPPRoom roomWithJID:[XMPPJID jidWithString:[newChatroomName stringValue]] service:serviceForJoining];
+				[chatroom enter];
+				[[NSNotificationCenter defaultCenter] postNotificationName:JIMChatManagerCreateNewChat object:chatroom];
+			}
+			else
+				NSBeep();
+		}
+		else
+			NSBeep();
+	}
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPAccountManager/XMPPAccount Delegate Methods:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -374,31 +402,43 @@
 - (void)accountManagerDidAddAccount:(NSNotification *)note
 {
 	[accountsButton removeAllItems];
+	[accountsButton2 removeAllItems];
 	
 	JIMAccount *oneAccount;
 	for(oneAccount in accountManager.accounts)
 		if([oneAccount.xmppService isAuthenticated])
+		{
 			[accountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+			[accountsButton2 addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+		}
 }
 
 - (void)accountManagerDidRemoveAccount:(NSNotification *)note
 {
 	[accountsButton removeAllItems];
+	[accountsButton2 removeAllItems];
 	
 	JIMAccount *oneAccount;
 	for(oneAccount in accountManager.accounts)
 		if([oneAccount.xmppService isAuthenticated])
+		{
 			[accountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+			[accountsButton2 addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+		}
 }
 
 - (void)accountDidConnect:(NSNotification *)note
 {
 	[accountsButton removeAllItems];
+	[accountsButton2 removeAllItems];
 	
 	JIMAccount *oneAccount;
 	for(oneAccount in accountManager.accounts)
 		if([oneAccount.xmppService isAuthenticated])
+		{
 			[accountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+			[accountsButton2 addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+		}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

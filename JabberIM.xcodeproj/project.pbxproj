@@ -128,6 +128,8 @@
 		CA137D0A1035CF4200725A9F /* invisible.png in Resources */ = {isa = PBXBuildFile; fileRef = CA451A531032FB7700ED538D /* invisible.png */; };
 		CA137D0B1035CF4200725A9F /* offline.png in Resources */ = {isa = PBXBuildFile; fileRef = CA451A521032FB7700ED538D /* offline.png */; };
 		CA137D0C1035CF4200725A9F /* unknown.png in Resources */ = {isa = PBXBuildFile; fileRef = CA451A4F1032FB7700ED538D /* unknown.png */; };
+		CA23154C103AF0B30081F2A6 /* JIMDiscoveryBrowser.xib in Resources */ = {isa = PBXBuildFile; fileRef = CA23154B103AF0B30081F2A6 /* JIMDiscoveryBrowser.xib */; };
+		CA231550103AF4580081F2A6 /* JIMDiscoveryBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = CA23154F103AF4580081F2A6 /* JIMDiscoveryBrowser.m */; };
 		CA4518131032AA5F00ED538D /* Jabber Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = CA3BDB171031658700184C2E /* Jabber Icon.png */; };
 		CA4B40261036D299009C57C7 /* JIMAccountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CA4B40251036D299009C57C7 /* JIMAccountManager.m */; };
 		CA4B40291036D316009C57C7 /* JIMAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = CA4B40281036D316009C57C7 /* JIMAccount.m */; };
@@ -296,6 +298,9 @@
 		CA137A0210359C9E00725A9F /* LibIDN.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibIDN.m; sourceTree = "<group>"; };
 		CA137A0310359C9E00725A9F /* idn-int.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "idn-int.h"; sourceTree = "<group>"; };
 		CA137A0410359C9E00725A9F /* stringprep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringprep.h; sourceTree = "<group>"; };
+		CA23153E103AF0A90081F2A6 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/JIMDiscoveryBrowser.xib; sourceTree = "<group>"; };
+		CA23154E103AF4580081F2A6 /* JIMDiscoveryBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIMDiscoveryBrowser.h; sourceTree = "<group>"; };
+		CA23154F103AF4580081F2A6 /* JIMDiscoveryBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIMDiscoveryBrowser.m; sourceTree = "<group>"; };
 		CA3BDB171031658700184C2E /* Jabber Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Jabber Icon.png"; sourceTree = "<group>"; };
 		CA451A4F1032FB7700ED538D /* unknown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unknown.png; sourceTree = "<group>"; };
 		CA451A511032FB7700ED538D /* typing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = typing.png; sourceTree = "<group>"; };
@@ -387,6 +392,8 @@
 				CAD2015D1030A32500F355F0 /* JIMContactInfoController.m */,
 				CABD73EB1036EE7C005E7B80 /* JIMSubscriptionManager.h */,
 				CABD73EC1036EE7C005E7B80 /* JIMSubscriptionManager.m */,
+				CA23154E103AF4580081F2A6 /* JIMDiscoveryBrowser.h */,
+				CA23154F103AF4580081F2A6 /* JIMDiscoveryBrowser.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -456,6 +463,7 @@
 				CAD201621030A36700F355F0 /* JIMChatController.xib */,
 				CAD201661030A36700F355F0 /* JIMContactInfoController.xib */,
 				CABD740D1036EE9D005E7B80 /* JIMSubscriptionManager.xib */,
+				CA23154B103AF0B30081F2A6 /* JIMDiscoveryBrowser.xib */,
 				CA3BDB171031658700184C2E /* Jabber Icon.png */,
 			);
 			name = Resources;
@@ -933,6 +941,7 @@
 				CABD740F1036EE9D005E7B80 /* JIMSubscriptionManager.xib in Resources */,
 				CABCC3521037500C00CD97EC /* Jabber Icon.png in Resources */,
 				CA7D1F7310383A6F007012CD /* JIMRosterManager.xib in Resources */,
+				CA23154C103AF0B30081F2A6 /* JIMDiscoveryBrowser.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -963,6 +972,7 @@
 				CABD73ED1036EE7C005E7B80 /* JIMSubscriptionManager.m in Sources */,
 				CA7D1F6E10383929007012CD /* JIMRosterManager.m in Sources */,
 				CA4BF3FE10396C300020BD9A /* JIMOutlineCell.m in Sources */,
+				CA231550103AF4580081F2A6 /* JIMDiscoveryBrowser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1041,6 +1051,14 @@
 				089C165DFE840E0CC02AAC07 /* English */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		CA23154B103AF0B30081F2A6 /* JIMDiscoveryBrowser.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CA23153E103AF0A90081F2A6 /* English */,
+			);
+			name = JIMDiscoveryBrowser.xib;
 			sourceTree = "<group>";
 		};
 		CA7D1F7210383A6F007012CD /* JIMRosterManager.xib */ = {

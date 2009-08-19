@@ -10,43 +10,40 @@
 
 @implementation JIMChatController
 
-@synthesize xmppUser;
-@synthesize chatSession;
 @synthesize chatView;
+@synthesize chatSession;
 
-- (id)initWithUser:(XMPPUser *)user message:(XMPPChatMessage *)aMessage
+- (id)initWithChatPartner:(id<XMPPChatPartner>)aPartner message:(XMPPChatMessage *)aMessage
 {
 	if((self = [super init]))
 	{
 		if (![NSBundle loadNibNamed:@"JIMChatController" owner:self])
 			NSLog(@"Error loading Nib for document!");
 		
-		self.xmppUser = user;
-		
-		[oldMessagesField setString:@""];
-		NSAttributedString *as = [[[NSAttributedString alloc] initWithString:@"Chatting with resource: Highest Priority" attributes:nil] autorelease];
-		[self appendMessage:as alignment:NSCenterTextAlignment];
-		
-		chatSession = [[[[XMPPChatManager sharedManager] chatSessionsForChatPartner:user] anyObject] retain];
+		self.chatSession = [[[XMPPChatManager sharedManager] chatSessionsForChatPartner:aPartner] anyObject];
 		
 		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 		[nc addObserver:self selector:@selector(chatDidSendMessage:) name:XMPPChatSessionDidSendMessageNotification object:self.chatSession];
 		[nc addObserver:self selector:@selector(chatDidReceiveMessage:) name:XMPPChatSessionDidReceiveMessageNotification object:self.chatSession];
-		[nc addObserver:self selector:@selector(userDidChange:) name:XMPPUserDidChangePresenceNotification object:user];
-		
 		if ([self.chatSession isGroupChat])
 		{
-			//[self observeRoom];
+			[self observeRoom];
 		}
 		else
 		{
 			[nc addObserver:self selector:@selector(chatDidBecomeGroupChat:) name:XMPPChatSessionDidBecomeGroupChatNotification object:nil];
-			[nc addObserver:self selector:@selector(userDidChangeChatState:) name:XMPPUserDidChangeChatStateNotification object:user];
+			[nc addObserver:self selector:@selector(userDidChangeChatState:) name:XMPPUserDidChangeChatStateNotification object:aPartner];
+			[nc addObserver:self selector:@selector(userDidChange:) name:XMPPUserDidChangePresenceNotification object:aPartner];
+			
+			for(XMPPResource *aResource in [(XMPPUser *)aPartner sortedResources])
+				[availableResources addItemWithTitle:[[aResource jid] fullString]];
+			
+			[chatSplitView setPosition:[chatSplitView maxPossiblePositionOfDividerAtIndex:0] ofDividerAtIndex:0];
 		}
 		
-		XMPPResource *aResource;
-		for(aResource in [user sortedResources])
-			[availableResources addItemWithTitle:[[aResource jid] fullString]];
+		[oldMessagesField setString:@""];
+		NSAttributedString *as = [[[NSAttributedString alloc] initWithString:@"Chatting with resource: Highest Priority" attributes:nil] autorelease];
+		[self appendMessage:as alignment:NSCenterTextAlignment];
 		
 		if(aMessage)
 			[self appendMessage:[aMessage attributedBody] alignment:NSLeftTextAlignment];
@@ -60,7 +57,6 @@
 	
 	[chatSession leave];
 	[chatSession release];
-	[xmppUser release];
 	
 	[super dealloc];
 }
@@ -116,8 +112,42 @@
 	[[scrollView documentView] scrollPoint:newScrollOrigin];
 }
 
-#pragma mark Delegates
+- (void)observeRoom
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self selector:@selector(roomDidAddOccupant:) name:XMPPRoomDidAddOccupantNotification object:self.chatSession.chatPartner];
+	[nc addObserver:self selector:@selector(roomDidRemoveOccupant:) name:XMPPRoomDidRemoveOccupantNotification object:self.chatSession.chatPartner];
+	[nc removeObserver:self name:XMPPUserDidChangePresenceNotification object:nil];
+	[nc removeObserver:self name:XMPPUserDidChangeNameNotification object:nil];
+	
+	[chatMembersTable reloadData];
+}
 
+#pragma mark Chat Members Table:
+- (int)numberOfRowsInTableView:(NSTableView *)tableView
+{
+	if(self.chatSession.isGroupChat)
+	{
+		XMPPRoom *room = (XMPPRoom *)self.chatSession.chatPartner;	// FIXME: Non-group chats have occupants too.
+		NSLog(@"Room has %i members", [room.occupants count]);
+		return [room.occupants count];
+	}
+	else
+		return 0;
+}
+
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)rowIndex
+{
+	if (self.chatSession.isGroupChat)
+	{
+		XMPPRoom *room = (XMPPRoom *)self.chatSession.chatPartner;
+		return [[room.occupants objectAtIndex:rowIndex] name];
+	}
+	
+	return @"";
+}
+
+#pragma mark Chat Session Delegates
 - (void)chatDidSendMessage:(NSNotification *)note
 {
 	XMPPChatMessage *message = (XMPPChatMessage *)[note chatMessage];
@@ -140,12 +170,19 @@
 	[newMessageSound release];
 }
 
+- (void)chatDidBecomeGroupChat:(NSNotification *)note
+{
+	[chatSplitView setPosition:380 ofDividerAtIndex:0];
+	
+	[self observeRoom];
+}
+
 - (void)userDidChange:(NSNotification *)note
 {
 	NSString *selectedItem = [availableResources titleOfSelectedItem];
+	XMPPUser *user = [note object];
 	
-	XMPPResource *aResource;
-	for(aResource in [xmppUser sortedResources])
+	for(XMPPResource *aResource in [user sortedResources])
 		[availableResources addItemWithTitle:[[aResource jid] fullString]];
 	
 	if([availableResources itemWithTitle:selectedItem])
@@ -177,6 +214,16 @@
 		NSAttributedString *as = [[[NSAttributedString alloc] initWithString:chatStateString attributes:nil] autorelease];
 		[self appendMessage:as alignment:NSCenterTextAlignment];
 	}
+}
+
+- (void)roomDidAddOccupant:(NSNotification *)note
+{
+	[chatMembersTable reloadData];
+}
+
+- (void)roomDidRemoveOccupant:(NSNotification *)note
+{
+	[chatMembersTable reloadData];
 }
 
 @end

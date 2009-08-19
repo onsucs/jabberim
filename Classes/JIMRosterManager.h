@@ -16,6 +16,7 @@
 @interface JIMRosterManager : NSWindowController {
 	IBOutlet NSWindow *addContactWindow;
 	IBOutlet NSWindow *removeContactWindow;
+	IBOutlet NSWindow *joinChatroomWindow;
 	
 	IBOutlet NSTextField *newContactJIDField;
 	IBOutlet NSTextField *newContactNicknameField;
@@ -24,6 +25,9 @@
 	IBOutlet NSTextField *jidToRemove;
 	IBOutlet NSTextField *nicknameToRemove;
 	IBOutlet NSImageView *contactImageToRemove;
+	
+	IBOutlet NSPopUpButton *accountsButton2;
+	IBOutlet NSTextField *newChatroomName;
 	
 	IBOutlet NSOutlineView *rosterTable;
 	IBOutlet NSPopUpButton *statusButton;
@@ -34,6 +38,8 @@
 	
 	NSMutableArray *buddies;
 	NSMutableArray *buddieGroups;
+	
+	NSMutableArray *chatrooms;
 }
 
 - (IBAction)setStatus:(id)sender;

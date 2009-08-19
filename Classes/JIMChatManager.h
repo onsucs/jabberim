@@ -18,6 +18,10 @@ extern NSString* const JIMChatManagerCreateNewChat;
 	IBOutlet NSTableView *chatControllerTable;
 	IBOutlet NSView *chatControllerView;
 	
+	IBOutlet NSWindow *inviteUserWindow;
+	IBOutlet NSTextField *inviteUserJID;
+	IBOutlet NSTextField *inviteUserReason;
+	
 	NSMutableArray *chatControllerArray;
 	NSView *selectedChatView;
 }
@@ -25,5 +29,9 @@ extern NSString* const JIMChatManagerCreateNewChat;
 @property (retain) NSView *selectedChatView;
 
 - (IBAction)stopChat:(id)sender;
+- (IBAction)performInvite:(id)sender;
+
+- (IBAction)cancleSheet:(id)sender;
+- (IBAction)okSheet:(id)sender;
 
 @end
