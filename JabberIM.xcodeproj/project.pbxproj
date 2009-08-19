@@ -135,6 +135,7 @@
 		CA4B40291036D316009C57C7 /* JIMAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = CA4B40281036D316009C57C7 /* JIMAccount.m */; };
 		CA4BF3FE10396C300020BD9A /* JIMOutlineCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CA4BF3FD10396C300020BD9A /* JIMOutlineCell.m */; };
 		CA51D95A1031634D009BEC7F /* JIMCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CA51D9591031634D009BEC7F /* JIMCell.m */; };
+		CA5561D1103C949000142FD4 /* JIMChatManagerTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA5561D0103C949000142FD4 /* JIMChatManagerTableView.m */; };
 		CA7D1F6E10383929007012CD /* JIMRosterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CA7D1F6D10383929007012CD /* JIMRosterManager.m */; };
 		CA7D1F7310383A6F007012CD /* JIMRosterManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = CA7D1F7210383A6F007012CD /* JIMRosterManager.xib */; };
 		CA95D80A103C57620012C828 /* JIMSmallCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CA95D809103C57620012C828 /* JIMSmallCell.m */; };
@@ -321,6 +322,8 @@
 		CA4BF3FD10396C300020BD9A /* JIMOutlineCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIMOutlineCell.m; sourceTree = "<group>"; };
 		CA51D9581031634D009BEC7F /* JIMCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIMCell.h; sourceTree = "<group>"; };
 		CA51D9591031634D009BEC7F /* JIMCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIMCell.m; sourceTree = "<group>"; };
+		CA5561CF103C949000142FD4 /* JIMChatManagerTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIMChatManagerTableView.h; sourceTree = "<group>"; };
+		CA5561D0103C949000142FD4 /* JIMChatManagerTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIMChatManagerTableView.m; sourceTree = "<group>"; };
 		CA7D1F6C10383929007012CD /* JIMRosterManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIMRosterManager.h; sourceTree = "<group>"; };
 		CA7D1F6D10383929007012CD /* JIMRosterManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIMRosterManager.m; sourceTree = "<group>"; };
 		CA7D1F7010383A6A007012CD /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/JIMRosterManager.xib; sourceTree = "<group>"; };
@@ -784,6 +787,8 @@
 				CA95D809103C57620012C828 /* JIMSmallCell.m */,
 				CA4BF3FC10396C300020BD9A /* JIMOutlineCell.h */,
 				CA4BF3FD10396C300020BD9A /* JIMOutlineCell.m */,
+				CA5561CF103C949000142FD4 /* JIMChatManagerTableView.h */,
+				CA5561D0103C949000142FD4 /* JIMChatManagerTableView.m */,
 			);
 			name = Subclasses;
 			sourceTree = "<group>";
@@ -979,6 +984,7 @@
 				CA4BF3FE10396C300020BD9A /* JIMOutlineCell.m in Sources */,
 				CA231550103AF4580081F2A6 /* JIMDiscoveryBrowser.m in Sources */,
 				CA95D80A103C57620012C828 /* JIMSmallCell.m in Sources */,
+				CA5561D1103C949000142FD4 /* JIMChatManagerTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

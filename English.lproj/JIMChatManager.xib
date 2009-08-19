@@ -8,7 +8,7 @@
 		<string key="IBDocument.HIToolboxVersion">353.00</string>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="1"/>
+			<integer value="18"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -499,14 +499,6 @@
 					<int key="connectionID">28</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">menu</string>
-						<reference key="source" ref="533234010"/>
-						<reference key="destination" ref="558772770"/>
-					</object>
-					<int key="connectionID">60</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">stopChat:</string>
 						<reference key="source" ref="1001"/>
@@ -561,6 +553,14 @@
 						<reference key="destination" ref="896109766"/>
 					</object>
 					<int key="connectionID">84</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">chatOptionsMenu</string>
+						<reference key="source" ref="111479770"/>
+						<reference key="destination" ref="558772770"/>
+					</object>
+					<int key="connectionID">85</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -849,6 +849,7 @@
 					<string>56.IBPluginDependency</string>
 					<string>57.IBPluginDependency</string>
 					<string>59.IBPluginDependency</string>
+					<string>6.CustomClassName</string>
 					<string>6.IBPluginDependency</string>
 					<string>61.IBPluginDependency</string>
 					<string>63.IBEditorWindowLastContentRect</string>
@@ -892,6 +893,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>JIMChatManagerTableView</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{38, 500}, {363, 188}}</string>
@@ -934,7 +936,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">84</int>
+			<int key="maxID">85</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -948,11 +950,13 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>cancleSheet:</string>
 							<string>okSheet:</string>
+							<string>openMenuForButton:</string>
 							<string>performInvite:</string>
 							<string>stopChat:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -991,6 +995,18 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
 						<string key="minorKey"/>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">JIMChatManagerTableView</string>
+					<string key="superclassName">NSTableView</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">chatOptionsMenu</string>
+						<string key="NS.object.0">NSMenu</string>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/JIMChatManagerTableView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
