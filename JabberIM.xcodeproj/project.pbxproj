@@ -156,7 +156,8 @@
 		CAD201F41030A41500F355F0 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD201F21030A41500F355F0 /* libcrypto.dylib */; };
 		CAD201F51030A41500F355F0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD201F31030A41500F355F0 /* libxml2.dylib */; };
 		CAD201F71030A41E00F355F0 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD201F61030A41E00F355F0 /* libidn.a */; };
-		CAD202411030AC1B00F355F0 /* JIMTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = CAD202401030AC1B00F355F0 /* JIMTableView.m */; };
+		CAE86BBF103C9DC70028E8AB /* JIMInvitationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CAE86BBE103C9DC70028E8AB /* JIMInvitationManager.m */; };
+		CAE86BEA103CA07D0028E8AB /* JIMInvitationManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = CAE86BE9103CA07D0028E8AB /* JIMInvitationManager.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -350,8 +351,9 @@
 		CAD201F21030A41500F355F0 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = /usr/lib/libcrypto.dylib; sourceTree = "<absolute>"; };
 		CAD201F31030A41500F355F0 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		CAD201F61030A41E00F355F0 /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libidn.a; sourceTree = "<group>"; };
-		CAD2023F1030AC1B00F355F0 /* JIMTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIMTableView.h; sourceTree = "<group>"; };
-		CAD202401030AC1B00F355F0 /* JIMTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIMTableView.m; sourceTree = "<group>"; };
+		CAE86BBD103C9DC70028E8AB /* JIMInvitationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIMInvitationManager.h; sourceTree = "<group>"; };
+		CAE86BBE103C9DC70028E8AB /* JIMInvitationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIMInvitationManager.m; sourceTree = "<group>"; };
+		CAE86BE7103CA0760028E8AB /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/JIMInvitationManager.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -398,6 +400,8 @@
 				CAD2015D1030A32500F355F0 /* JIMContactInfoController.m */,
 				CABD73EB1036EE7C005E7B80 /* JIMSubscriptionManager.h */,
 				CABD73EC1036EE7C005E7B80 /* JIMSubscriptionManager.m */,
+				CAE86BBD103C9DC70028E8AB /* JIMInvitationManager.h */,
+				CAE86BBE103C9DC70028E8AB /* JIMInvitationManager.m */,
 				CA23154E103AF4580081F2A6 /* JIMDiscoveryBrowser.h */,
 				CA23154F103AF4580081F2A6 /* JIMDiscoveryBrowser.m */,
 			);
@@ -469,6 +473,7 @@
 				CAD201621030A36700F355F0 /* JIMChatController.xib */,
 				CAD201661030A36700F355F0 /* JIMContactInfoController.xib */,
 				CABD740D1036EE9D005E7B80 /* JIMSubscriptionManager.xib */,
+				CAE86BE9103CA07D0028E8AB /* JIMInvitationManager.xib */,
 				CA23154B103AF0B30081F2A6 /* JIMDiscoveryBrowser.xib */,
 				CA3BDB171031658700184C2E /* Jabber Icon.png */,
 			);
@@ -779,16 +784,14 @@
 		CAD202421030AC2300F355F0 /* Subclasses */ = {
 			isa = PBXGroup;
 			children = (
-				CAD2023F1030AC1B00F355F0 /* JIMTableView.h */,
-				CAD202401030AC1B00F355F0 /* JIMTableView.m */,
+				CA5561CF103C949000142FD4 /* JIMChatManagerTableView.h */,
+				CA5561D0103C949000142FD4 /* JIMChatManagerTableView.m */,
 				CA51D9581031634D009BEC7F /* JIMCell.h */,
 				CA51D9591031634D009BEC7F /* JIMCell.m */,
 				CA95D808103C57620012C828 /* JIMSmallCell.h */,
 				CA95D809103C57620012C828 /* JIMSmallCell.m */,
 				CA4BF3FC10396C300020BD9A /* JIMOutlineCell.h */,
 				CA4BF3FD10396C300020BD9A /* JIMOutlineCell.m */,
-				CA5561CF103C949000142FD4 /* JIMChatManagerTableView.h */,
-				CA5561D0103C949000142FD4 /* JIMChatManagerTableView.m */,
 			);
 			name = Subclasses;
 			sourceTree = "<group>";
@@ -952,6 +955,7 @@
 				CABCC3521037500C00CD97EC /* Jabber Icon.png in Resources */,
 				CA7D1F7310383A6F007012CD /* JIMRosterManager.xib in Resources */,
 				CA23154C103AF0B30081F2A6 /* JIMDiscoveryBrowser.xib in Resources */,
+				CAE86BEA103CA07D0028E8AB /* JIMInvitationManager.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -975,7 +979,6 @@
 				CAD2015F1030A32500F355F0 /* JIMChatManager.m in Sources */,
 				CAD201601030A32500F355F0 /* JIMChatController.m in Sources */,
 				CAD201611030A32500F355F0 /* JIMContactInfoController.m in Sources */,
-				CAD202411030AC1B00F355F0 /* JIMTableView.m in Sources */,
 				CA51D95A1031634D009BEC7F /* JIMCell.m in Sources */,
 				CA4B40261036D299009C57C7 /* JIMAccountManager.m in Sources */,
 				CA4B40291036D316009C57C7 /* JIMAccount.m in Sources */,
@@ -985,6 +988,7 @@
 				CA231550103AF4580081F2A6 /* JIMDiscoveryBrowser.m in Sources */,
 				CA95D80A103C57620012C828 /* JIMSmallCell.m in Sources */,
 				CA5561D1103C949000142FD4 /* JIMChatManagerTableView.m in Sources */,
+				CAE86BBF103C9DC70028E8AB /* JIMInvitationManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1119,6 +1123,14 @@
 				CAD201691030A36700F355F0 /* English */,
 			);
 			name = JIMAppController.xib;
+			sourceTree = "<group>";
+		};
+		CAE86BE9103CA07D0028E8AB /* JIMInvitationManager.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CAE86BE7103CA0760028E8AB /* English */,
+			);
+			name = JIMInvitationManager.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

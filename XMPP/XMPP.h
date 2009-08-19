@@ -36,4 +36,6 @@
 #import "XMPPSubscriptionRequest.h"
 #import "XMPPUnsubscriptionRequest.h"
 
+#import "XMPPInvitationMessage.h"
+
 #import "XMPPError.h"

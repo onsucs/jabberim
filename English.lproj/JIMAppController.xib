@@ -1167,6 +1167,9 @@
 			<object class="NSCustomObject" id="1026614511">
 				<string key="NSClassName">JIMDiscoveryBrowser</string>
 			</object>
+			<object class="NSCustomObject" id="947377967">
+				<string key="NSClassName">JIMInvitationManager</string>
+			</object>
 			<object class="NSWindowTemplate" id="972006081">
 				<int key="NSWindowStyleMask">7</int>
 				<int key="NSWindowBacking">2</int>
@@ -5161,6 +5164,12 @@ cmVhZHkgZXhpc3QuA</string>
 						<reference key="object" ref="779482125"/>
 						<reference key="parent" ref="675995277"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1122</int>
+						<reference key="object" ref="947377967"/>
+						<reference key="parent" ref="1049"/>
+						<string key="objectName">JIMInvitationManager</string>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -5237,6 +5246,7 @@ cmVhZHkgZXhpc3QuA</string>
 					<string>1119.IBPluginDependency</string>
 					<string>112.IBPluginDependency</string>
 					<string>112.ImportedFromIB2</string>
+					<string>1122.IBPluginDependency</string>
 					<string>124.IBPluginDependency</string>
 					<string>124.ImportedFromIB2</string>
 					<string>125.IBEditorWindowLastContentRect</string>
@@ -5609,6 +5619,7 @@ cmVhZHkgZXhpc3QuA</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<reference ref="9"/>
 					<string>{{365, 500}, {146, 23}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5928,7 +5939,7 @@ cmVhZHkgZXhpc3QuA</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1121</int>
+			<int key="maxID">1122</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -6176,6 +6187,14 @@ cmVhZHkgZXhpc3QuA</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/JIMDiscoveryBrowser.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">JIMInvitationManager</string>
+					<string key="superclassName">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/JIMInvitationManager.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
