@@ -57,13 +57,13 @@
 #pragma mark NSApp Delegate Methods:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*- (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)flag
+- (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)flag
 {
 	if(!flag)
-		[rosterWindow makeKeyAndOrderFront:nil];
+		[rosterManager.window makeKeyAndOrderFront:nil];
 	
 	return YES;
-}*/
+}
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification
 {

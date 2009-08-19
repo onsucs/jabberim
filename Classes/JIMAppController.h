@@ -8,10 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 #import <JIMAccountManager.h>
+#import <JIMRosterManager.h>
 
 @interface JIMAppController : NSObject {
 	IBOutlet NSUserDefaultsController *userDefaultsController;
 	IBOutlet JIMAccountManager *accountManager;
+	IBOutlet JIMRosterManager *rosterManager;
 	
 	IBOutlet NSView *viewToInsertSettingsView;
 	IBOutlet NSView *accountSettingsView;

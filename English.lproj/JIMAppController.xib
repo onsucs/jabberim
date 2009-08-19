@@ -3407,6 +3407,14 @@ cmVhZHkgZXhpc3QuA</string>
 					</object>
 					<int key="connectionID">1120</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">rosterManager</string>
+						<reference key="source" ref="38515640"/>
+						<reference key="destination" ref="978853982"/>
+					</object>
+					<int key="connectionID">1121</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -5920,7 +5928,7 @@ cmVhZHkgZXhpc3QuA</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1120</int>
+			<int key="maxID">1121</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -6026,6 +6034,7 @@ cmVhZHkgZXhpc3QuA</string>
 							<string>accountManager</string>
 							<string>accountSettingsView</string>
 							<string>advancedSettingsView</string>
+							<string>rosterManager</string>
 							<string>userDefaultsController</string>
 							<string>viewToInsertSettingsView</string>
 						</object>
@@ -6034,6 +6043,7 @@ cmVhZHkgZXhpc3QuA</string>
 							<string>JIMAccountManager</string>
 							<string>NSView</string>
 							<string>NSView</string>
+							<string>JIMRosterManager</string>
 							<string>NSUserDefaultsController</string>
 							<string>NSView</string>
 						</object>
@@ -6047,8 +6057,21 @@ cmVhZHkgZXhpc3QuA</string>
 					<string key="className">JIMChatManager</string>
 					<string key="superclassName">NSObject</string>
 					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">stopChat:</string>
-						<string key="NS.object.0">id</string>
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>cancleSheet:</string>
+							<string>okSheet:</string>
+							<string>performInvite:</string>
+							<string>stopChat:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -6057,11 +6080,17 @@ cmVhZHkgZXhpc3QuA</string>
 							<string>chatControllerTable</string>
 							<string>chatControllerView</string>
 							<string>chatWindow</string>
+							<string>inviteUserJID</string>
+							<string>inviteUserReason</string>
+							<string>inviteUserWindow</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSTableView</string>
 							<string>NSView</string>
+							<string>NSWindow</string>
+							<string>NSTextField</string>
+							<string>NSTextField</string>
 							<string>NSWindow</string>
 						</object>
 					</object>
@@ -6113,19 +6142,34 @@ cmVhZHkgZXhpc3QuA</string>
 					<string key="className">JIMDiscoveryBrowser</string>
 					<string key="superclassName">NSWindowController</string>
 					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">setServer:</string>
-						<string key="NS.object.0">id</string>
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>cancleSheet:</string>
+							<string>setServer:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>discoveryBrowser</string>
+							<string>discoveryTable</string>
+							<string>mucTable</string>
+							<string>mucWindow</string>
+							<string>notSupportedWindow</string>
 							<string>serverField</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSBrowser</string>
+							<string>NSOutlineView</string>
+							<string>NSTableView</string>
+							<string>NSWindow</string>
+							<string>NSWindow</string>
 							<string>NSTextField</string>
 						</object>
 					</object>
@@ -6143,6 +6187,7 @@ cmVhZHkgZXhpc3QuA</string>
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>cancleSheet:</string>
 							<string>mainMenuItemPressed:</string>
+							<string>newChatroomAccountButton:</string>
 							<string>okSheet:</string>
 							<string>removeContact:</string>
 							<string>segmentedToolsButton:</string>
@@ -6160,6 +6205,7 @@ cmVhZHkgZXhpc3QuA</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
@@ -6167,11 +6213,15 @@ cmVhZHkgZXhpc3QuA</string>
 						<object class="NSMutableArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>accountManager</string>
-							<string>accountsButton</string>
 							<string>addContactWindow</string>
 							<string>contactImageToRemove</string>
 							<string>contactInfoController</string>
 							<string>jidToRemove</string>
+							<string>joinChatroomWindow</string>
+							<string>newChatroomAccountsButton</string>
+							<string>newChatroomName</string>
+							<string>newChatroomService</string>
+							<string>newContactAccountsButton</string>
 							<string>newContactJIDField</string>
 							<string>newContactNicknameField</string>
 							<string>nicknameToRemove</string>
@@ -6183,11 +6233,15 @@ cmVhZHkgZXhpc3QuA</string>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>JIMAccountManager</string>
-							<string>NSPopUpButton</string>
 							<string>NSWindow</string>
 							<string>NSImageView</string>
 							<string>JIMContactInfoController</string>
 							<string>NSTextField</string>
+							<string>NSWindow</string>
+							<string>NSPopUpButton</string>
+							<string>NSTextField</string>
+							<string>NSTextField</string>
+							<string>NSPopUpButton</string>
 							<string>NSTextField</string>
 							<string>NSTextField</string>
 							<string>NSTextField</string>
