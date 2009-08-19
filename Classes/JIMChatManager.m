@@ -64,13 +64,13 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 
 - (IBAction)performInvite:(id)sender
 {
-	//if([[(JIMChatController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatSession] isGroupChat])
-	//{
+	if([[(JIMChatController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatSession] isGroupChat])
+	{
 		[NSApp beginSheet:inviteUserWindow modalForWindow:chatWindow modalDelegate:self didEndSelector:@selector(inviteUserSheetDidEnd: returnCode: contextInfo:) contextInfo:nil];
 		[NSApp runModalForWindow:inviteUserWindow];
 		[NSApp endSheet:inviteUserWindow];
 		[inviteUserWindow orderOut:self];
-	/*}
+	}
 	else
 	{
 		NSAlert *errorSheet = [NSAlert alertWithMessageText:@"Invitation not possible"
@@ -80,7 +80,7 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 								  informativeTextWithFormat:@"You cannot invite users into a private chat!"];
 		
 		[errorSheet beginSheetModalForWindow:chatWindow modalDelegate:nil didEndSelector:nil contextInfo:nil];
-	}*/
+	}
 }
 
 - (IBAction)okSheet:(id)sender
