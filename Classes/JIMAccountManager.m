@@ -309,10 +309,10 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)rowIndex
 {
 	JIMAccount *account = [accounts objectAtIndex:rowIndex];
+	JIMCell *itemCell = [tableColumn dataCell];
 	
 	if([[tableColumn identifier] isEqualToString:@"Name"])
 	{
-		JIMCell *itemCell = [[accountTable tableColumnWithIdentifier:@"Name"] dataCell];
 		[itemCell setTitle:[account.xmppService.myJID fullString]];
 		
 		if(account.error)
@@ -341,7 +341,7 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 		[itemCell setEnabled:YES];
 	}
 	
-	return nil;
+	return itemCell;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -260,12 +260,12 @@
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)user;
 {
+	JIMCell *itemCell = [tableColumn dataCell];
+	
 	if([user isKindOfClass:[XMPPUser class]])
 	{
 		if([[tableColumn identifier] isEqualToString:@"Name"])
 		{
-			JIMCell *itemCell = [[rosterTable tableColumnWithIdentifier:@"Name"] dataCell];
-			
 			[itemCell setTitle:[user displayName]];
 			
 			if([user presenceStatus] && ![[user presenceStatus] isEqualToString:@""])
@@ -300,7 +300,6 @@
 	}
 	else //From now on user is a NSArray
 	{
-		JIMCell *itemCell = [[rosterTable tableColumnWithIdentifier:@"Name"] dataCell];
 		[itemCell setTitle:[buddieGroups objectAtIndex:[[self buddies] indexOfObject:user]]];
 		[itemCell setSubtitle:nil];
 		[itemCell setImage:nil];
@@ -308,7 +307,7 @@
 		[itemCell setEnabled:NO];
 	}
 	
-	return nil;
+	return itemCell;
 }
 
 - (CGFloat)outlineView:(NSOutlineView *)outlineView heightOfRowByItem:(id)item

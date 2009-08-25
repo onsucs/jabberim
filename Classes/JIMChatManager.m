@@ -119,11 +119,10 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)rowIndex
 {
 	JIMChatController *chatController = [chatControllerArray objectAtIndex:rowIndex];
+	JIMCell *itemCell = [tableColumn dataCell];
 	
 	if([[tableColumn identifier] isEqualToString:@"Name"])
 	{
-		JIMCell *itemCell = [[chatControllerTable tableColumnWithIdentifier:@"Name"] dataCell];
-		
 		if([chatController.chatSession.chatPartner isKindOfClass:[XMPPUser class]])
 		{
 			XMPPUser *user = chatController.chatSession.chatPartner;
@@ -163,7 +162,7 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 		}
 	}
 	
-	return nil;
+	return itemCell;
 }
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)rowIndex
