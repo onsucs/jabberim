@@ -152,12 +152,12 @@
 }
 
 #pragma mark Account Table Data Source:
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return [mucChatrooms count];
 }
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)rowIndex
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {
 	if([[tableColumn identifier] isEqualToString:@"Name"])
 		return [(XMPPDiscoItemsItemElement *)[mucChatrooms objectAtIndex:rowIndex] name];
@@ -168,7 +168,7 @@
 }
 
 #pragma mark NSOutlineView delegate
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
 	if(item)
 	{
@@ -181,7 +181,7 @@
 	return 1;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
 {
 	if(item)
 		return [itemsArray objectAtIndex:index];	

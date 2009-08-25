@@ -60,12 +60,12 @@
 }
 
 #pragma mark NSTaleView Delegate
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return [invitations count];
 }
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)rowIndex
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {	
 	if([[tableColumn identifier] isEqualToString:@"Name"])
 		return [[(XMPPInvitationMessage *)[invitations objectAtIndex:rowIndex] inviter] fullString];

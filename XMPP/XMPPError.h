@@ -100,7 +100,7 @@ unsigned XMPPErrorLegacyCodeForStanzaCode(XMPPErrorCode errorCode);
 #pragma mark NSNotificationCenter Category
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface NSNotificationCenter (XMPPError)
-- (void)postNotificationName:(NSString*)name object:(id)object errorDomain:(NSString*)domain errorCode:(int)code errorDescription:(NSString*)description;
+- (void)postNotificationName:(NSString*)name object:(id)object errorDomain:(NSString*)domain errorCode:(NSInteger)code errorDescription:(NSString*)description;
 - (void)postNotificationName:(NSString*)name object:(id)object error:(NSError*)error;
 @end
 

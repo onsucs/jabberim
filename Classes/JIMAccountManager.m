@@ -301,12 +301,12 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 #pragma mark Account Table Data Source:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return [accounts count];
 }
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)rowIndex
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {
 	JIMAccount *account = [accounts objectAtIndex:rowIndex];
 	JIMCell *itemCell = [tableColumn dataCell];

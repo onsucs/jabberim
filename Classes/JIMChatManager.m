@@ -111,12 +111,12 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 #pragma mark Chat Controller Table Data Source:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return [chatControllerArray count];
 }
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)rowIndex
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {
 	JIMChatController *chatController = [chatControllerArray objectAtIndex:rowIndex];
 	JIMCell *itemCell = [tableColumn dataCell];
@@ -165,7 +165,7 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 	return itemCell;
 }
 
-- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)rowIndex
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {
 	if([[tableColumn identifier] isEqualToString:@"Name"])
 	{

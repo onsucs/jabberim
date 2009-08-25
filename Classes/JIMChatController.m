@@ -127,7 +127,7 @@
 }
 
 #pragma mark Chat Members Table:
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	if(self.chatSession.isGroupChat)
 	{
@@ -138,7 +138,7 @@
 		return 0;
 }
 
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)rowIndex
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {
 	if([[tableColumn identifier] isEqualToString:@"Name"])
 	{

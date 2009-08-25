@@ -226,7 +226,7 @@
 #pragma mark Roster Table Data Source:
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item;
+- (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item;
 {
 	if(item)
 		return [item count];
@@ -242,7 +242,7 @@
 		return 0;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item;
+- (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item;
 {
 	if(item)
 		return [[(NSArray *)item sortedArrayUsingSelector:@selector(compareByAvailabilityName:)] objectAtIndex:index];	
