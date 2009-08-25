@@ -155,9 +155,9 @@
 		CAD201F11030A40200F355F0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD201F01030A40200F355F0 /* SystemConfiguration.framework */; };
 		CAD201F41030A41500F355F0 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD201F21030A41500F355F0 /* libcrypto.dylib */; };
 		CAD201F51030A41500F355F0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD201F31030A41500F355F0 /* libxml2.dylib */; };
-		CAD201F71030A41E00F355F0 /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD201F61030A41E00F355F0 /* libidn.a */; };
 		CAE86BBF103C9DC70028E8AB /* JIMInvitationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CAE86BBE103C9DC70028E8AB /* JIMInvitationManager.m */; };
 		CAE86BEA103CA07D0028E8AB /* JIMInvitationManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = CAE86BE9103CA07D0028E8AB /* JIMInvitationManager.xib */; };
+		CAF0115910446C34006BB03F /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD201F61030A41E00F355F0 /* libidn.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -373,7 +373,7 @@
 				CAD201F11030A40200F355F0 /* SystemConfiguration.framework in Frameworks */,
 				CAD201F41030A41500F355F0 /* libcrypto.dylib in Frameworks */,
 				CAD201F51030A41500F355F0 /* libxml2.dylib in Frameworks */,
-				CAD201F71030A41E00F355F0 /* libidn.a in Frameworks */,
+				CAF0115910446C34006BB03F /* libidn.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1170,7 +1170,11 @@
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					x86_64,
+					i386,
+					ppc,
+				);
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1184,10 +1188,15 @@
 		C01FCF5008A954540054247B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					x86_64,
+					i386,
+					ppc,
+				);
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = NO;
 				SDKROOT = macosx10.5;
 			};
