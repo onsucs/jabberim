@@ -9,8 +9,8 @@
 #import <Cocoa/Cocoa.h>
 #import <XMPP/XMPP.h>
 
-#import <JIMChatManager.h>
-#import <JIMContactInfoController.h>
+//#import <JIMChatManager.h>
+//#import <JIMContactInfoController.h>
 
 extern NSString* const JIMAccountDidConnectNotification;
 extern NSString* const JIMAccountDidFailToConnectNotification;

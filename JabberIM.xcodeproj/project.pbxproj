@@ -147,10 +147,10 @@
 		CAD2015E1030A32500F355F0 /* JIMAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = CAD201571030A32500F355F0 /* JIMAppController.m */; };
 		CAD2015F1030A32500F355F0 /* JIMChatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CAD201591030A32500F355F0 /* JIMChatManager.m */; };
 		CAD201601030A32500F355F0 /* JIMChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = CAD2015B1030A32500F355F0 /* JIMChatController.m */; };
-		CAD201611030A32500F355F0 /* JIMContactInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = CAD2015D1030A32500F355F0 /* JIMContactInfoController.m */; };
+		CAD201611030A32500F355F0 /* JIMBuddieInfoController.m in Sources */ = {isa = PBXBuildFile; fileRef = CAD2015D1030A32500F355F0 /* JIMBuddieInfoController.m */; };
 		CAD2016A1030A36700F355F0 /* JIMChatController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CAD201621030A36700F355F0 /* JIMChatController.xib */; };
 		CAD2016B1030A36700F355F0 /* JIMChatManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = CAD201641030A36700F355F0 /* JIMChatManager.xib */; };
-		CAD2016C1030A36700F355F0 /* JIMContactInfoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CAD201661030A36700F355F0 /* JIMContactInfoController.xib */; };
+		CAD2016C1030A36700F355F0 /* JIMBuddieInfoController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CAD201661030A36700F355F0 /* JIMBuddieInfoController.xib */; };
 		CAD2016D1030A36700F355F0 /* JIMAppController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CAD201681030A36700F355F0 /* JIMAppController.xib */; };
 		CAD201F11030A40200F355F0 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD201F01030A40200F355F0 /* SystemConfiguration.framework */; };
 		CAD201F41030A41500F355F0 /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CAD201F21030A41500F355F0 /* libcrypto.dylib */; };
@@ -341,11 +341,11 @@
 		CAD201591030A32500F355F0 /* JIMChatManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIMChatManager.m; sourceTree = "<group>"; };
 		CAD2015A1030A32500F355F0 /* JIMChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIMChatController.h; sourceTree = "<group>"; };
 		CAD2015B1030A32500F355F0 /* JIMChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIMChatController.m; sourceTree = "<group>"; };
-		CAD2015C1030A32500F355F0 /* JIMContactInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIMContactInfoController.h; sourceTree = "<group>"; };
-		CAD2015D1030A32500F355F0 /* JIMContactInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIMContactInfoController.m; sourceTree = "<group>"; };
+		CAD2015C1030A32500F355F0 /* JIMBuddieInfoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIMBuddieInfoController.h; sourceTree = "<group>"; };
+		CAD2015D1030A32500F355F0 /* JIMBuddieInfoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIMBuddieInfoController.m; sourceTree = "<group>"; };
 		CAD201631030A36700F355F0 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/JIMChatController.xib; sourceTree = "<group>"; };
 		CAD201651030A36700F355F0 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/JIMChatManager.xib; sourceTree = "<group>"; };
-		CAD201671030A36700F355F0 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/JIMContactInfoController.xib; sourceTree = "<group>"; };
+		CAD201671030A36700F355F0 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/JIMBuddieInfoController.xib; sourceTree = "<group>"; };
 		CAD201691030A36700F355F0 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/JIMAppController.xib; sourceTree = "<group>"; };
 		CAD201F01030A40200F355F0 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = /System/Library/Frameworks/SystemConfiguration.framework; sourceTree = "<absolute>"; };
 		CAD201F21030A41500F355F0 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = /usr/lib/libcrypto.dylib; sourceTree = "<absolute>"; };
@@ -396,8 +396,8 @@
 				CAD201591030A32500F355F0 /* JIMChatManager.m */,
 				CAD2015A1030A32500F355F0 /* JIMChatController.h */,
 				CAD2015B1030A32500F355F0 /* JIMChatController.m */,
-				CAD2015C1030A32500F355F0 /* JIMContactInfoController.h */,
-				CAD2015D1030A32500F355F0 /* JIMContactInfoController.m */,
+				CAD2015C1030A32500F355F0 /* JIMBuddieInfoController.h */,
+				CAD2015D1030A32500F355F0 /* JIMBuddieInfoController.m */,
 				CABD73EB1036EE7C005E7B80 /* JIMSubscriptionManager.h */,
 				CABD73EC1036EE7C005E7B80 /* JIMSubscriptionManager.m */,
 				CAE86BBD103C9DC70028E8AB /* JIMInvitationManager.h */,
@@ -471,7 +471,7 @@
 				CA7D1F7210383A6F007012CD /* JIMRosterManager.xib */,
 				CAD201641030A36700F355F0 /* JIMChatManager.xib */,
 				CAD201621030A36700F355F0 /* JIMChatController.xib */,
-				CAD201661030A36700F355F0 /* JIMContactInfoController.xib */,
+				CAD201661030A36700F355F0 /* JIMBuddieInfoController.xib */,
 				CABD740D1036EE9D005E7B80 /* JIMSubscriptionManager.xib */,
 				CAE86BE9103CA07D0028E8AB /* JIMInvitationManager.xib */,
 				CA23154B103AF0B30081F2A6 /* JIMDiscoveryBrowser.xib */,
@@ -939,7 +939,7 @@
 				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
 				CAD2016A1030A36700F355F0 /* JIMChatController.xib in Resources */,
 				CAD2016B1030A36700F355F0 /* JIMChatManager.xib in Resources */,
-				CAD2016C1030A36700F355F0 /* JIMContactInfoController.xib in Resources */,
+				CAD2016C1030A36700F355F0 /* JIMBuddieInfoController.xib in Resources */,
 				CAD2016D1030A36700F355F0 /* JIMAppController.xib in Resources */,
 				CA137D031035CF4200725A9F /* available.png in Resources */,
 				CA137D041035CF4200725A9F /* idle.png in Resources */,
@@ -978,7 +978,7 @@
 				CAD2015E1030A32500F355F0 /* JIMAppController.m in Sources */,
 				CAD2015F1030A32500F355F0 /* JIMChatManager.m in Sources */,
 				CAD201601030A32500F355F0 /* JIMChatController.m in Sources */,
-				CAD201611030A32500F355F0 /* JIMContactInfoController.m in Sources */,
+				CAD201611030A32500F355F0 /* JIMBuddieInfoController.m in Sources */,
 				CA51D95A1031634D009BEC7F /* JIMCell.m in Sources */,
 				CA4B40261036D299009C57C7 /* JIMAccountManager.m in Sources */,
 				CA4B40291036D316009C57C7 /* JIMAccount.m in Sources */,
@@ -1109,12 +1109,12 @@
 			name = JIMChatManager.xib;
 			sourceTree = "<group>";
 		};
-		CAD201661030A36700F355F0 /* JIMContactInfoController.xib */ = {
+		CAD201661030A36700F355F0 /* JIMBuddieInfoController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				CAD201671030A36700F355F0 /* English */,
 			);
-			name = JIMContactInfoController.xib;
+			name = JIMBuddieInfoController.xib;
 			sourceTree = "<group>";
 		};
 		CAD201681030A36700F355F0 /* JIMAppController.xib */ = {

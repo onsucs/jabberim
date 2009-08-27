@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <JIMContactInfoController.h>
+#import <JIMBuddieInfoController.h>
 #import <JIMAccountManager.h>
 #import <JIMAccount.h>
 #import <JIMChatManager.h>
@@ -34,7 +34,6 @@
 	IBOutlet NSPopUpButton *statusButton;
 	IBOutlet NSSegmentedControl *segmentedToolsButton;
 	
-	IBOutlet JIMContactInfoController *contactInfoController;
 	IBOutlet JIMAccountManager *accountManager;
 	
 	NSMutableArray *buddies;

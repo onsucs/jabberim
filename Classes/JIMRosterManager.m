@@ -195,7 +195,7 @@
 - (IBAction)showContactInfos:(id)sender
 {
 	if([rosterTable selectedRow] > -1 && [rosterTable levelForRow:[rosterTable selectedRow]] > 0)
-		[contactInfoController setXmppUser:[rosterTable itemAtRow:[rosterTable selectedRow]]];
+		[[NSNotificationCenter defaultCenter] postNotificationName:JIMBuddieInfoControllerShowUserNotification object:[rosterTable itemAtRow:[rosterTable selectedRow]]];
 	else
 		NSBeep();
 }
