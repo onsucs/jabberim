@@ -1,5 +1,5 @@
 //
-//  JIMContactInfoController.h
+//  JIMBuddieInfoController.h
 //  JabberIM
 //
 //  Created by Roland Moers on 09.08.09.
@@ -9,7 +9,9 @@
 #import <Cocoa/Cocoa.h>
 #import <XMPP/XMPP.h>
 
-@interface JIMContactInfoController : NSObject {
+extern NSString* const JIMBuddieInfoControllerShowUserNotification;
+
+@interface JIMBuddieInfoController : NSObject {
 	IBOutlet NSPanel *contactInfoPanel;
 	IBOutlet NSPopUpButton *availableResources;
 	
@@ -21,7 +23,6 @@
 	IBOutlet NSTextField *clientVersion;
 	IBOutlet NSTextField *clientOS;
 	
-	BOOL askedForAdditionalInfo;
 	XMPPUser *xmppUser;
 }
 

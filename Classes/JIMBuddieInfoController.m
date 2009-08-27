@@ -1,14 +1,16 @@
 //
-//  JIMContactInfoController.m
+//  JIMBuddieInfoController.m
 //  JabberIM
 //
 //  Created by Roland Moers on 09.08.09.
 //  Copyright 2009 Roland Moers. All rights reserved.
 //
 
-#import "JIMContactInfoController.h"
+#import "JIMBuddieInfoController.h"
 
-@implementation JIMContactInfoController
+NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoControllerShowUserNotification";
+
+@implementation JIMBuddieInfoController
 
 @synthesize xmppUser;
 
@@ -16,8 +18,11 @@
 {
 	if((self = [super init]))
 	{
-		if (![NSBundle loadNibNamed:@"JIMContactInfoController" owner:self])
+		if (![NSBundle loadNibNamed:@"JIMBuddieInfoController" owner:self])
 			NSLog(@"Error loading Nib for document!");
+		
+		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+		[nc addObserver:self selector:@selector(showBuddieInfo:) name:JIMBuddieInfoControllerShowUserNotification object:nil];
 	}
 	return self;
 }
@@ -48,19 +53,12 @@
 	[clientID setStringValue:@"Not available"];
 	[clientVersion setStringValue:@"Not available"];
 	[clientOS setStringValue:@"Not available"];
-	askedForAdditionalInfo = NO;
 }
 
 - (void)refreshAllFieldsWithResource:(XMPPResource *)resource
 {
 	if([xmppUser isOnline])
 	{
-		if(!askedForAdditionalInfo)
-		{
-			//[xmppService requestAdditionalInfoForResource:resource];
-			askedForAdditionalInfo = YES;
-		}
-		
 		[priority setStringValue:[NSString stringWithFormat:@"%i", [resource  priority]]];
 		
 		if(resource.statusString)
@@ -69,36 +67,22 @@
 			[status setStringValue:@"Online"];
 		
 		[statusRecieved setObjectValue:resource.lastPresenceUpdate];
-		
-		/*if(resource.lastActivity)
-			[timeOfLastActivity setStringValue:resource.lastActivity];
-		if(resource.clientID)
-			[clientID setStringValue:resource.clientID];
-		if(resource.clientVer)
-			[clientVersion setStringValue:resource.clientVer];
-		if(resource.clientOS)
-			[clientOS setStringValue:resource.clientOS];*/
 	}
 	else
-	{
 		[status setStringValue:@"Offline"];
-		
-		/*if(xmppUser.lastActivity)
-			[timeOfLastActivity setObjectValue:xmppUser.lastActivity];*/
-	}
 	
 	//if([xmppUser error])
 		//[status setStringValue:[xmppUser error]];
 }
 
-- (void)setXmppUser:(XMPPUser *)newXMPPUser
+- (void)setXmppUser:(XMPPUser *)newXmppUser;
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc removeObserver:self name:XMPPUserDidChangePresenceNotification object:xmppUser];
 	[nc removeObserver:self name:XMPPUserDidChangeNameNotification object:xmppUser];
 	
 	[xmppUser release];
-	xmppUser = newXMPPUser;
+	xmppUser = newXmppUser;;
 	
 	if(xmppUser)
 	{
@@ -127,7 +111,7 @@
 		[lastIQ send];
 		
 		[contactInfoPanel makeKeyAndOrderFront:self];
-	}		
+	}
 }
 
 - (IBAction)setResource:(id)sender
@@ -166,6 +150,11 @@
 }
 
 #pragma mark Notifications
+
+- (void)showBuddieInfo:(NSNotification *)aNotification
+{
+	[self setXmppUser:[aNotification object]];
+}
 
 - (void)infoQueryDidReceiveResult:(NSNotification *)note
 {
