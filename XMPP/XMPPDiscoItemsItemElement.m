@@ -45,4 +45,18 @@
 	[self.xmlElement setStringValue:aName forAttributeWithName:@"name"];
 }
 
+#pragma mark Comparison Methods
+- (NSComparisonResult)compareByName:(XMPPDiscoItemsItemElement *)another
+{
+	return [self compareByName:another options:0];
+}
+
+- (NSComparisonResult)compareByName:(XMPPDiscoItemsItemElement *)another options:(NSStringCompareOptions)mask
+{
+	NSString *myName = [self name];
+	NSString *anotherName = [another name];
+	
+	return [myName compare:anotherName options:mask];
+}
+
 @end
