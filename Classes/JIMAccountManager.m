@@ -84,7 +84,7 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 	if([accountTable selectedRow] != -1)
 	{
 		if([(JIMAccount *)[accounts objectAtIndex:[accountTable selectedRow]] show] == XMPPPresenceShowAvailable)
-				[discoveryBrowser openDiscoveryBrowserWithService:[(JIMAccount *)[accounts objectAtIndex:[accountTable selectedRow]] xmppService]];
+				[discoveryBrowser openWithAccount:[accounts objectAtIndex:[accountTable selectedRow]]];
 		else
 			NSBeep();
 	}

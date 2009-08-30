@@ -8,11 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import <XMPP/XMPP.h>
+
 #import <JIMAccount.h>
 #import <JIMChatManager.h>
 
 @interface JIMDiscoveryBrowser : NSWindowController {
-	IBOutlet NSTextField *serverField;
 	IBOutlet NSOutlineView *discoveryTable;
 	
 	IBOutlet NSWindow *mucWindow;
@@ -21,13 +21,11 @@
 	
 	IBOutlet NSWindow *notSupportedWindow;
 	
-	NSMutableArray *itemsArray;
-	XMPPService *service;
+	JIMAccount *account;
 }
 
 - (IBAction)cancleSheet:(id)sender;
 
-- (IBAction)setServer:(id)sender;
-- (void)openDiscoveryBrowserWithService:(XMPPService *)aService;
+- (void)openWithAccount:(JIMAccount *)aAccount;
 
 @end

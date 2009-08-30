@@ -15,17 +15,20 @@ NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToR
 
 @implementation JIMAccount
 
-@synthesize xmppService;
 @synthesize accountDict;
 @synthesize error;
+@synthesize xmppService;
 @synthesize show;
 
+#pragma mark Init and Dealloc
 - (id)initWithAccountDict:(NSDictionary *)newAccountDict
 {
 	if((self = [super init]))
 	{
 		accountDict = [newAccountDict mutableCopy];
 		[accountDict retain];
+		
+		transportDictArray = [[NSMutableArray alloc] init];
 		
 		XMPPJID *jid = [XMPPJID jidWithString:[accountDict objectForKey:@"JabberID"] resource:[accountDict objectForKey:@"Resource"]];
 		
@@ -58,12 +61,7 @@ NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToR
 				[xmppService connect];
 		}
 		
-		
-		
-		
-		
-		
-		self.show = XMPPPresenceShowUnknown;
+		show = XMPPPresenceShowUnknown;
 	}
 	return self;
 }
@@ -75,11 +73,13 @@ NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToR
 	[xmppService goOffline];
 	[xmppService disconnect];
 	[xmppService release];
+	[transportDictArray release];
 	[accountDict release];
 	
 	[super dealloc];
 }
 
+#pragma mark Status
 - (void)setShow:(XMPPPresenceShow)newShow andStatus:(NSString *)newStatus
 {	
 	
@@ -111,20 +111,64 @@ NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToR
 		[xmppService sendElement:presence];
 	}
 	
-	self.show = newShow;
+	show = newShow;
 }
 
 - (void)goOffline
 {
 	[xmppService disconnect];
 	
-	self.show = XMPPPresenceShowUnknown;
+	show = XMPPPresenceShowUnknown;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark XMPPService Delegate Methods:
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Transports and Features
 
+- (NSArray *)transports
+{
+	NSMutableArray *mutableTransportsArray = [[NSMutableArray alloc] init];
+	
+	for(NSMutableDictionary *transportDict in transportDictArray)
+		[mutableTransportsArray addObject:[transportDict objectForKey:@"Transport Item"]];
+	
+	NSArray *transportsArray = [NSArray arrayWithArray:mutableTransportsArray];
+	[mutableTransportsArray release];
+	return transportsArray;
+}
+
+- (NSArray *)featuresOfTransport:(XMPPDiscoItemsItemElement *)item
+{
+	for(NSMutableDictionary *transportDict in transportDictArray)
+	{
+		if([[transportDict objectForKey:@"Transport Item"] isEqual:item])
+			return [transportDict objectForKey:@"Transport Features"];
+	}
+	
+	return nil;
+}
+
+- (XMPPDiscoItemsItemElement *)transportForFeature:(NSString *)feature
+{
+	for(NSMutableDictionary *transportDict in transportDictArray)
+	{
+		if([(XMPPDiscoInfoInfoQuery *)[transportDict objectForKey:@"Transport Features"] hasFeatureWithName:feature])
+			return [transportDict objectForKey:@"Transport Item"];
+	}
+	
+	return nil;
+}
+
+- (BOOL)transport:(XMPPDiscoItemsItemElement *)item hasFeature:(NSString *)feature
+{
+	for(NSMutableDictionary *transportDict in transportDictArray)
+	{
+		if([[[transportDict objectForKey:@"Transport Item"] jid] isEqual:item.jid])
+			return [(XMPPDiscoInfoInfoQuery *)[transportDict objectForKey:@"Transport Features"] hasFeatureWithName:feature];
+	}
+	
+	return NO;
+}
+
+#pragma mark XMPPService Delegate Methods
 - (void)serviceDidBeginConnect:(NSNotification *)note
 {
 }
@@ -132,44 +176,28 @@ NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToR
 - (void)serviceDidConnect:(NSNotification *)note
 {
 	if([[accountDict objectForKey:@"Register"] boolValue])
-	{
-		NSLog(@"Registering...");
 		[self.xmppService registerUser];
-	}
-	
-	//[xmppService authenticateUser];
-	//[statusButton selectItemWithTitle:@"Available"];
 }
 
 - (void)serviceDidFailConnect:(NSNotification *)note
 {
 	NSLog(@"---------- xmppServiceDidNotConnect ----------");
-	/*if([sender streamError])
-	 {
-	 NSLog(@"           error: %@", [sender streamError]);
-	 }*/
+	if([note error])
+	{
+		NSLog(@"           error: %@", [note error]);
+	}
 	
-	self.error = @"Unable to establish connection";
+	error = @"Unable to establish connection";
 	[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountDidFailToConnectNotification object:self];
-	
-	/*
-	 // Update tracking variables
-	 isRegistering = NO;
-	 isAuthenticating = NO;
-	 
-	 // Update GUI
-	 [signInButton setEnabled:YES];
-	 [registerButton setEnabled:YES];
-	 [messageField setStringValue:@"Cannot connect to server"];*/
 }
 
 - (void)serviceDidDisconnect:(NSNotification *)note
 {
 	NSLog(@"---------- xmppServiceDidDisconnect ----------");
-	/*if ([sender streamError])
-	 {
-	 NSLog(@"           error: %@", [sender streamError]);
-	 }*/
+	if([note error])
+	{
+		NSLog(@"           error: %@", [note error]);
+	}
 	
 	[NSApp stopModal];
 }
@@ -185,7 +213,7 @@ NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToR
 
 - (void)serviceDidFailRegister:(NSNotification *)note
 {
-	self.error = @"Unable to register account";
+	error = @"Unable to register account";
 	[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountDidFailToRegisterNotification object:self];
 	
 	
@@ -198,19 +226,16 @@ NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToR
 
 - (void)serviceDidAuthenticate:(NSNotification *)note
 {
-	self.error = nil;
+	error = nil;
 	[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountDidConnectNotification object:self];
 	
 	if([xmppService autoPresence])
-		self.show = XMPPPresenceShowAvailable;
+		show = XMPPPresenceShowAvailable;
 	
-	/*
-	 // Update tracking variables
-	 isAuthenticating = NO;
-	 
-	 // Close the sheet
-	 [signInSheet orderOut:self];
-	 [NSApp endSheet:signInSheet];*/
+	XMPPDiscoItemsInfoQuery *itemsQuery = [[XMPPDiscoItemsInfoQuery alloc] initWithType:XMPPIQTypeGet to:nil service:xmppService];
+	[itemsQuery.stanza addAttributeWithName:@"to" stringValue:[accountDict objectForKey:@"Server"]];
+	[itemsQuery setDelegate:self];
+	[itemsQuery send];
 }
 
 - (void)serviceDidFailAuthenticate:(NSNotification *)note
@@ -221,17 +246,49 @@ NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToR
 		NSLog(@"           error: %@", [note error]);
 	}
 	
-	self.error = @"Username or password wrong";
+	error = @"Username or password wrong";
 	[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountDidFailToConnectNotification object:self];
+}
+
+#pragma mark XMPPInfoQuery Delegate Methods
+- (void)infoQueryDidReceiveResult:(NSNotification *)note
+{
+	if([[note object] isKindOfClass:[XMPPDiscoItemsInfoQuery class]])
+	{
+		XMPPDiscoItemsInfoQuery *itemsQuery = [note object];
+		
+		for(XMPPDiscoItemsItemElement *oneElement in [[itemsQuery items] allObjects])
+		{
+			NSLog(@"JID String: %@", [oneElement.jid fullString]);
+			
+			[transportDictArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:oneElement, @"Transport Item", nil]];
+			
+			XMPPDiscoInfoInfoQuery *infoQuery = [[XMPPDiscoInfoInfoQuery alloc] initWithType:XMPPIQTypeGet to:oneElement.jid service:xmppService];
+			[infoQuery setDelegate:self];
+			[infoQuery send];
+		}
+	}
+	else if([[note object] isKindOfClass:[XMPPDiscoInfoInfoQuery class]])
+	{
+		XMPPDiscoInfoInfoQuery *infoQuery = [note object];
+		
+		for(NSMutableDictionary *oneTransport in transportDictArray)
+		{
+			NSLog(@"Transport JID: %@, Query JID: %@", [[[oneTransport objectForKey:@"Transport Item"] jid] fullString], [infoQuery.jid fullString]);
+			
+			if([[[oneTransport objectForKey:@"Transport Item"] jid] isEqual:infoQuery.jid])
+				[oneTransport setObject:infoQuery forKey:@"Transport Features"];
+		}
+	}
 	
-	/*
-	 // Update tracking variables
-	 isAuthenticating = NO;
-	 
-	 // Update GUI
-	 [signInButton setEnabled:YES];
-	 [registerButton setEnabled:YES];
-	 [messageField setStringValue:@"Invalid username/password"];*/
+	[[note object] release];
+}
+
+- (void)infoQueryDidReceiveError:(NSNotification *)note
+{
+	//FIXME: Implement
+	
+	[[note object] release];
 }
 
 @end

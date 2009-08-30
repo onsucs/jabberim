@@ -14,7 +14,6 @@
 {
 	if((self = [super initWithWindowNibName:@"JIMDiscoveryBrowser"]))
 	{
-		itemsArray = [[NSMutableArray alloc] init];
 		mucChatrooms = [[NSMutableArray alloc] init];
 	}
 	return self;
@@ -23,7 +22,6 @@
 - (void)dealloc
 {
 	[mucChatrooms release];
-	[itemsArray release];
 	
 	[super dealloc];
 }
@@ -43,39 +41,34 @@
 	[NSApp endSheet:notSupportedWindow];
 }
 
-- (IBAction)setServer:(id)sender
+- (void)openWithAccount:(JIMAccount *)aAccount
 {
-	[itemsArray removeAllObjects];
-	
-	XMPPDiscoItemsInfoQuery *itemsQuery = [[XMPPDiscoItemsInfoQuery alloc] initWithType:XMPPIQTypeGet to:nil service:service];
-	[itemsQuery.stanza addAttributeWithName:@"to" stringValue:[sender stringValue]];
-	[itemsQuery setDelegate:self];
-	[itemsQuery send];
+	account = aAccount;
 	
 	[discoveryTable reloadData];
-}
-
-- (void)openDiscoveryBrowserWithService:(XMPPService *)aService
-{
-	service = aService;
 	
 	[self.window makeFirstResponder:discoveryTable];
-	
-	[serverField setStringValue:[aService.myJID domain]];
-	[self setServer:serverField];
-	
 	[self showWindow:self];
 }
 
 - (void)showDetailsForSelectedItem:(id)sender
 {
-	if([discoveryTable levelForRow:[discoveryTable selectedRow]])
+	if([discoveryTable selectedRow] > -1 && [discoveryTable levelForRow:[discoveryTable selectedRow]] > 0)
 	{
 		XMPPDiscoItemsItemElement *selectedItem = [discoveryTable itemAtRow:[discoveryTable selectedRow]];
-		
-		XMPPDiscoInfoInfoQuery *infoQuery = [[XMPPDiscoInfoInfoQuery alloc] initWithType:XMPPIQTypeGet to:[selectedItem jid] service:service];
-		[infoQuery setDelegate:self];
-		[infoQuery send];
+		if([account transport:selectedItem hasFeature:@"http://jabber.org/protocol/muc"])
+		{
+			XMPPDiscoItemsInfoQuery *itemsQuery = [[XMPPDiscoItemsInfoQuery alloc] initWithType:XMPPIQTypeGet to:nil service:account.xmppService];
+			[itemsQuery.stanza addAttributeWithName:@"to" stringValue:[[selectedItem jid] domain]];
+			[itemsQuery setDelegate:self];
+			[itemsQuery send];
+		}
+		else
+		{
+			[NSApp beginSheet:notSupportedWindow modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(notSupportedSheetDidEnd: returnCode: contextInfo:) contextInfo:nil];
+			[NSApp runModalForWindow:notSupportedWindow];
+			[notSupportedWindow orderOut:self];
+		}
 	}
 	else
 		NSBeep();
@@ -85,7 +78,7 @@
 {
 	if([mucTable selectedRow] > -1)
 	{
-		XMPPRoom *chatroom = [XMPPRoom roomWithJID:[(XMPPDiscoItemsItemElement *)[mucChatrooms objectAtIndex:[mucTable selectedRow]] jid] service:service];
+		XMPPRoom *chatroom = [XMPPRoom roomWithJID:[(XMPPDiscoItemsItemElement *)[mucChatrooms objectAtIndex:[mucTable selectedRow]] jid] service:account.xmppService];
 		[chatroom enter];
 		[[NSNotificationCenter defaultCenter] postNotificationName:JIMChatManagerCreateNewChat object:chatroom];
 	}
@@ -100,46 +93,13 @@
 	{
 		XMPPDiscoItemsInfoQuery *itemsQuery = [note object];
 		
-		if([[[itemsQuery jid] domain] isEqualToString:[serverField stringValue]])
-		{
-			for(XMPPDiscoItemsItemElement *oneElement in [[itemsQuery items] allObjects])
-				[itemsArray addObject:oneElement];
-			
-			[discoveryTable reloadData];
-		}
-		else
-		{
-			for(XMPPDiscoItemsItemElement *oneElement in [[itemsQuery items] allObjects])
-				[mucChatrooms addObject:oneElement];
-			
-			[mucTable reloadData];
-			
-			[NSApp beginSheet:mucWindow modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(mucSheetDidEnd: returnCode: contextInfo:) contextInfo:nil];
-		}
-	}
-	else if([[note object] isKindOfClass:[XMPPDiscoInfoInfoQuery class]])
-	{
-		XMPPDiscoInfoInfoQuery *infoQuery = [note object];
+		for(XMPPDiscoItemsItemElement *oneElement in [[itemsQuery items] allObjects])
+			[mucChatrooms addObject:oneElement];
 		
-		if([infoQuery hasFeatureWithName:@"http://jabber.org/protocol/muc"])
-		{
-			NSLog(@"Loading chatrooms");
-			
-			XMPPDiscoItemsInfoQuery *itemsQuery = [[XMPPDiscoItemsInfoQuery alloc] initWithType:XMPPIQTypeGet to:nil service:service];
-			[itemsQuery.stanza addAttributeWithName:@"to" stringValue:[[infoQuery jid] domain]];
-			[itemsQuery setDelegate:self];
-			[itemsQuery send];
-		}
-		else
-		{
-			NSLog(@"No supported protocol! :(");
-			
-			[NSApp beginSheet:notSupportedWindow modalForWindow:[self window] modalDelegate:nil didEndSelector:nil contextInfo:nil];
-			[NSApp runModalForWindow:notSupportedWindow];
-			[notSupportedWindow orderOut:self];
-		}
+		[mucTable reloadData];
+		
+		[NSApp beginSheet:mucWindow modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(mucSheetDidEnd: returnCode: contextInfo:) contextInfo:nil];
 	}
-	
 	
 	[[note object] release];
 }
@@ -160,9 +120,9 @@
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {
 	if([[tableColumn identifier] isEqualToString:@"Name"])
-		return [(XMPPDiscoItemsItemElement *)[mucChatrooms objectAtIndex:rowIndex] name];
+		return [(XMPPDiscoItemsItemElement *)[[mucChatrooms sortedArrayUsingSelector:@selector(compareByName:)] objectAtIndex:rowIndex] name];
 	else if([[tableColumn identifier] isEqualToString:@"JabberID"])
-		return [[(XMPPDiscoItemsItemElement *)[mucChatrooms objectAtIndex:rowIndex] jid] fullString];
+		return [[(XMPPDiscoItemsItemElement *)[[mucChatrooms sortedArrayUsingSelector:@selector(compareByName:)] objectAtIndex:rowIndex] jid] fullString];
 	
 	return nil;
 }
@@ -172,9 +132,9 @@
 {
 	if(item)
 	{
-		if([item isKindOfClass:[XMPPService class]])
-			return [itemsArray count];
-		else if([item isKindOfClass:[NSDictionary class]])
+		if([item isKindOfClass:[JIMAccount class]])
+			return [[item transports] count];
+		else
 			return 0;
 	}
 	
@@ -184,14 +144,14 @@
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item
 {
 	if(item)
-		return [itemsArray objectAtIndex:index];	
+		return [[account transports] objectAtIndex:index];	
 	
-	return service;
+	return account;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item;
 {
-	if([item isKindOfClass:[XMPPService class]])
+	if([item isKindOfClass:[JIMAccount class]])
 		return YES;
 	
 	return NO;
@@ -202,7 +162,7 @@
 	if([item isKindOfClass:[XMPPDiscoItemsItemElement class]])
 		return [[item jid] fullString];
 	else
-		return [serverField stringValue];
+		return [account.accountDict objectForKey:@"Server"];
 	
 	return nil;
 }
@@ -214,6 +174,9 @@
 	[mucChatrooms removeAllObjects];
 }
 	
-	
+- (void)notSupportedSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	[NSApp stopModal];
+}
 
 @end
