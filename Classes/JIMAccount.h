@@ -12,14 +12,17 @@
 extern NSString* const JIMAccountDidConnectNotification;
 extern NSString* const JIMAccountDidFailToConnectNotification;
 extern NSString* const JIMAccountDidFailToRegisterNotification;
+extern NSString* const JIMAccountDidRefreshListOfChatroomsNotification;
 
 @interface JIMAccount : NSObject {
 	NSMutableDictionary *accountDict;
-	NSMutableArray *transportDictArray;
 	NSString *error;
 	
 	XMPPChatService *xmppService;
 	XMPPPresenceShow show;
+	
+	NSMutableArray *transportDictArray;
+	NSMutableArray *chatroomArray;
 }
 
 @property (readonly) NSMutableDictionary *accountDict;
@@ -41,4 +44,8 @@ extern NSString* const JIMAccountDidFailToRegisterNotification;
 - (BOOL)transport:(XMPPDiscoItemsItemElement *)item hasFeature:(NSString *)feature;
 
 #pragma mark Multi-User Chat
+- (NSArray *)chatrooms;
+- (NSArray *)chatroomForName:(NSString *)name;
+- (void)refreshChatrooms;
+
 @end

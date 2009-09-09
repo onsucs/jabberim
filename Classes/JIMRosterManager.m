@@ -8,6 +8,12 @@
 
 #import "JIMRosterManager.h"
 
+@interface JIMRosterManager ()
+- (NSMutableArray *)buddies;
+- (void)sortBuddies;
+- (JIMAccount *)accountForJIDString:(NSString *)string;
+@end
+
 @implementation JIMRosterManager
 
 - (id)init
@@ -51,46 +57,33 @@
 	JIMOutlineCell *contactCell = [[[JIMOutlineCell alloc] init] autorelease];
 	[[rosterTable tableColumnWithIdentifier:@"Name"] setDataCell:contactCell];
 	
+	[existingChatroomsTable setTarget:self];
+	[existingChatroomsTable setDoubleAction:@selector(joinExistingChatroom:)];
+	
 	[[self window] makeKeyAndOrderFront:self];
 }
 
-- (NSMutableArray *)buddies
+#pragma mark Think of a name for it and tell me :P
+- (IBAction)chatroomAccountButton:(id)sender
 {
-	if (buddies == nil)
-	{
-		NSMutableArray *onlineArray = [[NSMutableArray alloc] initWithCapacity:5];
-		NSMutableArray *offlineArray = [[NSMutableArray alloc] initWithCapacity:5];
-		
-		buddies = [[NSMutableArray alloc] initWithCapacity:5];
-		[buddies addObject:onlineArray];
-		[buddies addObject:offlineArray];
-		
-		[onlineArray release];
-		[offlineArray release];
-	}
+	JIMAccount *selectedAccount = [self accountForJIDString:[sender titleOfSelectedItem]];
 	
-	return buddies;
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:JIMAccountDidRefreshListOfChatroomsNotification object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountDidRefreshListOfChatrooms:) name:JIMAccountDidRefreshListOfChatroomsNotification object:selectedAccount];
+	
+	[selectedAccount refreshChatrooms];
+	[[newChatroomService cell] setPlaceholderString:[[(XMPPDiscoItemsItemElement *)[selectedAccount transportForFeature:@"http://jabber.org/protocol/muc"] jid] fullString]];
+	
+	[existingChatroomsTable reloadData];
 }
 
-- (void)sortBuddies
+#pragma mark Buttons
+- (IBAction)showContactInfos:(id)sender
 {
-	for(XMPPUser *oneUser in [[self buddies] objectAtIndex:0])
-	{
-		if(![oneUser isOnline])
-		{
-			[[[self buddies] objectAtIndex:1] addObject:oneUser];
-			[[[self buddies] objectAtIndex:0] removeObject:oneUser];
-		}
-	}
-	
-	for(XMPPUser *oneUser in [[self buddies] objectAtIndex:1])
-	{
-		if([oneUser isOnline])
-		{
-			[[[self buddies] objectAtIndex:0] addObject:oneUser];
-			[[[self buddies] objectAtIndex:1] removeObject:oneUser];
-		}
-	}
+	if([rosterTable selectedRow] > -1 && [rosterTable levelForRow:[rosterTable selectedRow]] > 0)
+		[[NSNotificationCenter defaultCenter] postNotificationName:JIMBuddieInfoControllerShowUserNotification object:[rosterTable itemAtRow:[rosterTable selectedRow]]];
+	else
+		NSBeep();
 }
 
 - (IBAction)setStatus:(id)sender
@@ -123,11 +116,6 @@
 	}
 }
 
-- (IBAction)newChatroomAccountButton:(id)sender
-{
-	[[newChatroomService cell] setPlaceholderString:[NSString stringWithFormat:@"conference.%@", [XMPPJID jidWithString:[sender titleOfSelectedItem]].domain]];
-}
-
 - (IBAction)segmentedToolsButton:(id)sender
 {
 	if([sender selectedSegment] == 0)
@@ -148,14 +136,15 @@
 	}
 	else if([sender selectedSegment] == 2)
 	{
+		JIMAccount *selectedAccount = [self accountForJIDString:[chatroomAccountsButton titleOfSelectedItem]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountDidRefreshListOfChatrooms:) name:JIMAccountDidRefreshListOfChatroomsNotification object:selectedAccount];
+		[selectedAccount refreshChatrooms];
+		
 		[newChatroomName setStringValue:@""];
 		[newChatroomService setStringValue:@""];
-		[[newChatroomService cell] setPlaceholderString:[NSString stringWithFormat:@"conference.%@", [XMPPJID jidWithString:[newChatroomAccountsButton titleOfSelectedItem]].domain]];
+		[[newChatroomService cell] setPlaceholderString:[[(XMPPDiscoItemsItemElement *)[selectedAccount transportForFeature:@"http://jabber.org/protocol/muc"] jid] fullString]];
 		
 		[NSApp beginSheet:joinChatroomWindow modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(joinChatroomSheetDidEnd: returnCode: contextInfo:) contextInfo:nil];
-		[NSApp runModalForWindow:joinChatroomWindow];
-		[NSApp endSheet:joinChatroomWindow];
-		[joinChatroomWindow orderOut:self];
 	}
 }
 
@@ -192,14 +181,7 @@
 		NSBeep();
 }
 
-- (IBAction)showContactInfos:(id)sender
-{
-	if([rosterTable selectedRow] > -1 && [rosterTable levelForRow:[rosterTable selectedRow]] > 0)
-		[[NSNotificationCenter defaultCenter] postNotificationName:JIMBuddieInfoControllerShowUserNotification object:[rosterTable itemAtRow:[rosterTable selectedRow]]];
-	else
-		NSBeep();
-}
-
+#pragma mark Start chats
 - (IBAction)startChat:(id)sender
 {
 	if([rosterTable selectedRow] > -1 && [rosterTable levelForRow:[rosterTable selectedRow]] > 0)
@@ -208,6 +190,12 @@
 		NSBeep();
 }
 
+- (IBAction)joinExistingChatroom:(id)sender
+{
+	[NSApp endSheet:joinChatroomWindow returnCode:NSOKButton];
+}
+
+#pragma mark Sheet Methods
 - (IBAction)okSheet:(id)sender
 {
 	[NSApp endSheet:addContactWindow returnCode:NSOKButton];
@@ -222,10 +210,83 @@
 	[NSApp endSheet:joinChatroomWindow returnCode:NSCancelButton];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark Roster Table Data Source:
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Sheet Delegate Methods
+- (void)addContactSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	[NSApp stopModal];
+	
+	if(returnCode == NSOKButton)
+	{
+		XMPPService *serviceForAdding = nil;
+		for(JIMAccount *oneAccount in accountManager.accounts)
+			if([[oneAccount.xmppService.myJID bareString] isEqualToString:[newContactAccountsButton titleOfSelectedItem]])
+				serviceForAdding = oneAccount.xmppService;
+		
+		if(serviceForAdding)
+		{
+			XMPPSubscriptionRequest *request = [[[XMPPSubscriptionRequest alloc] initWithToJID:[XMPPJID jidWithString:[newContactJIDField stringValue]] service:serviceForAdding] autorelease];
+			[request send];
+		}
+		else
+			NSBeep();
+	}
+}
 
+- (void)removeContactSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	[NSApp stopModal];
+	
+	if(returnCode == NSOKButton)
+	{
+		XMPPUser *userForRemoval = [rosterTable itemAtRow:[rosterTable selectedRow]];
+		[userForRemoval unsubscribe];
+		[userForRemoval deleteFromRoster];
+	}
+}
+
+- (void)joinChatroomSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	[joinChatroomWindow orderOut:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:JIMAccountDidRefreshListOfChatroomsNotification object:nil];
+	
+	if(returnCode == NSOKButton)
+	{
+		if([chatroomTabView indexOfTabViewItem:[chatroomTabView selectedTabViewItem]] == 0)
+		{
+			if([existingChatroomsTable selectedRow] > -1)
+			{
+				JIMAccount *selectedAccount = [self accountForJIDString:[chatroomAccountsButton titleOfSelectedItem]];
+				XMPPJID *selectedAccountJID = [(XMPPDiscoItemsItemElement *)[[selectedAccount chatrooms] objectAtIndex:[existingChatroomsTable selectedRow]] jid];
+				XMPPRoom *chatroom = [XMPPRoom roomWithJID:selectedAccountJID  service:selectedAccount.xmppService];
+				[chatroom enter];
+				
+				[[NSNotificationCenter defaultCenter] postNotificationName:JIMChatManagerCreateNewChat object:chatroom];
+			}
+			else
+				NSBeep();
+		}
+		else
+		{
+			if(![[newChatroomName stringValue] isEqualToString:@""])
+			{
+				JIMAccount *selectedAccount = [self accountForJIDString:[chatroomAccountsButton titleOfSelectedItem]];
+				XMPPRoom *chatroom;
+				
+				if([[newChatroomService stringValue] isEqualToString:@""])
+					chatroom = [XMPPRoom roomWithJID:[XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@", [newChatroomName stringValue], [[newChatroomService cell] placeholderString]]] service:selectedAccount.xmppService];
+				else
+					chatroom = [XMPPRoom roomWithJID:[XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@", [newChatroomName stringValue], [newChatroomService stringValue]]] service:selectedAccount.xmppService];
+				
+				[chatroom enter];
+				[[NSNotificationCenter defaultCenter] postNotificationName:JIMChatManagerCreateNewChat object:chatroom];
+			}
+			else
+				NSBeep();
+		}
+	}
+}
+
+#pragma mark Roster Table
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item;
 {
 	if(item)
@@ -339,125 +400,87 @@
 		[cell setEnabled:NO];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark Sheet Delegate Methods:
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (void)addContactSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+#pragma mark Chatroom Table
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	[NSApp stopModal];
+	JIMAccount *accountOfChatrooms = nil;
+	for(JIMAccount *oneAccount in accountManager.accounts)
+		if([[oneAccount.xmppService.myJID bareString] isEqualToString:[chatroomAccountsButton titleOfSelectedItem]])
+			accountOfChatrooms = oneAccount;
 	
-	if(returnCode == NSOKButton)
-	{
-		XMPPService *serviceForAdding;
-		for(JIMAccount *oneAccount in accountManager.accounts)
-			if([[oneAccount.xmppService.myJID bareString] isEqualToString:[newContactAccountsButton titleOfSelectedItem]])
-				serviceForAdding = oneAccount.xmppService;
-		
-		if(serviceForAdding)
-		{
-			XMPPSubscriptionRequest *request = [[[XMPPSubscriptionRequest alloc] initWithToJID:[XMPPJID jidWithString:[newContactJIDField stringValue]] service:serviceForAdding] autorelease];
-			[request send];
-		}
-		else
-			NSBeep();
-	}
+	if(accountOfChatrooms)
+		return [[accountOfChatrooms chatrooms] count];
+	
+	return 0;
 }
 
-- (void)removeContactSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {
-	[NSApp stopModal];
+	JIMAccount *accountOfChatrooms = nil;
+	for(JIMAccount *oneAccount in accountManager.accounts)
+		if([[oneAccount.xmppService.myJID bareString] isEqualToString:[chatroomAccountsButton titleOfSelectedItem]])
+			accountOfChatrooms = oneAccount;
 	
-	if(returnCode == NSOKButton)
+	if(accountOfChatrooms)
 	{
-		XMPPUser *userForRemoval = [rosterTable itemAtRow:[rosterTable selectedRow]];
-		[userForRemoval unsubscribe];
-		[userForRemoval deleteFromRoster];
+		if([[tableColumn identifier] isEqualToString:@"Name"])
+			return [(XMPPDiscoItemsItemElement *)[[accountOfChatrooms chatrooms] objectAtIndex:rowIndex] name];
+		else if([[tableColumn identifier] isEqualToString:@"JID"])
+			return [[(XMPPDiscoItemsItemElement *)[[accountOfChatrooms chatrooms] objectAtIndex:rowIndex] jid] fullString];
 	}
+	
+	return @"";
 }
 
-- (void)joinChatroomSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-	[NSApp stopModal];
-	
-	if(returnCode == NSOKButton)
-	{
-		if(![[newChatroomName stringValue] isEqualToString:@""])
-		{
-			XMPPService *serviceForJoining;
-			for(JIMAccount *oneAccount in accountManager.accounts)
-				if([[oneAccount.xmppService.myJID bareString] isEqualToString:[newContactAccountsButton titleOfSelectedItem]])
-					serviceForJoining = oneAccount.xmppService;
-			
-			if(serviceForJoining)
-			{
-				XMPPRoom *chatroom;
-				if(![[newChatroomService stringValue] isEqualToString:@""])
-					chatroom = [XMPPRoom roomWithJID:[XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@", [newChatroomName stringValue], [newChatroomService stringValue]]] service:serviceForJoining];
-				else
-					chatroom = [XMPPRoom roomWithJID:[XMPPJID jidWithString:[NSString stringWithFormat:@"%@@%@", [newChatroomName stringValue], [[newChatroomService cell] placeholderString]]] service:serviceForJoining];
-				
-				[chatroom enter];
-				[[NSNotificationCenter defaultCenter] postNotificationName:JIMChatManagerCreateNewChat object:chatroom];
-			}
-			else
-				NSBeep();
-		}
-		else
-			NSBeep();
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark XMPPAccountManager/XMPPAccount Delegate Methods:
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+#pragma mark JIMAccountManager/JIMAccount Delegate Methods
 - (void)accountManagerDidAddAccount:(NSNotification *)note
 {
 	[newContactAccountsButton removeAllItems];
-	[newChatroomAccountsButton removeAllItems];
+	[chatroomAccountsButton removeAllItems];
 	
 	JIMAccount *oneAccount;
 	for(oneAccount in accountManager.accounts)
 		if([oneAccount.xmppService isAuthenticated])
 		{
 			[newContactAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
-			[newChatroomAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+			[chatroomAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
 		}
 }
 
 - (void)accountManagerDidRemoveAccount:(NSNotification *)note
 {
 	[newContactAccountsButton removeAllItems];
-	[newChatroomAccountsButton removeAllItems];
+	[chatroomAccountsButton removeAllItems];
 	
 	JIMAccount *oneAccount;
 	for(oneAccount in accountManager.accounts)
 		if([oneAccount.xmppService isAuthenticated])
 		{
 			[newContactAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
-			[newChatroomAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+			[chatroomAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
 		}
 }
 
 - (void)accountDidConnect:(NSNotification *)note
 {
 	[newContactAccountsButton removeAllItems];
-	[newChatroomAccountsButton removeAllItems];
+	[chatroomAccountsButton removeAllItems];
 	
 	JIMAccount *oneAccount;
 	for(oneAccount in accountManager.accounts)
 		if([oneAccount.xmppService isAuthenticated])
 		{
 			[newContactAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
-			[newChatroomAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
+			[chatroomAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
 		}
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark XMPPRoster Delegate Methods:
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)accountDidRefreshListOfChatrooms:(NSNotification *)note
+{
+	[existingChatroomsTable reloadData];
+}
 
+#pragma mark XMPPRoster Delegate Methods:
 - (void)rosterDidAddUsers:(NSNotification *)note
 {
 	NSSet *addedUsers = [note users];
@@ -505,6 +528,55 @@
 {
 	[self sortBuddies];
 	[rosterTable reloadData];
+}
+
+#pragma mark Private
+- (NSMutableArray *)buddies
+{
+	if (buddies == nil)
+	{
+		NSMutableArray *onlineArray = [[NSMutableArray alloc] initWithCapacity:5];
+		NSMutableArray *offlineArray = [[NSMutableArray alloc] initWithCapacity:5];
+		
+		buddies = [[NSMutableArray alloc] initWithCapacity:5];
+		[buddies addObject:onlineArray];
+		[buddies addObject:offlineArray];
+		
+		[onlineArray release];
+		[offlineArray release];
+	}
+	
+	return buddies;
+}
+
+- (void)sortBuddies
+{
+	for(XMPPUser *oneUser in [[self buddies] objectAtIndex:0])
+	{
+		if(![oneUser isOnline])
+		{
+			[[[self buddies] objectAtIndex:1] addObject:oneUser];
+			[[[self buddies] objectAtIndex:0] removeObject:oneUser];
+		}
+	}
+	
+	for(XMPPUser *oneUser in [[self buddies] objectAtIndex:1])
+	{
+		if([oneUser isOnline])
+		{
+			[[[self buddies] objectAtIndex:0] addObject:oneUser];
+			[[[self buddies] objectAtIndex:1] removeObject:oneUser];
+		}
+	}
+}
+
+- (JIMAccount *)accountForJIDString:(NSString *)string
+{
+	for(JIMAccount *oneAccount in accountManager.accounts)
+		if([[oneAccount.xmppService.myJID bareString] isEqualToString:string])
+			return oneAccount;
+	
+	return nil;
 }
 
 @end

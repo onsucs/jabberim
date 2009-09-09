@@ -364,7 +364,7 @@ NSString* const XMPPUsersKey = @"users";
 		NSXMLElement *imageBinVal = [[[iqStanza elementForName:@"vCard"] elementForName:@"PHOTO"] elementForName:@"BINVAL"];
 		NSData *base64Data = [[imageBinVal stringValue] dataUsingEncoding:NSASCIIStringEncoding];
 		
-		NSData *decodedData;
+		NSData *decodedData = nil;
 		if([[[[[iqStanza elementForName:@"vCard"] elementForName:@"PHOTO"] elementForName:@"TYPE"] stringValue] isEqualToString:@"image/png"])
 			decodedData = [base64Data decodeBase64WithNewLines:NO];
 		else if([[[[[iqStanza elementForName:@"vCard"] elementForName:@"PHOTO"] elementForName:@"TYPE"] stringValue] isEqualToString:@"image/jpeg"])

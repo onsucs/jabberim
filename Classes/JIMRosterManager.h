@@ -26,7 +26,9 @@
 	IBOutlet NSTextField *nicknameToRemove;
 	IBOutlet NSImageView *contactImageToRemove;
 	
-	IBOutlet NSPopUpButton *newChatroomAccountsButton;
+	IBOutlet NSPopUpButton *chatroomAccountsButton;
+	IBOutlet NSTabView *chatroomTabView;
+	IBOutlet NSTableView *existingChatroomsTable;
 	IBOutlet NSTextField *newChatroomName;
 	IBOutlet NSTextField *newChatroomService;
 	
@@ -42,7 +44,7 @@
 	NSMutableArray *chatrooms;
 }
 
-- (IBAction)newChatroomAccountButton:(id)sender;
+- (IBAction)chatroomAccountButton:(id)sender;
 
 - (IBAction)setStatus:(id)sender;
 - (IBAction)segmentedToolsButton:(id)sender;
@@ -50,15 +52,15 @@
 - (IBAction)mainMenuItemPressed:(id)sender;
 
 - (IBAction)showContactInfos:(id)sender;
+
 - (IBAction)startChat:(id)sender;
+- (IBAction)joinExistingChatroom:(id)sender;
 
 - (IBAction)okSheet:(id)sender;
 - (IBAction)cancleSheet:(id)sender;
 
 - (void)addContactSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (void)removeContactSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-
-- (void)sortBuddies;
-- (NSMutableArray *)buddies;
+- (void)joinChatroomSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 
 @end

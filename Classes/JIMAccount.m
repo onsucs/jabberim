@@ -12,6 +12,7 @@
 NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotification";
 NSString* const JIMAccountDidFailToConnectNotification = @"JIMAccountDidFailToConnectNotification";
 NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToRegisterNotification";
+NSString* const JIMAccountDidRefreshListOfChatroomsNotification = @"JIMAccountDidRefreshListOfChatroomsNotification";
 
 @implementation JIMAccount
 
@@ -29,6 +30,7 @@ NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToR
 		[accountDict retain];
 		
 		transportDictArray = [[NSMutableArray alloc] init];
+		chatroomArray = [[NSMutableArray alloc] init];
 		
 		XMPPJID *jid = [XMPPJID jidWithString:[accountDict objectForKey:@"JabberID"] resource:[accountDict objectForKey:@"Resource"]];
 		
@@ -74,6 +76,7 @@ NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToR
 	[xmppService disconnect];
 	[xmppService release];
 	[transportDictArray release];
+	[chatroomArray release];
 	[accountDict release];
 	
 	[super dealloc];
@@ -168,6 +171,25 @@ NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToR
 	return NO;
 }
 
+#pragma mark Multi-User Chat
+- (NSArray *)chatrooms
+{
+	return [chatroomArray sortedArrayUsingSelector:@selector(compareByName:)];
+}
+
+- (NSArray *)chatroomForName:(NSString *)name
+{
+	return nil;
+}
+
+- (void)refreshChatrooms
+{
+	XMPPDiscoItemsInfoQuery *itemsQuery = [[XMPPDiscoItemsInfoQuery alloc] initWithType:XMPPIQTypeGet to:nil service:xmppService];
+	[itemsQuery.stanza addAttributeWithName:@"to" stringValue:[[[self transportForFeature:@"http://jabber.org/protocol/muc"] jid] domain]];
+	[itemsQuery setDelegate:self];
+	[itemsQuery send];
+}
+
 #pragma mark XMPPService Delegate Methods
 - (void)serviceDidBeginConnect:(NSNotification *)note
 {
@@ -257,28 +279,36 @@ NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToR
 	{
 		XMPPDiscoItemsInfoQuery *itemsQuery = [note object];
 		
-		for(XMPPDiscoItemsItemElement *oneElement in [[itemsQuery items] allObjects])
+		if([itemsQuery.jid isEqual:[[self transportForFeature:@"http://jabber.org/protocol/muc"] jid]]) //Chatrooms
 		{
-			NSLog(@"JID String: %@", [oneElement.jid fullString]);
+			[chatroomArray removeAllObjects];
 			
-			[transportDictArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:oneElement, @"Transport Item", nil]];
+			for(XMPPDiscoItemsItemElement *oneElement in [[itemsQuery items] allObjects])
+				[chatroomArray addObject:oneElement];
 			
-			XMPPDiscoInfoInfoQuery *infoQuery = [[XMPPDiscoInfoInfoQuery alloc] initWithType:XMPPIQTypeGet to:oneElement.jid service:xmppService];
-			[infoQuery setDelegate:self];
-			[infoQuery send];
+			[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountDidRefreshListOfChatroomsNotification object:self];
+		}
+		else //Subservers
+		{
+			for(XMPPDiscoItemsItemElement *oneElement in [[itemsQuery items] allObjects])
+			{
+				NSLog(@"JID String: %@", [oneElement.jid fullString]);
+				
+				[transportDictArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:oneElement, @"Transport Item", nil]];
+				
+				XMPPDiscoInfoInfoQuery *infoQuery = [[XMPPDiscoInfoInfoQuery alloc] initWithType:XMPPIQTypeGet to:oneElement.jid service:xmppService];
+				[infoQuery setDelegate:self];
+				[infoQuery send];
+			}
 		}
 	}
-	else if([[note object] isKindOfClass:[XMPPDiscoInfoInfoQuery class]])
+	else if([[note object] isKindOfClass:[XMPPDiscoInfoInfoQuery class]]) //Feature for subserver
 	{
 		XMPPDiscoInfoInfoQuery *infoQuery = [note object];
 		
 		for(NSMutableDictionary *oneTransport in transportDictArray)
-		{
-			NSLog(@"Transport JID: %@, Query JID: %@", [[[oneTransport objectForKey:@"Transport Item"] jid] fullString], [infoQuery.jid fullString]);
-			
 			if([[[oneTransport objectForKey:@"Transport Item"] jid] isEqual:infoQuery.jid])
 				[oneTransport setObject:infoQuery forKey:@"Transport Features"];
-		}
 	}
 	
 	[[note object] release];

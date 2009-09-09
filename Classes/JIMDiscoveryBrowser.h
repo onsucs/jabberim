@@ -15,17 +15,19 @@
 @interface JIMDiscoveryBrowser : NSWindowController {
 	IBOutlet NSOutlineView *discoveryTable;
 	
-	IBOutlet NSWindow *mucWindow;
-	IBOutlet NSTableView *mucTable;
-	NSMutableArray *mucChatrooms;
+	IBOutlet NSWindow *tableWindow;
+	IBOutlet NSTableView *tableWindowTable;
+	NSMutableArray *tableWindowArray;
 	
 	IBOutlet NSWindow *notSupportedWindow;
 	
 	JIMAccount *account;
 }
 
-- (IBAction)cancleSheet:(id)sender;
-
+#pragma mark Opening
 - (void)openWithAccount:(JIMAccount *)aAccount;
+
+#pragma mark Button Methods
+- (IBAction)cancleSheet:(id)sender;
 
 @end

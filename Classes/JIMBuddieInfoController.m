@@ -118,7 +118,7 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 {
 	[self resetAllFieldsAndResetAvailableResources:NO];
 	
-	XMPPJID *toJID;
+	XMPPJID *toJID = nil;
 	
 	if([[sender titleOfSelectedItem] isEqualToString:@"Highest Priority"])
 	{

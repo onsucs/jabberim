@@ -223,6 +223,8 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	[defaults setObject:accountDicts forKey:@"Accounts"];
 	[defaults synchronize];
+	
+	[accountDicts release];
 }
 
 #pragma mark Sheet Delegates

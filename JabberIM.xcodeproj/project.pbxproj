@@ -680,9 +680,9 @@
 				CA13796910359C6700725A9F /* XMPPChatManager.h */,
 				CA13796A10359C6700725A9F /* XMPPChatManager.m */,
 				CA13796B10359C6700725A9F /* XMPPChatSession.h */,
+				CA13796C10359C6700725A9F /* XMPPChatSession.m */,
 				CA13797210359C6700725A9F /* XMPPSubscriptionManager.h */,
 				CA13797310359C6700725A9F /* XMPPSubscriptionManager.m */,
-				CA13796C10359C6700725A9F /* XMPPChatSession.m */,
 			);
 			name = Chat;
 			sourceTree = "<group>";
@@ -1177,6 +1177,7 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1194,6 +1195,7 @@
 					ppc,
 				);
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = NO;
