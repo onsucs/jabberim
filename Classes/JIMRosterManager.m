@@ -72,7 +72,7 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountDidRefreshListOfChatrooms:) name:JIMAccountDidRefreshListOfChatroomsNotification object:selectedAccount];
 	
 	[selectedAccount refreshChatrooms];
-	[[newChatroomService cell] setPlaceholderString:[[(XMPPDiscoItemsItemElement *)[selectedAccount transportForFeature:@"http://jabber.org/protocol/muc"] jid] fullString]];
+	[[newChatroomService cell] setPlaceholderString:[[[selectedAccount serviceForFeature:@"http://jabber.org/protocol/muc"] jid] fullString]];
 	
 	[existingChatroomsTable reloadData];
 }
@@ -142,7 +142,7 @@
 		
 		[newChatroomName setStringValue:@""];
 		[newChatroomService setStringValue:@""];
-		[[newChatroomService cell] setPlaceholderString:[[(XMPPDiscoItemsItemElement *)[selectedAccount transportForFeature:@"http://jabber.org/protocol/muc"] jid] fullString]];
+		[[newChatroomService cell] setPlaceholderString:[[[selectedAccount serviceForFeature:@"http://jabber.org/protocol/muc"] jid] fullString]];
 		
 		[NSApp beginSheet:joinChatroomWindow modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(joinChatroomSheetDidEnd: returnCode: contextInfo:) contextInfo:nil];
 	}

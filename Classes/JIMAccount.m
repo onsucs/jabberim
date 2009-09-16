@@ -7,7 +7,6 @@
 //
 
 #import "JIMAccount.h"
-#import "XMPP.h"
 
 NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotification";
 NSString* const JIMAccountDidFailToConnectNotification = @"JIMAccountDidFailToConnectNotification";
@@ -29,8 +28,8 @@ NSString* const JIMAccountDidRefreshListOfChatroomsNotification = @"JIMAccountDi
 		accountDict = [newAccountDict mutableCopy];
 		[accountDict retain];
 		
-		transportDictArray = [[NSMutableArray alloc] init];
-		chatroomArray = [[NSMutableArray alloc] init];
+		services = [[NSMutableArray alloc] init];
+		chatrooms = [[NSMutableArray alloc] init];
 		
 		XMPPJID *jid = [XMPPJID jidWithString:[accountDict objectForKey:@"JabberID"] resource:[accountDict objectForKey:@"Resource"]];
 		
@@ -75,8 +74,9 @@ NSString* const JIMAccountDidRefreshListOfChatroomsNotification = @"JIMAccountDi
 	[xmppService goOffline];
 	[xmppService disconnect];
 	[xmppService release];
-	[transportDictArray release];
-	[chatroomArray release];
+	
+	[services release];
+	[chatrooms release];
 	[accountDict release];
 	
 	[super dealloc];
@@ -126,55 +126,38 @@ NSString* const JIMAccountDidRefreshListOfChatroomsNotification = @"JIMAccountDi
 
 #pragma mark Transports and Features
 
-- (NSArray *)transports
+- (NSArray *)services
 {
-	NSMutableArray *mutableTransportsArray = [[NSMutableArray alloc] init];
-	
-	for(NSMutableDictionary *transportDict in transportDictArray)
-		[mutableTransportsArray addObject:[transportDict objectForKey:@"Transport Item"]];
-	
-	NSArray *transportsArray = [NSArray arrayWithArray:mutableTransportsArray];
-	[mutableTransportsArray release];
-	return transportsArray;
+	return services;
 }
 
-- (NSArray *)featuresOfTransport:(XMPPDiscoItemsItemElement *)item
+- (JIMService *)serviceForFeature:(NSString *)feature
 {
-	for(NSMutableDictionary *transportDict in transportDictArray)
-	{
-		if([[transportDict objectForKey:@"Transport Item"] isEqual:item])
-			return [transportDict objectForKey:@"Transport Features"];
-	}
+	for(JIMService *oneService in services)
+		if([oneService hasFeatureWithName:feature])
+		{
+			NSLog(@"Has feature");
+			return oneService;
+		}
 	
 	return nil;
 }
 
-- (XMPPDiscoItemsItemElement *)transportForFeature:(NSString *)feature
+- (NSArray *)servicesWithFeature:(NSString *)feature
 {
-	for(NSMutableDictionary *transportDict in transportDictArray)
-	{
-		if([(XMPPDiscoInfoInfoQuery *)[transportDict objectForKey:@"Transport Features"] hasFeatureWithName:feature])
-			return [transportDict objectForKey:@"Transport Item"];
-	}
+	NSMutableArray *servicesToReturn = [NSMutableArray array];
 	
-	return nil;
-}
-
-- (BOOL)transport:(XMPPDiscoItemsItemElement *)item hasFeature:(NSString *)feature
-{
-	for(NSMutableDictionary *transportDict in transportDictArray)
-	{
-		if([[[transportDict objectForKey:@"Transport Item"] jid] isEqual:item.jid])
-			return [(XMPPDiscoInfoInfoQuery *)[transportDict objectForKey:@"Transport Features"] hasFeatureWithName:feature];
-	}
+	for(JIMService *oneService in services)
+		if([oneService hasFeatureWithName:feature])
+			[servicesToReturn addObject:oneService];
 	
-	return NO;
+	return servicesToReturn;
 }
 
 #pragma mark Multi-User Chat
 - (NSArray *)chatrooms
 {
-	return [chatroomArray sortedArrayUsingSelector:@selector(compareByName:)];
+	return [chatrooms sortedArrayUsingSelector:@selector(compareByName:)];
 }
 
 - (NSArray *)chatroomForName:(NSString *)name
@@ -185,7 +168,7 @@ NSString* const JIMAccountDidRefreshListOfChatroomsNotification = @"JIMAccountDi
 - (void)refreshChatrooms
 {
 	XMPPDiscoItemsInfoQuery *itemsQuery = [[XMPPDiscoItemsInfoQuery alloc] initWithType:XMPPIQTypeGet to:nil service:xmppService];
-	[itemsQuery.stanza addAttributeWithName:@"to" stringValue:[[[self transportForFeature:@"http://jabber.org/protocol/muc"] jid] domain]];
+	[itemsQuery.stanza addAttributeWithName:@"to" stringValue:[[[self serviceForFeature:@"http://jabber.org/protocol/muc"] jid] domain]];
 	[itemsQuery setDelegate:self];
 	[itemsQuery send];
 }
@@ -279,36 +262,24 @@ NSString* const JIMAccountDidRefreshListOfChatroomsNotification = @"JIMAccountDi
 	{
 		XMPPDiscoItemsInfoQuery *itemsQuery = [note object];
 		
-		if([itemsQuery.jid isEqual:[[self transportForFeature:@"http://jabber.org/protocol/muc"] jid]]) //Chatrooms
+		if([itemsQuery.jid isEqual:[[self serviceForFeature:@"http://jabber.org/protocol/muc"] jid]]) //Chatrooms
 		{
-			[chatroomArray removeAllObjects];
+			[chatrooms removeAllObjects];
 			
 			for(XMPPDiscoItemsItemElement *oneElement in [[itemsQuery items] allObjects])
-				[chatroomArray addObject:oneElement];
+				[chatrooms addObject:oneElement];
 			
 			[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountDidRefreshListOfChatroomsNotification object:self];
 		}
-		else //Subservers
+		else //Services
 		{
 			for(XMPPDiscoItemsItemElement *oneElement in [[itemsQuery items] allObjects])
 			{
-				NSLog(@"JID String: %@", [oneElement.jid fullString]);
-				
-				[transportDictArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:oneElement, @"Transport Item", nil]];
-				
-				XMPPDiscoInfoInfoQuery *infoQuery = [[XMPPDiscoInfoInfoQuery alloc] initWithType:XMPPIQTypeGet to:oneElement.jid service:xmppService];
-				[infoQuery setDelegate:self];
-				[infoQuery send];
+				JIMService *oneService = [[JIMService alloc] initWithDiscoItemsItem:oneElement service:xmppService];
+				[services addObject:oneService];
+				[oneService release];
 			}
 		}
-	}
-	else if([[note object] isKindOfClass:[XMPPDiscoInfoInfoQuery class]]) //Feature for subserver
-	{
-		XMPPDiscoInfoInfoQuery *infoQuery = [note object];
-		
-		for(NSMutableDictionary *oneTransport in transportDictArray)
-			if([[[oneTransport objectForKey:@"Transport Item"] jid] isEqual:infoQuery.jid])
-				[oneTransport setObject:infoQuery forKey:@"Transport Features"];
 	}
 	
 	[[note object] release];
