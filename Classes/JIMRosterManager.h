@@ -41,10 +41,6 @@
 	IBOutlet JIMAccountManager *accountManager;
 	
 	NSMutableArray *groups;
-	
-	//NSMutableArray *buddies;
-	//NSMutableArray *buddieGroups;
-	
 	NSMutableArray *chatrooms;
 }
 

@@ -9,7 +9,6 @@
 #import "JIMRosterManager.h"
 
 @interface JIMRosterManager ()
-//- (NSMutableArray *)buddies;
 - (void)sortBuddies;
 - (JIMAccount *)accountForJIDString:(NSString *)string;
 - (JIMGroup *)groupWithName:(NSString *)groupName;
@@ -524,8 +523,6 @@
 	NSSound *newMessageSound = [[NSSound alloc] initWithContentsOfFile:@"/Applications/iChat.app/Contents/Resources/Buddy Logging Out.aiff" byReference:YES];
 	[newMessageSound play];
 	[newMessageSound release];
-	
-	//FIXME: Do not remove user when only one account is offline while another one is still online...
 }
 
 - (void)userDidChange:(NSNotification *)note
@@ -592,7 +589,6 @@
 		if([oneGroup.name isEqualToString:groupName])
 			return oneGroup;
 	
-	//OK we did not found the group, let's create it...
 	JIMGroup *newGroup = [[JIMGroup alloc] initWithName:groupName];
 	[groups addObject:newGroup];
 	[newGroup release];
