@@ -44,13 +44,13 @@
 	}
 }
 
-#pragma mark NSWindow Delegate Methods:
+#pragma mark NSWindow Delegate
 - (void)windowWillClose:(NSNotification *)notification
 {
 	[userDefaultsController save:self];
 }
 
-#pragma mark NSApp Delegate Methods:
+#pragma mark NSApp Delegate
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)theApplication hasVisibleWindows:(BOOL)flag
 {
 	if(!flag)

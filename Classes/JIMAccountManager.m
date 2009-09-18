@@ -15,6 +15,7 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 
 @synthesize accounts;
 
+#pragma mark Init and Dealloc
 - (id)init
 {
 	if((self = [super init]))
@@ -39,6 +40,38 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 	[accounts release];
 	
 	[super dealloc];
+}
+
+#pragma mark Load/Save Settings
+- (void)loadAccounts;
+{
+	NSArray *accountDicts = [[NSUserDefaults standardUserDefaults] objectForKey:@"Accounts"];
+	
+	NSDictionary *oneAccountDict;
+	for(oneAccountDict in accountDicts)
+	{		
+		JIMAccount *newAccount = [[JIMAccount alloc] initWithAccountDict:oneAccountDict];
+		[accounts addObject:newAccount];
+		[newAccount release];
+	}
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountManagerDidAddNewAccountNotification object:self];
+	[accountTable reloadData];
+}
+
+- (void)saveAccounts
+{
+	NSMutableArray *accountDicts = [[NSMutableArray alloc] initWithCapacity:[accounts count]];
+	
+	JIMAccount *oneAccount;
+	for(oneAccount in accounts)
+		[accountDicts addObject:oneAccount.accountDict];
+	
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	[defaults setObject:accountDicts forKey:@"Accounts"];
+	[defaults synchronize];
+	
+	[accountDicts release];
 }
 
 #pragma mark Sheet Actions
@@ -79,6 +112,7 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 		NSBeep();
 }
 
+#pragma mark Buttons
 - (IBAction)setStatus:(id)sender
 {
 	if([accountTable selectedRow] == -1)
@@ -160,62 +194,67 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 	}
 }
 
-- (void)resetNewAccountFields
+#pragma mark Account Table
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	[newAccountJID setStringValue:@""];
-	[newAccountPassword setStringValue:@""];
-	[newAccountResource setStringValue:@"JabberIM"];
-	[newAccountPriority setStringValue:@"1"];
-	[newAccountServer setStringValue:@""];
-	[newAccountPort setStringValue:@"5222"];
-	[newAccountAutoLogin setState:NSOnState];
-	[newAccountRegisterUser setState:NSOffState];
-	[newAccountForceOldSSL setState:NSOffState];
-	[newAccountAllowSelfSignedCerts setState:NSOffState];
-	[newAccountAllowHostMismatch setState:NSOffState];
-	
-	[newAccountSheet makeFirstResponder:newAccountJID];
+	return [accounts count];
 }
 
-- (void)resetRemoveAccountFields
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {
-	[removeAccountJID setStringValue:@""];
-	[removeAccountServer setStringValue:@""];
-}
-
-- (void)loadAccounts;
-{
-	NSArray *accountDicts = [[NSUserDefaults standardUserDefaults] objectForKey:@"Accounts"];
+	JIMAccount *account = [accounts objectAtIndex:rowIndex];
+	JIMCell *itemCell = [tableColumn dataCell];
 	
-	NSDictionary *oneAccountDict;
-	for(oneAccountDict in accountDicts)
-	{		
-		JIMAccount *newAccount = [[JIMAccount alloc] initWithAccountDict:oneAccountDict];
-		[accounts addObject:newAccount];
-		[newAccount release];
+	if([[tableColumn identifier] isEqualToString:@"Name"])
+	{
+		[itemCell setTitle:[account.xmppService.myJID fullString]];
+		
+		if(account.error)
+			[itemCell setSubtitle:account.error];
+		else
+			[itemCell setSubtitle:nil];
+		
+		[itemCell setImage:account.xmppService.serviceIcon];
+		
+		if(account.show != XMPPPresenceShowUnknown)
+		{
+			if(account.show == XMPPPresenceShowAvailable)
+				[itemCell setStatusImage:[NSImage imageNamed:@"available"]];
+			else if(account.show == XMPPPresenceShowChat)
+				[itemCell setStatusImage:[NSImage imageNamed:@"available"]];
+			else if(account.show == XMPPPresenceShowAway)
+				[itemCell setStatusImage:[NSImage imageNamed:@"away"]];
+			else if(account.show == XMPPPresenceShowExtendedAway)
+				[itemCell setStatusImage:[NSImage imageNamed:@"away"]];
+			else if(account.show == XMPPPresenceShowDoNotDisturb)
+				[itemCell setStatusImage:[NSImage imageNamed:@"busy"]];
+		}
+		else
+			[itemCell setStatusImage:[NSImage imageNamed:@"offline"]];
+		
+		[itemCell setEnabled:YES];
 	}
 	
-	[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountManagerDidAddNewAccountNotification object:self];
+	return itemCell;
+}
+
+#pragma mark JIMAccount delegate
+- (void)accountDidConnect:(NSNotification *)note
+{
 	[accountTable reloadData];
 }
 
-- (void)saveAccounts
+- (void)accountDidFailToConnect:(NSNotification *)note
 {
-	NSMutableArray *accountDicts = [[NSMutableArray alloc] initWithCapacity:[accounts count]];
-	
-	JIMAccount *oneAccount;
-	for(oneAccount in accounts)
-		[accountDicts addObject:oneAccount.accountDict];
-	
-	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	[defaults setObject:accountDicts forKey:@"Accounts"];
-	[defaults synchronize];
-	
-	[accountDicts release];
+	[accountTable reloadData];
+}
+
+- (void)accountDidFailToRegister:(NSNotification *)note
+{
+	[accountTable reloadData];
 }
 
 #pragma mark Sheet Delegates
-
 - (void)newAccountSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	[NSApp stopModal];
@@ -286,70 +325,28 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark Account Table Data Source:
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
+#pragma mark Others
+- (void)resetNewAccountFields
 {
-	return [accounts count];
-}
-
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
-{
-	JIMAccount *account = [accounts objectAtIndex:rowIndex];
-	JIMCell *itemCell = [tableColumn dataCell];
+	[newAccountJID setStringValue:@""];
+	[newAccountPassword setStringValue:@""];
+	[newAccountResource setStringValue:@"JabberIM"];
+	[newAccountPriority setStringValue:@"1"];
+	[newAccountServer setStringValue:@""];
+	[newAccountPort setStringValue:@"5222"];
+	[newAccountAutoLogin setState:NSOnState];
+	[newAccountRegisterUser setState:NSOffState];
+	[newAccountForceOldSSL setState:NSOffState];
+	[newAccountAllowSelfSignedCerts setState:NSOffState];
+	[newAccountAllowHostMismatch setState:NSOffState];
 	
-	if([[tableColumn identifier] isEqualToString:@"Name"])
-	{
-		[itemCell setTitle:[account.xmppService.myJID fullString]];
-		
-		if(account.error)
-			[itemCell setSubtitle:account.error];
-		else
-			[itemCell setSubtitle:nil];
-		
-		[itemCell setImage:account.xmppService.serviceIcon];
-		
-		if(account.show != XMPPPresenceShowUnknown)
-		{
-			if(account.show == XMPPPresenceShowAvailable)
-				[itemCell setStatusImage:[NSImage imageNamed:@"available"]];
-			else if(account.show == XMPPPresenceShowChat)
-				[itemCell setStatusImage:[NSImage imageNamed:@"available"]];
-			else if(account.show == XMPPPresenceShowAway)
-				[itemCell setStatusImage:[NSImage imageNamed:@"away"]];
-			else if(account.show == XMPPPresenceShowExtendedAway)
-				[itemCell setStatusImage:[NSImage imageNamed:@"away"]];
-			else if(account.show == XMPPPresenceShowDoNotDisturb)
-				[itemCell setStatusImage:[NSImage imageNamed:@"busy"]];
-		}
-		else
-			[itemCell setStatusImage:[NSImage imageNamed:@"offline"]];
-		
-		[itemCell setEnabled:YES];
-	}
-	
-	return itemCell;
+	[newAccountSheet makeFirstResponder:newAccountJID];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark JIMAccount delegate
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (void)accountDidConnect:(NSNotification *)note
+- (void)resetRemoveAccountFields
 {
-	[accountTable reloadData];
-}
-
-- (void)accountDidFailToConnect:(NSNotification *)note
-{
-	[accountTable reloadData];
-}
-
-- (void)accountDidFailToRegister:(NSNotification *)note
-{
-	[accountTable reloadData];
+	[removeAccountJID setStringValue:@""];
+	[removeAccountServer setStringValue:@""];
 }
 
 @end

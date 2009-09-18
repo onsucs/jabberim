@@ -37,7 +37,7 @@
 	[super dealloc];
 }
 
-#pragma mark IBActions
+#pragma mark Buttons
 - (IBAction)approve:(id)sender
 {
 	XMPPSubscriptionRequest *request = [requests objectAtIndex:[subscriptionTable selectedRow]];
@@ -80,7 +80,7 @@
 	[subscriptionTable reloadData];
 }
 
-#pragma mark NSTaleView Delegate
+#pragma mark Subscription Table
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return [requests count];

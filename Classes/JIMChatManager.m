@@ -48,7 +48,7 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 	chatControllerArray = [[NSMutableArray alloc] initWithCapacity:3];
 }
 
-#pragma mark IBActions:
+#pragma mark Buttons
 - (IBAction)stopChat:(id)sender
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -107,10 +107,7 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 	[chatControllerView addSubview:self.selectedChatView];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark Chat Controller Table Data Source:
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+#pragma mark Chat Controller Table
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return [chatControllerArray count];
@@ -189,7 +186,7 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 	self.selectedChatView = [(JIMChatController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatView];
 }
 
-#pragma mark Notifications:
+#pragma mark Notifications
 - (void)createChat:(NSNotification *)note
 {
 	id<XMPPChatPartner> chatPartner = [note object];
@@ -238,10 +235,7 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 	}
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark XMPPService Delegate Methods:
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+#pragma mark XMPPService Delegate
 - (void)chatDidReceiveMessage:(NSNotification *)note
 {
 	XMPPChatSession *searchedChatSession = [note object];
@@ -286,17 +280,14 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 	[chatControllerTable reloadData];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark NSSound Delegate Methods:
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (void)sound:(NSSound *)sound didFinishPlaying:(BOOL)finishedPlaying
+#pragma mark NSWindow Delegate
+- (void)windowWillClose:(NSNotification *)notification
 {
-	if(finishedPlaying)
-		[sound release];
+	self.selectedChatView = nil;
+	[chatControllerArray removeAllObjects];
 }
 
-#pragma mark Sheet Delegate Methods:
+#pragma mark Sheet Delegate
 - (void)inviteUserSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	[NSApp stopModal];
@@ -310,13 +301,6 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 			[inviteUserReason setStringValue:@""];
 		}
 	}
-}
-
-#pragma mark NSWindow Delegate Methods:
-- (void)windowWillClose:(NSNotification *)notification
-{
-	self.selectedChatView = nil;
-	[chatControllerArray removeAllObjects];
 }
 
 @end

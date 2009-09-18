@@ -14,6 +14,7 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 
 @synthesize xmppUser;
 
+#pragma mark Init and Dealloc
 - (id)init
 {
 	if((self = [super init]))
@@ -34,47 +35,7 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 	[super dealloc];
 }
 
-- (void)resetAllFieldsAndResetAvailableResources:(BOOL)resetResources
-{
-	if(resetResources)
-	{
-		[availableResources removeAllItems];
-		[availableResources addItemWithTitle:@"Highest Priority"];
-		
-		XMPPResource *oneResource;
-		for (oneResource in [xmppUser sortedResources])
-			[availableResources addItemWithTitle:[[oneResource jid] fullString]];
-	}
-	
-	[timeOfLastActivity setStringValue:@"Not available"];
-	[status setStringValue:@"Not available"];
-	[statusRecieved setStringValue:@"Not available"];
-	[priority setStringValue:@"Not available"];
-	[clientID setStringValue:@"Not available"];
-	[clientVersion setStringValue:@"Not available"];
-	[clientOS setStringValue:@"Not available"];
-}
-
-- (void)refreshAllFieldsWithResource:(XMPPResource *)resource
-{
-	if([xmppUser isOnline])
-	{
-		[priority setStringValue:[NSString stringWithFormat:@"%i", [resource  priority]]];
-		
-		if(resource.statusString)
-			[status setStringValue:resource.statusString];
-		else
-			[status setStringValue:@"Online"];
-		
-		[statusRecieved setObjectValue:resource.lastPresenceUpdate];
-	}
-	else
-		[status setStringValue:@"Offline"];
-	
-	//if([xmppUser error])
-		//[status setStringValue:[xmppUser error]];
-}
-
+#pragma mark XMPPUser Setter
 - (void)setXmppUser:(XMPPUser *)newXmppUser;
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -114,6 +75,7 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 	}
 }
 
+#pragma mark Buttons
 - (IBAction)setResource:(id)sender
 {
 	[self resetAllFieldsAndResetAvailableResources:NO];
@@ -183,7 +145,7 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 	[[note object] release];
 }
 
-#pragma mark XMPPRoster delegate
+#pragma mark XMPPRoster Delegate
 
 - (void)userDidChange:(NSNotification *)note
 {
@@ -210,11 +172,53 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 	}
 }
 
-#pragma mark NSWindow delegate
+#pragma mark NSWindow Delegate
 
 - (void)windowWillClose:(NSNotification *)notification
 {
 	self.xmppUser = nil;
+}
+
+#pragma mark Others
+- (void)resetAllFieldsAndResetAvailableResources:(BOOL)resetResources
+{
+	if(resetResources)
+	{
+		[availableResources removeAllItems];
+		[availableResources addItemWithTitle:@"Highest Priority"];
+		
+		XMPPResource *oneResource;
+		for (oneResource in [xmppUser sortedResources])
+			[availableResources addItemWithTitle:[[oneResource jid] fullString]];
+	}
+	
+	[timeOfLastActivity setStringValue:@"Not available"];
+	[status setStringValue:@"Not available"];
+	[statusRecieved setStringValue:@"Not available"];
+	[priority setStringValue:@"Not available"];
+	[clientID setStringValue:@"Not available"];
+	[clientVersion setStringValue:@"Not available"];
+	[clientOS setStringValue:@"Not available"];
+}
+
+- (void)refreshAllFieldsWithResource:(XMPPResource *)resource
+{
+	if([xmppUser isOnline])
+	{
+		[priority setStringValue:[NSString stringWithFormat:@"%i", [resource  priority]]];
+		
+		if(resource.statusString)
+			[status setStringValue:resource.statusString];
+		else
+			[status setStringValue:@"Online"];
+		
+		[statusRecieved setObjectValue:resource.lastPresenceUpdate];
+	}
+	else
+		[status setStringValue:@"Offline"];
+	
+	//if([xmppUser error])
+	//[status setStringValue:[xmppUser error]];
 }
 
 @end

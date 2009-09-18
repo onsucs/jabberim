@@ -13,6 +13,7 @@
 @synthesize chatView;
 @synthesize chatSession;
 
+#pragma mark Init and Dealloc
 - (id)initWithChatPartner:(id<XMPPChatPartner>)aPartner message:(XMPPChatMessage *)aMessage
 {
 	if((self = [super init]))
@@ -64,6 +65,7 @@
 	[super dealloc];
 }
 
+#pragma mark Buttons
 - (IBAction)setResource:(id)sender
 {
 	NSAttributedString *as = [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"Changed resource to: %@", [sender titleOfSelectedItem]] attributes:nil] autorelease];
@@ -102,31 +104,7 @@
 	[self scrollToBottom];
 }
 
-- (void)scrollToBottom
-{
-	NSScrollView *scrollView = [oldMessagesField enclosingScrollView];
-	NSPoint newScrollOrigin;
-	
-	if ([[scrollView documentView] isFlipped])
-		newScrollOrigin = NSMakePoint(0.0F, NSMaxY([[scrollView documentView] frame]));
-	else
-		newScrollOrigin = NSMakePoint(0.0F, 0.0F);
-	
-	[[scrollView documentView] scrollPoint:newScrollOrigin];
-}
-
-- (void)observeRoom
-{
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	[nc addObserver:self selector:@selector(roomDidAddOccupant:) name:XMPPRoomDidAddOccupantNotification object:self.chatSession.chatPartner];
-	[nc addObserver:self selector:@selector(roomDidRemoveOccupant:) name:XMPPRoomDidRemoveOccupantNotification object:self.chatSession.chatPartner];
-	[nc removeObserver:self name:XMPPUserDidChangePresenceNotification object:nil];
-	[nc removeObserver:self name:XMPPUserDidChangeNameNotification object:nil];
-	
-	[chatMembersTable reloadData];
-}
-
-#pragma mark Chat Members Table:
+#pragma mark Chat Members Table
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	if(self.chatSession.isGroupChat)
@@ -162,7 +140,7 @@
 	return nil;
 }
 
-#pragma mark Chat Session Delegates
+#pragma mark Chat Session Delegate
 - (void)chatDidSendMessage:(NSNotification *)note
 {
 	XMPPChatMessage *message = (XMPPChatMessage *)[note chatMessage];
@@ -238,6 +216,31 @@
 
 - (void)roomDidRemoveOccupant:(NSNotification *)note
 {
+	[chatMembersTable reloadData];
+}
+
+#pragma mark Others
+- (void)scrollToBottom
+{
+	NSScrollView *scrollView = [oldMessagesField enclosingScrollView];
+	NSPoint newScrollOrigin;
+	
+	if ([[scrollView documentView] isFlipped])
+		newScrollOrigin = NSMakePoint(0.0F, NSMaxY([[scrollView documentView] frame]));
+	else
+		newScrollOrigin = NSMakePoint(0.0F, 0.0F);
+	
+	[[scrollView documentView] scrollPoint:newScrollOrigin];
+}
+
+- (void)observeRoom
+{
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self selector:@selector(roomDidAddOccupant:) name:XMPPRoomDidAddOccupantNotification object:self.chatSession.chatPartner];
+	[nc addObserver:self selector:@selector(roomDidRemoveOccupant:) name:XMPPRoomDidRemoveOccupantNotification object:self.chatSession.chatPartner];
+	[nc removeObserver:self name:XMPPUserDidChangePresenceNotification object:nil];
+	[nc removeObserver:self name:XMPPUserDidChangeNameNotification object:nil];
+	
 	[chatMembersTable reloadData];
 }
 

@@ -39,20 +39,18 @@ extern NSString* const JIMAccountManagerDidRemoveAccountNotification;
 
 @property (readonly) NSMutableArray *accounts;
 
+- (void)loadAccounts;
+- (void)saveAccounts;
+
 - (IBAction)openNewAccountSheet:(id)sender;
 - (IBAction)openRemoveAccountSheet:(id)sender;
 - (IBAction)setStatus:(id)sender;
 - (IBAction)okSheet:(id)sender;
 - (IBAction)cancleSheet:(id)sender;
-
 - (IBAction)editAccount:(id)sender;
-
 - (IBAction)jabberIDEntered:(id)sender;
 
 - (void)resetNewAccountFields;
 - (void)resetRemoveAccountFields;
-
-- (void)loadAccounts;
-- (void)saveAccounts;
 
 @end

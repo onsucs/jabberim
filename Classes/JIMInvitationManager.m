@@ -35,7 +35,7 @@
 	[super dealloc];
 }
 
-#pragma mark IBActions
+#pragma mark Buttons
 - (IBAction)accept:(id)sender
 {
 	XMPPInvitationMessage *invitation = [invitations objectAtIndex:[invitationTable selectedRow]];
@@ -59,7 +59,7 @@
 		[invitationWindow close];
 }
 
-#pragma mark NSTaleView Delegate
+#pragma mark Invitation Table
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	return [invitations count];
