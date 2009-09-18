@@ -46,6 +46,8 @@ extern NSString* const XMPPUserDidChangeChatStateNotification;
 @property (nonatomic, readonly)			NSString *shortDisplayName;	// "Best" name for user in a shorter form (without domain for JIDs)
 @property (nonatomic, readwrite, retain) NSImage *image;
 
+@property (nonatomic, readwrite, retain) NSSet *groupNames;	// FIXME: Update server on change
+
 @property (nonatomic, readonly)			BOOL isOnline;
 @property (nonatomic, readonly)			BOOL isPendingApproval;
 

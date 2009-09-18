@@ -22,7 +22,6 @@ NSString* const XMPPUsersKey = @"users";
 @property (nonatomic, readwrite, assign)	XMPPService *service;
 @property (nonatomic, readwrite, retain, setter=setJID:) XMPPJID *jid;
 @property (nonatomic, readwrite, copy)		NSString *name;
-@property (nonatomic, readwrite, retain)	NSSet *groupNames;	// FIXME: Make public (and update server on change)
 @property (nonatomic, readwrite, assign)	BOOL isPendingApproval;
 @property (nonatomic, readwrite, assign)	XMPPSubscription subscription;
 @property (nonatomic, readwrite, retain)	NSMutableDictionary *resources;

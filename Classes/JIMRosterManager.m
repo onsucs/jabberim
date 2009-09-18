@@ -9,9 +9,10 @@
 #import "JIMRosterManager.h"
 
 @interface JIMRosterManager ()
-- (NSMutableArray *)buddies;
+//- (NSMutableArray *)buddies;
 - (void)sortBuddies;
 - (JIMAccount *)accountForJIDString:(NSString *)string;
+- (JIMGroup *)groupWithName:(NSString *)groupName;
 @end
 
 @implementation JIMRosterManager
@@ -24,7 +25,13 @@
 		[nc addObserver:self selector:@selector(rosterDidAddUsers:) name:XMPPRosterDidAddUsersNotification object:nil];
 		[nc addObserver:self selector:@selector(rosterDidRemoveUsers:) name:XMPPRosterDidRemoveUsersNotification object:nil];
 		
-		buddieGroups = [[NSMutableArray alloc] initWithObjects:@"Online", @"Offline", nil];
+		groups = [[NSMutableArray alloc] init];
+		JIMGroup *noGroupGroup = [[JIMGroup alloc] initWithName:@"Not grouped"];
+		JIMGroup *offlineGroup = [[JIMGroup alloc] initWithName:@"Offline"];
+		[groups addObject:noGroupGroup];
+		[groups addObject:offlineGroup];
+		[noGroupGroup release];
+		[offlineGroup release];
 	}
 	return self;
 }
@@ -37,8 +44,7 @@
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
-	[buddies release];
-	[buddieGroups release];
+	[groups release];
 	
 	[[self window] close];
 	
@@ -290,41 +296,42 @@
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item;
 {
 	if(item)
-		return [item count];
-	
-	BOOL hasAUser = NO;
-	for(NSArray *oneGroupArray in [self buddies])
-		if([oneGroupArray count] != 0)
-			hasAUser = YES;
-	
-	if(hasAUser)
-		return [[self buddies] count];
-	else
-		return 0;
+	{
+		if([item isKindOfClass:[JIMGroup class]])
+			return [[(JIMGroup *)item users] count];
+		else return 0;
+	}
+	else return [groups count];
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(id)item;
 {
 	if(item)
-		return [[(NSArray *)item sortedArrayUsingSelector:@selector(compareByAvailabilityName:)] objectAtIndex:index];	
+	{
+		if([item isKindOfClass:[JIMGroup class]])
+			return [[[(JIMGroup *)item users] sortedArrayUsingSelector:@selector(compareByAvailabilityName:)] objectAtIndex:index];
+		else return 0;
+	}
 	
-	return [[self buddies] objectAtIndex:index];
+	return [[groups sortedArrayUsingSelector:@selector(compareByName:)] objectAtIndex:index];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item;
 {
-	if([item isKindOfClass:[NSMutableArray class]])
+	if([item isKindOfClass:[JIMGroup class]])
 		return YES;
 	
 	return NO;
 }
 
-- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)user;
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item;
 {
 	JIMCell *itemCell = [tableColumn dataCell];
 	
-	if([user isKindOfClass:[XMPPUser class]])
+	if([item isKindOfClass:[XMPPUser class]])
 	{
+		XMPPUser *user = item;
+		
 		if([[tableColumn identifier] isEqualToString:@"Name"])
 		{
 			[itemCell setTitle:[user displayName]];
@@ -359,9 +366,11 @@
 			[itemCell setEnabled:NO];
 		}
 	}
-	else //From now on user is a NSArray
+	else if([item isKindOfClass:[JIMGroup class]])
 	{
-		[itemCell setTitle:[buddieGroups objectAtIndex:[[self buddies] indexOfObject:user]]];
+		JIMGroup *group = item;
+		
+		[itemCell setTitle:group.name];
 		[itemCell setSubtitle:nil];
 		[itemCell setImage:nil];
 		[itemCell setStatusImage:nil];
@@ -393,11 +402,9 @@
 	{
 		if([item isOnline])
 			[cell setEnabled:YES];
-		else
-			[cell setEnabled:NO];
+		else [cell setEnabled:NO];
 	}
-	else
-		[cell setEnabled:NO];
+	else [cell setEnabled:NO];
 }
 
 #pragma mark Chatroom Table
@@ -485,19 +492,15 @@
 {
 	NSSet *addedUsers = [note users];
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	for (XMPPUser *user in addedUsers)
+	for (XMPPUser *oneUser in addedUsers)
 	{
-		if([user isOnline])
-			[[[self buddies] objectAtIndex:0] addObject:user];
-		else
-			[[[self buddies] objectAtIndex:1] addObject:user];
+		[[self groupWithName:@"Offline"] addUser:oneUser];
 		
-		[nc addObserver:self selector:@selector(userDidChange:) name:XMPPUserDidChangePresenceNotification object:user];
-		[nc addObserver:self selector:@selector(userDidChange:) name:XMPPUserDidChangeNameNotification object:user];
+		[nc addObserver:self selector:@selector(userDidChange:) name:XMPPUserDidChangePresenceNotification object:oneUser];
+		[nc addObserver:self selector:@selector(userDidChange:) name:XMPPUserDidChangeNameNotification object:oneUser];
 	}
 	
 	[self sortBuddies];
-	[rosterTable reloadData];
 	
 	NSSound *newMessageSound = [[NSSound alloc] initWithContentsOfFile:@"/Applications/iChat.app/Contents/Resources/Buddy Logging In.aiff" byReference:YES];
 	[newMessageSound play];
@@ -508,64 +511,66 @@
 {
 	NSSet *removedUsers = [note users];
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	for (XMPPUser *user in removedUsers)
+	for (XMPPUser *oneUser in removedUsers)
 	{
-		[nc removeObserver:self name:nil object:user];
+		[nc removeObserver:self name:nil object:oneUser];
 		
-		if([user isOnline])
-			[[[self buddies] objectAtIndex:0] removeObject:user];
-		else
-			[[[self buddies] objectAtIndex:1] removeObject:user];
+		for(JIMGroup *oneGroup in groups)
+			[oneGroup removeUser:oneUser];
 	}	
-	[rosterTable reloadData];
+	
+	[self sortBuddies];
 	
 	NSSound *newMessageSound = [[NSSound alloc] initWithContentsOfFile:@"/Applications/iChat.app/Contents/Resources/Buddy Logging Out.aiff" byReference:YES];
 	[newMessageSound play];
 	[newMessageSound release];
+	
+	//FIXME: Do not remove user when only one account is offline while another one is still online...
 }
 
 - (void)userDidChange:(NSNotification *)note
 {
 	[self sortBuddies];
-	[rosterTable reloadData];
 }
 
 #pragma mark Private
-- (NSMutableArray *)buddies
-{
-	if (buddies == nil)
-	{
-		NSMutableArray *onlineArray = [[NSMutableArray alloc] initWithCapacity:5];
-		NSMutableArray *offlineArray = [[NSMutableArray alloc] initWithCapacity:5];
-		
-		buddies = [[NSMutableArray alloc] initWithCapacity:5];
-		[buddies addObject:onlineArray];
-		[buddies addObject:offlineArray];
-		
-		[onlineArray release];
-		[offlineArray release];
-	}
-	
-	return buddies;
-}
-
 - (void)sortBuddies
 {
-	for(XMPPUser *oneUser in [[self buddies] objectAtIndex:0])
+	for(JIMGroup *oneGroup in groups)
 	{
-		if(![oneUser isOnline])
+		if([oneGroup.name isEqualToString:@"Offline"])
 		{
-			[[[self buddies] objectAtIndex:1] addObject:oneUser];
-			[[[self buddies] objectAtIndex:0] removeObject:oneUser];
+			for(XMPPUser *oneUser in oneGroup.users)
+			{
+				if([oneUser isOnline])
+				{
+					if([[oneUser.groupNames allObjects] count] > 0)
+						for(NSString *oneGroupName in [oneUser.groupNames allObjects])
+						{
+							JIMGroup *groupWithName = [self groupWithName:oneGroupName];
+							[groupWithName addUser:oneUser];
+							[rosterTable reloadItem:groupWithName];
+						}
+					
+					[oneGroup removeUser:oneUser];
+					[rosterTable reloadItem:oneGroup];
+				}
+			}
 		}
-	}
-	
-	for(XMPPUser *oneUser in [[self buddies] objectAtIndex:1])
-	{
-		if([oneUser isOnline])
+		else
 		{
-			[[[self buddies] objectAtIndex:0] addObject:oneUser];
-			[[[self buddies] objectAtIndex:1] removeObject:oneUser];
+			for(XMPPUser *oneUser in oneGroup.users)
+			{
+				if(![oneUser isOnline])
+				{
+					JIMGroup *offlineGroup = [self groupWithName:@"Offline"];
+					[offlineGroup addUser:oneUser];
+					[oneGroup removeUser:oneUser];
+					
+					[rosterTable reloadItem:offlineGroup];
+					[rosterTable reloadItem:oneGroup];
+				}
+			}
 		}
 	}
 }
@@ -577,6 +582,26 @@
 			return oneAccount;
 	
 	return nil;
+}
+
+- (JIMGroup *)groupWithName:(NSString *)groupName
+{
+	NSLog(@"Searching for group with name: %@", groupName);
+	
+	for(JIMGroup *oneGroup in groups)
+		if([oneGroup.name isEqualToString:groupName])
+			return oneGroup;
+	
+	//OK we did not found the group, let's create it...
+	JIMGroup *newGroup = [[JIMGroup alloc] initWithName:groupName];
+	[groups addObject:newGroup];
+	[newGroup release];
+	
+	[rosterTable reloadData];
+	
+	return [self groupWithName:groupName];
+	
+	//FIXME: Support for groups with same name
 }
 
 @end

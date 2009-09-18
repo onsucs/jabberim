@@ -13,6 +13,8 @@
 #import <JIMChatManager.h>
 #import <JIMOutlineCell.h>
 
+#import <JIMGroup.h>
+
 @interface JIMRosterManager : NSWindowController {
 	IBOutlet NSWindow *addContactWindow;
 	IBOutlet NSWindow *removeContactWindow;
@@ -38,8 +40,10 @@
 	
 	IBOutlet JIMAccountManager *accountManager;
 	
-	NSMutableArray *buddies;
-	NSMutableArray *buddieGroups;
+	NSMutableArray *groups;
+	
+	//NSMutableArray *buddies;
+	//NSMutableArray *buddieGroups;
 	
 	NSMutableArray *chatrooms;
 }
