@@ -76,8 +76,19 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 	[accountDicts release];
 }
 
-#pragma mark Sheet Actions
+#pragma mark Accessors
+- (NSArray *)enabledAccounts
+{
+	NSMutableArray *enabledAccounts = [NSMutableArray array];
+	
+	for(JIMAccount *oneAccount in accounts)
+		if([oneAccount.xmppService isAuthenticated] || [[oneAccount.accountDict objectForKey:@"AutoLogin"] intValue] == NSOnState)
+			[enabledAccounts addObject:oneAccount];
+	
+	return enabledAccounts;
+}
 
+#pragma mark Sheet Actions
 - (IBAction)openNewAccountSheet:(id)sender
 {
 	[self resetNewAccountFields];

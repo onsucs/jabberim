@@ -100,29 +100,27 @@
 	if([[sender titleOfSelectedItem] isEqualToString:@"Offline"])
 	{
 		JIMAccount *oneAccount;
-		for(oneAccount in accountManager.accounts)
+		for(oneAccount in [accountManager enabledAccounts])
 			[oneAccount goOffline];
 	}
 	else
 	{
 		JIMAccount *oneAccount;
-		for(oneAccount in accountManager.accounts)
+		for(oneAccount in [accountManager enabledAccounts])
 		{
-			if([[oneAccount.accountDict objectForKey:@"AutoLogin"] intValue] == NSOnState)
-			{
-				if(![oneAccount.xmppService isAuthenticated])
-					[oneAccount.xmppService authenticateUser];
-				
-				if([[sender titleOfSelectedItem] isEqualToString:@"Available"])
-					[oneAccount setShow:XMPPPresenceShowAvailable andStatus:nil];
-				else if([[sender titleOfSelectedItem] isEqualToString:@"Away"])
-					[oneAccount setShow:XMPPPresenceShowAway andStatus:@"Away"];
-				else if([[sender titleOfSelectedItem] isEqualToString:@"Chat"])
-					[oneAccount setShow:XMPPPresenceShowChat andStatus:@"I want to chat"];
-				else if([[sender titleOfSelectedItem] isEqualToString:@"Away (Extended)"])
-					[oneAccount setShow:XMPPPresenceShowExtendedAway andStatus:@"Extended away"];
-				else if([[sender titleOfSelectedItem] isEqualToString:@"Do not Disturb"])
-					[oneAccount setShow:XMPPPresenceShowDoNotDisturb andStatus:@"Do not Disturb"];
+			if(![oneAccount.xmppService isAuthenticated])
+				[oneAccount.xmppService authenticateUser];
+			
+			if([[sender titleOfSelectedItem] isEqualToString:@"Available"])
+				[oneAccount setShow:XMPPPresenceShowAvailable andStatus:nil];
+			else if([[sender titleOfSelectedItem] isEqualToString:@"Away"])
+				[oneAccount setShow:XMPPPresenceShowAway andStatus:@"Away"];
+			else if([[sender titleOfSelectedItem] isEqualToString:@"Chat"])
+				[oneAccount setShow:XMPPPresenceShowChat andStatus:@"I want to chat"];
+			else if([[sender titleOfSelectedItem] isEqualToString:@"Away (Extended)"])
+				[oneAccount setShow:XMPPPresenceShowExtendedAway andStatus:@"Extended away"];
+			else if([[sender titleOfSelectedItem] isEqualToString:@"Do not Disturb"])
+				[oneAccount setShow:XMPPPresenceShowDoNotDisturb andStatus:@"Do not Disturb"];
 			}
 		}
 	}
@@ -413,35 +411,37 @@
 
 - (void)accountDidChangeStatus:(NSNotification *)note
 {
-	for(JIMAccount *oneAccount in accountManager.accounts)
+	NSArray *enabledAccounts = [accountManager enabledAccounts];
+	
+	for(JIMAccount *oneAccount in enabledAccounts)
 		if(oneAccount.show == XMPPPresenceShowAvailable)
 		{
 			[statusButton selectItemWithTag:1];
 			return;
 		}
 	
-	for(JIMAccount *oneAccount in accountManager.accounts)
+	for(JIMAccount *oneAccount in enabledAccounts)
 		if(oneAccount.show == XMPPPresenceShowChat)
 		{
 			[statusButton selectItemWithTag:2];
 			return;
 		}
 	
-	for(JIMAccount *oneAccount in accountManager.accounts)
+	for(JIMAccount *oneAccount in enabledAccounts)
 		if(oneAccount.show == XMPPPresenceShowDoNotDisturb)
 		{
 			[statusButton selectItemWithTag:5];
 			return;
 		}
 	
-	for(JIMAccount *oneAccount in accountManager.accounts)
+	for(JIMAccount *oneAccount in enabledAccounts)
 		if(oneAccount.show == XMPPPresenceShowExtendedAway)
 		{
 			[statusButton selectItemWithTag:4];
 			return;
 		}
 	
-	for(JIMAccount *oneAccount in accountManager.accounts)
+	for(JIMAccount *oneAccount in enabledAccounts)
 		if(oneAccount.show == XMPPPresenceShowAway)
 		{
 			[statusButton selectItemWithTag:3];
@@ -579,9 +579,31 @@
 #pragma mark NSMenu Delegate
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
+	if([[menu itemWithTag:2] state] != NSOnState)
+		[[menu itemWithTag:2] setState:NSOffState];
+	if([[menu itemWithTag:3] state] != NSOnState)
+		[[menu itemWithTag:3] setState:NSOffState];
+	if([[menu itemWithTag:4] state] != NSOnState)
+		[[menu itemWithTag:4] setState:NSOffState];
+	if([[menu itemWithTag:5] state] != NSOnState)
+		[[menu itemWithTag:5] setState:NSOffState];
+	if([[menu itemWithTag:6] state] != NSOnState)
+		[[menu itemWithTag:6] setState:NSOffState];
 	
 	
-	//FIXME: Implement
+	for(JIMAccount *oneAccount in [accountManager enabledAccounts])
+	{
+		if(oneAccount.show == XMPPPresenceShowChat && [[menu itemWithTag:2] state] != NSOnState)
+			[[menu itemWithTag:2] setState:NSMixedState];
+		if(oneAccount.show == XMPPPresenceShowAway && [[menu itemWithTag:3] state] != NSOnState)
+			[[menu itemWithTag:3] setState:NSMixedState];
+		if(oneAccount.show == XMPPPresenceShowExtendedAway && [[menu itemWithTag:4] state] != NSOnState)
+			[[menu itemWithTag:4] setState:NSMixedState];
+		if(oneAccount.show == XMPPPresenceShowDoNotDisturb && [[menu itemWithTag:5] state] != NSOnState)
+			[[menu itemWithTag:5] setState:NSMixedState];
+		if(oneAccount.show == XMPPPresenceShowUnknown && [[menu itemWithTag:6] state] != NSOnState)
+			[[menu itemWithTag:6] setState:NSMixedState];
+	}
 }
 
 #pragma mark Private
@@ -648,8 +670,6 @@
 	[rosterTable reloadData];
 	
 	return [self groupWithName:groupName];
-	
-	//FIXME: Support for groups with same name
 }
 
 @end

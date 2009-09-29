@@ -41,7 +41,6 @@
 	IBOutlet JIMAccountManager *accountManager;
 	
 	NSMutableArray *groups;
-	NSMutableArray *chatrooms;
 }
 
 - (IBAction)chatroomAccountButton:(id)sender;
