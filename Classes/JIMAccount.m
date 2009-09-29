@@ -12,6 +12,7 @@ NSString* const JIMAccountDidConnectNotification = @"JIMAccountDidConnectNotific
 NSString* const JIMAccountDidFailToConnectNotification = @"JIMAccountDidFailToConnectNotification";
 NSString* const JIMAccountDidFailToRegisterNotification = @"JIMAccountDidFailToRegisterNotification";
 NSString* const JIMAccountDidRefreshListOfChatroomsNotification = @"JIMAccountDidRefreshListOfChatroomsNotification";
+NSString* const JIMAccountDidChangeStatusNotification = @"JIMAccountDidChangeStatusNotification";
 
 @implementation JIMAccount
 
@@ -115,13 +116,15 @@ NSString* const JIMAccountDidRefreshListOfChatroomsNotification = @"JIMAccountDi
 	}
 	
 	show = newShow;
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountDidChangeStatusNotification object:self];
 }
 
 - (void)goOffline
 {
 	[xmppService disconnect];
-	
 	show = XMPPPresenceShowUnknown;
+	[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountDidChangeStatusNotification object:self];
 }
 
 #pragma mark Transports and Features
@@ -236,6 +239,8 @@ NSString* const JIMAccountDidRefreshListOfChatroomsNotification = @"JIMAccountDi
 	
 	if([xmppService autoPresence])
 		show = XMPPPresenceShowAvailable;
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:JIMAccountDidChangeStatusNotification object:self];
 	
 	XMPPDiscoItemsInfoQuery *itemsQuery = [[XMPPDiscoItemsInfoQuery alloc] initWithType:XMPPIQTypeGet to:nil service:xmppService];
 	[itemsQuery.stanza addAttributeWithName:@"to" stringValue:[accountDict objectForKey:@"Server"]];

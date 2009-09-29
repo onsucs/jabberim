@@ -28,11 +28,13 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 - (void)awakeFromNib
 {
 	JIMCell *accountCell = [[[JIMCell alloc] init] autorelease];
-	[[accountTable tableColumnWithIdentifier:@"Name"] setDataCell:accountCell];
+	[[accountTable tableColumnWithIdentifier:@"JabberID"] setDataCell:accountCell];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountDidConnect:) name:JIMAccountDidConnectNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountDidFailToConnect:) name:JIMAccountDidFailToConnectNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(accountDidFailToRegister:) name:JIMAccountDidFailToRegisterNotification object:nil];
+	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+	[nc addObserver:self selector:@selector(accountDidConnect:) name:JIMAccountDidConnectNotification object:nil];
+	[nc addObserver:self selector:@selector(accountDidFailToConnect:) name:JIMAccountDidFailToConnectNotification object:nil];
+	[nc addObserver:self selector:@selector(accountDidFailToRegister:) name:JIMAccountDidFailToRegisterNotification object:nil];
+	[nc addObserver:self selector:@selector(accountDidChangeStatus:) name:JIMAccountDidChangeStatusNotification object:nil];
 }
 
 - (void)dealloc
@@ -131,7 +133,7 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 			[(JIMAccount *)[accounts objectAtIndex:[accountTable selectedRow]] setShow:XMPPPresenceShowAway andStatus:@"Away"];
 		else if([[sender title] isEqualToString:@"Chat"])
 			[(JIMAccount *)[accounts objectAtIndex:[accountTable selectedRow]] setShow:XMPPPresenceShowChat andStatus:@"I want to chat"];
-		else if([[sender title] isEqualToString:@"Extended away"])
+		else if([[sender title] isEqualToString:@"Away (Extended)"])
 			[(JIMAccount *)[accounts objectAtIndex:[accountTable selectedRow]] setShow:XMPPPresenceShowExtendedAway andStatus:@"Extended away"];
 		else if([[sender title] isEqualToString:@"Do not Disturb"])
 			[(JIMAccount *)[accounts objectAtIndex:[accountTable selectedRow]] setShow:XMPPPresenceShowDoNotDisturb andStatus:@"Do not Disturb"];
@@ -203,10 +205,11 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {
 	JIMAccount *account = [accounts objectAtIndex:rowIndex];
-	JIMCell *itemCell = [tableColumn dataCell];
 	
-	if([[tableColumn identifier] isEqualToString:@"Name"])
+	if([[tableColumn identifier] isEqualToString:@"JabberID"])
 	{
+		JIMCell *itemCell = [tableColumn dataCell];
+		
 		[itemCell setTitle:[account.xmppService.myJID fullString]];
 		
 		if(account.error)
@@ -233,9 +236,15 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 			[itemCell setStatusImage:[NSImage imageNamed:@"offline"]];
 		
 		[itemCell setEnabled:YES];
+		
+		return itemCell;
+	}
+	else if([[tableColumn identifier] isEqualToString:@"Activated"])
+	{
+		return [account.accountDict objectForKey:@"AutoLogin"];
 	}
 	
-	return itemCell;
+	return nil;
 }
 
 #pragma mark JIMAccount delegate
@@ -250,6 +259,11 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 }
 
 - (void)accountDidFailToRegister:(NSNotification *)note
+{
+	[accountTable reloadData];
+}
+
+- (void)accountDidChangeStatus:(NSNotification *)note
 {
 	[accountTable reloadData];
 }

@@ -15,6 +15,7 @@ extern NSString* const JIMAccountDidConnectNotification;
 extern NSString* const JIMAccountDidFailToConnectNotification;
 extern NSString* const JIMAccountDidFailToRegisterNotification;
 extern NSString* const JIMAccountDidRefreshListOfChatroomsNotification;
+extern NSString* const JIMAccountDidChangeStatusNotification;
 
 @interface JIMAccount : NSObject {
 	NSMutableDictionary *accountDict;

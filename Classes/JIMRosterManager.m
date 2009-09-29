@@ -57,6 +57,7 @@
 	[nc addObserver:self selector:@selector(accountManagerDidAddAccount:) name:JIMAccountManagerDidAddNewAccountNotification object:nil];
 	[nc addObserver:self selector:@selector(accountManagerDidRemoveAccount:) name:JIMAccountManagerDidRemoveAccountNotification object:nil];
 	[nc addObserver:self selector:@selector(accountDidConnect:) name:JIMAccountDidConnectNotification object:nil];
+	[nc addObserver:self selector:@selector(accountDidChangeStatus:) name:JIMAccountDidChangeStatusNotification object:nil];
 	
 	[rosterTable setTarget:self];
 	[rosterTable setDoubleAction:@selector(startChat:)];
@@ -65,6 +66,8 @@
 	
 	[existingChatroomsTable setTarget:self];
 	[existingChatroomsTable setDoubleAction:@selector(joinExistingChatroom:)];
+	
+	[statusButton selectItemWithTag:6];
 	
 	[[self window] makeKeyAndOrderFront:self];
 }
@@ -105,19 +108,22 @@
 		JIMAccount *oneAccount;
 		for(oneAccount in accountManager.accounts)
 		{
-			if(![oneAccount.xmppService isAuthenticated])
-				[oneAccount.xmppService authenticateUser];
-			
-			if([[sender titleOfSelectedItem] isEqualToString:@"Available"])
-				[oneAccount setShow:XMPPPresenceShowAvailable andStatus:nil];
-			else if([[sender titleOfSelectedItem] isEqualToString:@"Away"])
-				[oneAccount setShow:XMPPPresenceShowAway andStatus:@"Away"];
-			else if([[sender titleOfSelectedItem] isEqualToString:@"Chat"])
-				[oneAccount setShow:XMPPPresenceShowChat andStatus:@"I want to chat"];
-			else if([[sender titleOfSelectedItem] isEqualToString:@"Extended away"])
-				[oneAccount setShow:XMPPPresenceShowExtendedAway andStatus:@"Extended away"];
-			else if([[sender titleOfSelectedItem] isEqualToString:@"Do not Disturb"])
-				[oneAccount setShow:XMPPPresenceShowDoNotDisturb andStatus:@"Do not Disturb"];
+			if([[oneAccount.accountDict objectForKey:@"AutoLogin"] intValue] == NSOnState)
+			{
+				if(![oneAccount.xmppService isAuthenticated])
+					[oneAccount.xmppService authenticateUser];
+				
+				if([[sender titleOfSelectedItem] isEqualToString:@"Available"])
+					[oneAccount setShow:XMPPPresenceShowAvailable andStatus:nil];
+				else if([[sender titleOfSelectedItem] isEqualToString:@"Away"])
+					[oneAccount setShow:XMPPPresenceShowAway andStatus:@"Away"];
+				else if([[sender titleOfSelectedItem] isEqualToString:@"Chat"])
+					[oneAccount setShow:XMPPPresenceShowChat andStatus:@"I want to chat"];
+				else if([[sender titleOfSelectedItem] isEqualToString:@"Away (Extended)"])
+					[oneAccount setShow:XMPPPresenceShowExtendedAway andStatus:@"Extended away"];
+				else if([[sender titleOfSelectedItem] isEqualToString:@"Do not Disturb"])
+					[oneAccount setShow:XMPPPresenceShowDoNotDisturb andStatus:@"Do not Disturb"];
+			}
 		}
 	}
 }
@@ -397,13 +403,52 @@
 	[newContactAccountsButton removeAllItems];
 	[chatroomAccountsButton removeAllItems];
 	
-	JIMAccount *oneAccount;
-	for(oneAccount in accountManager.accounts)
+	for(JIMAccount *oneAccount in accountManager.accounts)
 		if([oneAccount.xmppService isAuthenticated])
 		{
 			[newContactAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
 			[chatroomAccountsButton addItemWithTitle:[oneAccount.xmppService.myJID bareString]];
 		}
+}
+
+- (void)accountDidChangeStatus:(NSNotification *)note
+{
+	for(JIMAccount *oneAccount in accountManager.accounts)
+		if(oneAccount.show == XMPPPresenceShowAvailable)
+		{
+			[statusButton selectItemWithTag:1];
+			return;
+		}
+	
+	for(JIMAccount *oneAccount in accountManager.accounts)
+		if(oneAccount.show == XMPPPresenceShowChat)
+		{
+			[statusButton selectItemWithTag:2];
+			return;
+		}
+	
+	for(JIMAccount *oneAccount in accountManager.accounts)
+		if(oneAccount.show == XMPPPresenceShowDoNotDisturb)
+		{
+			[statusButton selectItemWithTag:5];
+			return;
+		}
+	
+	for(JIMAccount *oneAccount in accountManager.accounts)
+		if(oneAccount.show == XMPPPresenceShowExtendedAway)
+		{
+			[statusButton selectItemWithTag:4];
+			return;
+		}
+	
+	for(JIMAccount *oneAccount in accountManager.accounts)
+		if(oneAccount.show == XMPPPresenceShowAway)
+		{
+			[statusButton selectItemWithTag:3];
+			return;
+		}
+	
+	[statusButton selectItemWithTag:6];
 }
 
 - (void)accountDidRefreshListOfChatrooms:(NSNotification *)note
@@ -531,6 +576,14 @@
 	}
 }
 
+#pragma mark NSMenu Delegate
+- (void)menuNeedsUpdate:(NSMenu *)menu
+{
+	
+	
+	//FIXME: Implement
+}
+
 #pragma mark Private
 - (void)sortBuddies
 {
@@ -584,8 +637,6 @@
 
 - (JIMGroup *)groupWithName:(NSString *)groupName
 {
-	NSLog(@"Searching for group with name: %@", groupName);
-	
 	for(JIMGroup *oneGroup in groups)
 		if([oneGroup.name isEqualToString:groupName])
 			return oneGroup;
