@@ -53,4 +53,7 @@ extern NSString* const JIMAccountDidChangeStatusNotification;
 - (NSArray *)chatroomForName:(NSString *)name;
 - (void)refreshChatrooms;
 
+#pragma mark Comparison Methods
+- (NSComparisonResult)compareByNameAndEnabled:(JIMAccount *)another;
+
 @end

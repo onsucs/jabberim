@@ -314,4 +314,23 @@ NSString* const JIMAccountDidChangeStatusNotification = @"JIMAccountDidChangeSta
 	[[note object] release];
 }
 
+#pragma mark Comparison Methods
+- (NSComparisonResult)compareByNameAndEnabled:(JIMAccount *)another
+{
+	if([[self.accountDict objectForKey:@"AutoLogin"] intValue] == NSOnState)
+	{
+		if([[another.accountDict objectForKey:@"AutoLogin"] intValue] == NSOnState)
+			return [[self.xmppService.myJID fullString] compare:[another.xmppService.myJID fullString]];
+		else
+			return NSOrderedAscending;
+	}
+	else
+	{
+		if([[another.accountDict objectForKey:@"AutoLogin"] intValue] == NSOnState)
+			return NSOrderedDescending;
+		else
+			return [[self.xmppService.myJID fullString] compare:[another.xmppService.myJID fullString]];
+	}
+}
+
 @end
