@@ -36,6 +36,9 @@ extern NSString* const JIMAccountDidChangeStatusNotification;
 #pragma mark Init
 - (id)initWithAccountDict:(NSDictionary *)newAccountDict;
 
+#pragma mark Settings
+- (void)setAutoLogin:(NSInteger)autoLogin;
+
 #pragma mark Status
 - (void)setShow:(XMPPPresenceShow)newShow andStatus:(NSString *)newStatus;
 - (void)goOffline;

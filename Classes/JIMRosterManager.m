@@ -121,7 +121,6 @@
 				[oneAccount setShow:XMPPPresenceShowExtendedAway andStatus:@"Extended away"];
 			else if([[sender titleOfSelectedItem] isEqualToString:@"Do not Disturb"])
 				[oneAccount setShow:XMPPPresenceShowDoNotDisturb andStatus:@"Do not Disturb"];
-			}
 		}
 	}
 }

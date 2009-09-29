@@ -207,6 +207,18 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 	}
 }
 
+- (IBAction)setAutoLogin:(id)sender
+{
+	JIMAccount *selectedAccount = [accounts objectAtIndex:[accountTable selectedRow]];
+	
+	if([[[accountTable tableColumnWithIdentifier:@"Activated"] dataCellForRow:[accountTable selectedRow]] state] == NSOnState)
+		[selectedAccount setAutoLogin:NSOffState];
+	else
+		[selectedAccount setAutoLogin:NSOnState];
+	
+	[accountTable reloadData];
+}
+
 #pragma mark Account Table
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {

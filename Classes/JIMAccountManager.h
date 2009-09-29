@@ -51,6 +51,7 @@ extern NSString* const JIMAccountManagerDidRemoveAccountNotification;
 - (IBAction)cancleSheet:(id)sender;
 - (IBAction)editAccount:(id)sender;
 - (IBAction)jabberIDEntered:(id)sender;
+- (IBAction)setAutoLogin:(id)sender;
 
 - (void)resetNewAccountFields;
 - (void)resetRemoveAccountFields;

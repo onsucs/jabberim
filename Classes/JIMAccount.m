@@ -83,6 +83,23 @@ NSString* const JIMAccountDidChangeStatusNotification = @"JIMAccountDidChangeSta
 	[super dealloc];
 }
 
+#pragma mark Settings
+- (void)setAutoLogin:(NSInteger)autoLogin
+{
+	if(autoLogin == NSOnState)
+	{
+		[xmppService setAutoLogin:YES];
+		[xmppService connect];
+	}
+	else
+	{
+		[xmppService setAutoLogin:NO];
+		[self goOffline];
+	}
+
+	[accountDict setObject:[NSNumber numberWithInt:autoLogin] forKey:@"AutoLogin"];
+}
+
 #pragma mark Status
 - (void)setShow:(XMPPPresenceShow)newShow andStatus:(NSString *)newStatus
 {	

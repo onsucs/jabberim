@@ -70,8 +70,6 @@
 
 - (IBAction)setAddRequestingUser:(id)sender
 {
-	NSLog(@"Setting Add");
-	
 	if([[[subscriptionTable tableColumnWithIdentifier:@"Add"] dataCellForRow:[subscriptionTable selectedRow]] state] == NSOnState)
 		[requestsAlsoAdd replaceObjectAtIndex:[subscriptionTable selectedRow] withObject:[NSNumber numberWithInt:NSOffState]];
 	else
