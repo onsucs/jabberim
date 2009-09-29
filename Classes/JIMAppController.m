@@ -48,6 +48,7 @@
 - (void)windowWillClose:(NSNotification *)notification
 {
 	[userDefaultsController save:self];
+	[accountManager saveAccounts];
 }
 
 #pragma mark NSApp Delegate
