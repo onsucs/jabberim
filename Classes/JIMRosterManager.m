@@ -647,6 +647,20 @@ extern NSSound *buddieOfflineSound;
 			}
 		}
 	}
+	
+	NSMutableArray *groupsToRemove = [NSMutableArray array];
+	
+	for(JIMGroup *oneGroup in groups)
+	{
+		if([oneGroup.users count] < 1 && ![oneGroup.name isEqualToString:@"Not grouped"] && ![oneGroup.name isEqualToString:@"Offline"])
+			[groupsToRemove addObject:oneGroup];
+	}
+	
+	if([groupsToRemove count] > 0)
+	{
+		[groups removeObjectsInArray:groupsToRemove];
+		[rosterTable reloadData];
+	}
 }
 
 - (JIMAccount *)accountForJIDString:(NSString *)string
