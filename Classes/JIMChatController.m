@@ -94,12 +94,35 @@ extern NSSound *newMessageSendSound;
 - (void)appendMessage:(NSAttributedString *)messageStr alignment:(NSTextAlignment)alignment
 {
 	NSMutableAttributedString *paragraph = [[messageStr mutableCopy] autorelease];
+	[paragraph appendAttributedString:[[[NSAttributedString alloc] initWithString:@"\n"] autorelease]];	
+	NSMutableParagraphStyle *mps = [[[NSMutableParagraphStyle alloc] init] autorelease];
+	[mps setAlignment:alignment];
+	NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithCapacity:2];
+	[attributes setObject:mps forKey:NSParagraphStyleAttributeName];
+	[attributes setObject:[NSColor colorWithCalibratedRed:250 green:250 blue:250 alpha:1] forKey:NSBackgroundColorAttributeName]; //FIXME: Not sure why this isn't doing anything
+	
+	[paragraph addAttributes:attributes range:NSMakeRange(0, [paragraph length])];
+	
+	[[oldMessagesField textStorage] appendAttributedString:paragraph];
+	[self scrollToBottom];
+}
+
+- (void)appendMessage:(NSAttributedString *)messageStr fromUserAsString:(NSString *)userStr alignment:(NSTextAlignment)alignment
+{
+	NSMutableAttributedString *paragraph = [[messageStr mutableCopy] autorelease];
+	
+	if(userStr)
+	{
+		NSMutableString *mutableParagraph = [paragraph mutableString];
+		[mutableParagraph insertString:[NSString stringWithFormat:@"%@: ", userStr] atIndex:0];
+	}
+	
 	[paragraph appendAttributedString:[[[NSAttributedString alloc] initWithString:@"\n\n"] autorelease]];	
 	NSMutableParagraphStyle *mps = [[[NSMutableParagraphStyle alloc] init] autorelease];
 	[mps setAlignment:alignment];
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithCapacity:2];
 	[attributes setObject:mps forKey:NSParagraphStyleAttributeName];
-	[attributes setObject:[NSColor colorWithCalibratedRed:250 green:250 blue:250 alpha:1] forKey:NSBackgroundColorAttributeName];	// FIXME: Not sure why this isn't doing anything
+	[attributes setObject:[NSColor colorWithCalibratedRed:250 green:250 blue:250 alpha:1] forKey:NSBackgroundColorAttributeName]; //FIXME: Not sure why this isn't doing anything
 	
 	[paragraph addAttributes:attributes range:NSMakeRange(0, [paragraph length])];
 	
@@ -148,7 +171,7 @@ extern NSSound *newMessageSendSound;
 {
 	XMPPChatMessage *message = (XMPPChatMessage *)[note chatMessage];
 	NSAttributedString *messageStr = [message attributedBody];
-	[self appendMessage:messageStr alignment:NSRightTextAlignment];
+	[self appendMessage:messageStr fromUserAsString:[message fromDisplayName] alignment:NSRightTextAlignment];
 	
 	[newMessageSendSound play];
 }
@@ -157,7 +180,7 @@ extern NSSound *newMessageSendSound;
 {
 	XMPPChatMessage *message = (XMPPChatMessage *)[note chatMessage];
 	NSAttributedString *messageStr = [message attributedBody];
-	[self appendMessage:messageStr alignment:NSLeftTextAlignment];
+	[self appendMessage:messageStr fromUserAsString:[message fromDisplayName] alignment:NSLeftTextAlignment];
 	
 	[newMessageRecievedSound play];
 }

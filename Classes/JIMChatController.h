@@ -34,6 +34,7 @@
 
 - (void)scrollToBottom;
 - (void)appendMessage:(NSAttributedString *)messageStr alignment:(NSTextAlignment)alignment;
+- (void)appendMessage:(NSAttributedString *)messageStr fromUserAsString:(NSString *)userStr alignment:(NSTextAlignment)alignment;
 - (void)observeRoom;
 
 @end
