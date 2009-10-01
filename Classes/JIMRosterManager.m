@@ -8,6 +8,9 @@
 
 #import "JIMRosterManager.h"
 
+extern NSSound *buddieOnlineSound;
+extern NSSound *buddieOfflineSound;
+
 @interface JIMRosterManager ()
 - (void)sortBuddies;
 - (JIMAccount *)accountForJIDString:(NSString *)string;
@@ -36,21 +39,6 @@
 	return self;
 }
 
-- (void)dealloc
-{
-	//End any sheets
-	[NSApp endSheet:addContactWindow returnCode:NSCancelButton];
-	[NSApp endSheet:removeContactWindow returnCode:NSCancelButton];
-	
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
-	[groups release];
-	
-	[[self window] close];
-	
-	[super dealloc];
-}
-
 - (void)awakeFromNib
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
@@ -70,6 +58,20 @@
 	[statusButton selectItemWithTag:6];
 	
 	[[self window] makeKeyAndOrderFront:self];
+}
+
+- (void)dealloc
+{
+	[NSApp endSheet:addContactWindow returnCode:NSCancelButton];
+	[NSApp endSheet:removeContactWindow returnCode:NSCancelButton];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
+	[groups release];
+	
+	[[self window] close];
+	
+	[super dealloc];
 }
 
 #pragma mark Buttons
@@ -469,10 +471,7 @@
 	}
 	
 	[self sortBuddies];
-	
-	NSSound *newMessageSound = [[NSSound alloc] initWithContentsOfFile:@"/Applications/iChat.app/Contents/Resources/Buddy Logging In.aiff" byReference:YES];
-	[newMessageSound play];
-	[newMessageSound release];
+	[buddieOnlineSound play];
 }
 
 - (void)rosterDidRemoveUsers:(NSNotification *)note
@@ -488,10 +487,7 @@
 	}	
 	
 	[self sortBuddies];
-	
-	NSSound *newMessageSound = [[NSSound alloc] initWithContentsOfFile:@"/Applications/iChat.app/Contents/Resources/Buddy Logging Out.aiff" byReference:YES];
-	[newMessageSound play];
-	[newMessageSound release];
+	[buddieOfflineSound play];
 }
 
 - (void)userDidChange:(NSNotification *)note
@@ -623,6 +619,12 @@
 							[groupWithName addUser:oneUser];
 							[rosterTable reloadItem:groupWithName];
 						}
+					else
+					{
+						JIMGroup *notGroupedGroup = [self groupWithName:@"Not grouped"];
+						[notGroupedGroup addUser:oneUser];
+						[rosterTable reloadItem:notGroupedGroup];
+					}
 					
 					[oneGroup removeUser:oneUser];
 					[rosterTable reloadItem:oneGroup];
@@ -658,6 +660,9 @@
 
 - (JIMGroup *)groupWithName:(NSString *)groupName
 {
+	if(!groupName)
+		return [self groupWithName:@"Not grouped"];
+	
 	for(JIMGroup *oneGroup in groups)
 		if([oneGroup.name isEqualToString:groupName])
 			return oneGroup;

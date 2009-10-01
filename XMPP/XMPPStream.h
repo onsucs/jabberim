@@ -6,7 +6,6 @@
 @class XMPPMessageStanza;
 @class XMPPPresenceStanza;
 
-
 @interface XMPPStream : NSObject
 {
 	id delegate;

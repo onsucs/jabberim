@@ -8,13 +8,36 @@
 
 #import "JIMAppController.h"
 
+NSSound *newMessageRecievedSound;
+NSSound *newMessageSendSound;
+NSSound *buddieOnlineSound;
+NSSound *buddieOfflineSound;
+
 @implementation JIMAppController
 
+#pragma mark Init and Dealloc
 - (void)awakeFromNib
 {
 	[accountManager loadAccounts];
 	
+	newMessageRecievedSound = [[NSSound alloc] initWithContentsOfFile:@"/Applications/iChat.app/Contents/Resources/Received Message.aiff" byReference:YES];
+	newMessageSendSound = [[NSSound alloc] initWithContentsOfFile:@"/Applications/iChat.app/Contents/Resources/Received Message.aiff" byReference:YES];
+	
+	buddieOnlineSound = [[NSSound alloc] initWithContentsOfFile:@"/Applications/iChat.app/Contents/Resources/Buddy Logging In.aiff" byReference:YES];
+	buddieOfflineSound = [[NSSound alloc] initWithContentsOfFile:@"/Applications/iChat.app/Contents/Resources/Buddy Logging Out.aiff" byReference:YES];
+	
 	[self setSelectedSettingsView:accountSettingsView];
+}
+
+- (void)dealloc
+{
+	[newMessageRecievedSound release];
+	[newMessageSendSound release];
+	
+	[buddieOnlineSound release];
+	[buddieOfflineSound release];
+	
+	[super dealloc];
 }
 
 - (IBAction)switchToAccountSettings:(id)sender

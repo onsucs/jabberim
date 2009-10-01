@@ -12,7 +12,6 @@
 #import <JIMAccount.h>
 #import <JIMChatManager.h>
 #import <JIMOutlineCell.h>
-
 #import <JIMGroup.h>
 
 @interface JIMRosterManager : NSWindowController {

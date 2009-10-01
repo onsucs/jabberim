@@ -8,6 +8,9 @@
 
 #import "JIMChatController.h"
 
+extern NSSound *newMessageRecievedSound;
+extern NSSound *newMessageSendSound;
+
 @implementation JIMChatController
 
 @synthesize chatView;
@@ -147,9 +150,7 @@
 	NSAttributedString *messageStr = [message attributedBody];
 	[self appendMessage:messageStr alignment:NSRightTextAlignment];
 	
-	NSSound *newMessageSound = [[NSSound alloc] initWithContentsOfFile:@"/Applications/iChat.app/Contents/Resources/Sent Message.aiff" byReference:YES];
-	[newMessageSound play];
-	[newMessageSound release];
+	[newMessageSendSound play];
 }
 
 - (void)chatDidReceiveMessage:(NSNotification *)note
@@ -158,9 +159,7 @@
 	NSAttributedString *messageStr = [message attributedBody];
 	[self appendMessage:messageStr alignment:NSLeftTextAlignment];
 	
-	NSSound *newMessageSound = [[NSSound alloc] initWithContentsOfFile:@"/Applications/iChat.app/Contents/Resources/Received Message.aiff" byReference:YES];
-	[newMessageSound play];
-	[newMessageSound release];
+	[newMessageRecievedSound play];
 }
 
 - (void)chatDidBecomeGroupChat:(NSNotification *)note
