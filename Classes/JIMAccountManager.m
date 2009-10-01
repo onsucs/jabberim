@@ -29,6 +29,8 @@ NSString* const JIMAccountManagerDidRemoveAccountNotification = @"JIMAccountMana
 {
 	JIMCell *accountCell = [[[JIMCell alloc] init] autorelease];
 	[[accountTable tableColumnWithIdentifier:@"JabberID"] setDataCell:accountCell];
+	[accountTable setTarget:self];
+	[accountTable setDoubleAction:@selector(editAccount:)];
 	
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	[nc addObserver:self selector:@selector(accountDidConnect:) name:JIMAccountDidConnectNotification object:nil];
