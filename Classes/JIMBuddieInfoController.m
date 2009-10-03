@@ -82,6 +82,7 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 #pragma mark Buttons
 - (IBAction)setGroup:(id)sender
 {
+	[xmppUser setGroupNames:[NSSet setWithObject:[sender titleOfSelectedItem]]];
 }
 
 - (IBAction)setResource:(id)sender

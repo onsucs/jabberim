@@ -335,7 +335,12 @@ extern NSSound *buddieOfflineSound;
 			[cell setEnabled:YES];
 		else [cell setEnabled:NO];
 	}
-	else [cell setEnabled:NO];
+	else
+	{
+		[cell setEnabled:NO];
+		//if(![[(JIMGroup *)item name] isEqualToString:@"Offline"])
+		//	[rosterTable expandItem:item];
+	}
 }
 
 #pragma mark Chatroom Table
@@ -463,13 +468,14 @@ extern NSSound *buddieOfflineSound;
 - (void)rosterDidAddUsers:(NSNotification *)note
 {
 	NSSet *addedUsers = [note users];
-	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 	for (XMPPUser *oneUser in addedUsers)
 	{
 		[[self groupWithName:@"Offline"] addUser:oneUser];
 		
-		[nc addObserver:self selector:@selector(userDidChange:) name:XMPPUserDidChangePresenceNotification object:oneUser];
+		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 		[nc addObserver:self selector:@selector(userDidChange:) name:XMPPUserDidChangeNameNotification object:oneUser];
+		[nc addObserver:self selector:@selector(userDidChange:) name:XMPPUserDidChangeGroupsNotification object:oneUser];
+		[nc addObserver:self selector:@selector(userDidChange:) name:XMPPUserDidChangePresenceNotification object:oneUser];
 	}
 	
 	[self sortBuddies];
@@ -646,6 +652,31 @@ extern NSSound *buddieOfflineSound;
 					[rosterTable reloadItem:offlineGroup];
 					[rosterTable reloadItem:oneGroup];
 				}
+				else
+				{
+					if(![oneUser.groupNames containsObject:oneGroup.name])
+					{
+						[oneGroup removeUser:oneUser];
+						
+						if([[oneUser.groupNames allObjects] count] > 0)
+							for(NSString *oneGroupName in oneUser.groupNames)
+							{
+								JIMGroup *groupWithName = [self groupWithName:oneGroupName];
+								[groupWithName addUser:oneUser];
+								[rosterTable reloadItem:groupWithName];
+							}
+						else
+						{
+							JIMGroup *notGroupedGroup = [self groupWithName:@"Not grouped"];
+							[notGroupedGroup addUser:oneUser];
+							[rosterTable reloadItem:notGroupedGroup];
+						}
+						
+						[oneGroup removeUser:oneUser];
+						[rosterTable reloadItem:oneGroup];
+					}
+				}
+
 			}
 		}
 	}

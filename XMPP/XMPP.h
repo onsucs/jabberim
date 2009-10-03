@@ -9,33 +9,32 @@
 #import "XMPPRoster.h"
 
 #import "XMPPJID.h"
-
 #import "XMPPUser.h"
-#import "XMPPUserManager.h"
 #import "XMPPResource.h"
-
-#import "XMPPChatManager.h"
-#import "XMPPChatSession.h"
-
+#import "XMPPUserManager.h"
 #import "XMPPRoom.h"
+
+#import "XMPPMessage.h"
+#import "XMPPChatMessage.h"
+#import "XMPPMessageStanza.h"
+#import "XMPPChatSession.h"
+#import "XMPPChatManager.h"
 
 #import "XMPPInfoQuery.h"
 #import "XMPPIQStanza.h"
+
+#import "XMPPRosterInfoQuery.h"
+#import "XMPPRosterItemElement.h"
+
 #import "XMPPDiscoItemsInfoQuery.h"
 #import "XMPPDiscoItemsItemElement.h"
 
 #import "XMPPDiscoInfoInfoQuery.h"
 #import "XMPPDiscoInfoFeatureElement.h"
 
-#import "XMPPMessage.h"
-#import "XMPPChatMessage.h"
-#import "XMPPMessageStanza.h"
-
 #import "XMPPPresenceStanza.h"
-
 #import "XMPPSubscriptionRequest.h"
 #import "XMPPUnsubscriptionRequest.h"
-
 #import "XMPPInvitationMessage.h"
 
 #import "XMPPError.h"

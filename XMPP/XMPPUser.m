@@ -13,6 +13,7 @@
 #import "NSDataAdditions.h"
 
 NSString* const XMPPUserDidChangeNameNotification = @"XMPPUserDidChangeNameNotification";
+NSString* const XMPPUserDidChangeGroupsNotification = @"XMPPUserDidChangeGroupsNotification";
 NSString* const XMPPUserDidChangePresenceNotification = @"XMPPUserDidChangePresenceNotification";
 NSString* const XMPPUserDidChangeChatStateNotification = @"XMPPUserDidChangeChatStateNotification";
 
@@ -162,6 +163,36 @@ NSString* const XMPPUsersKey = @"users";
 	[query addItem:item];
 	[query setDelegate:self];
 	[query send];
+}
+
+- (void)setGroupNames:(NSSet *)groupSet
+{
+	if(!self.groupNames)
+	{
+		_groupNames = groupSet;
+		[_groupNames retain];
+	}
+	else if([self.groupNames isEqualToSet:groupSet])
+		return;
+	else
+	{
+		XMPPRosterItemElement *rosterItem = [[XMPPRosterItemElement alloc] initWithJID:self.jid];
+		[rosterItem setNickname:self.nickname];
+		[rosterItem setGroupNames:groupSet];
+		
+		XMPPRosterInfoQuery *rosterIQ = [[XMPPRosterInfoQuery alloc] initWithType:XMPPIQTypeSet service:self.service];
+		[rosterIQ addItem:rosterItem];
+		[rosterItem release];
+		
+		[rosterIQ send];
+		
+		[_groupNames release];
+		_groupNames = groupSet;
+		[_groupNames retain];
+		
+		[[NSNotificationCenter defaultCenter] postNotificationName:XMPPUserDidChangeGroupsNotification object:self];
+	}
+
 }
 
 - (NSImage *)image
