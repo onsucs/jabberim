@@ -19,6 +19,8 @@ extern NSSound *buddieOfflineSound;
 
 @implementation JIMRosterManager
 
+@synthesize groups;
+
 #pragma mark Init and Dealloc
 - (id)init
 {

@@ -9,12 +9,19 @@
 #import <Cocoa/Cocoa.h>
 #import <XMPP/XMPP.h>
 
+#import <JIMRosterManager.h>
+#import <JIMGroup.h>
+
 extern NSString* const JIMBuddieInfoControllerShowUserNotification;
 
+@class JIMRosterManager;
+
 @interface JIMBuddieInfoController : NSObject {
-	IBOutlet NSPanel *contactInfoPanel;
-	IBOutlet NSPopUpButton *availableResources;
+	IBOutlet JIMRosterManager *rosterManager;
 	
+	IBOutlet NSPanel *contactInfoPanel;
+	IBOutlet NSPopUpButton *availableGroups;
+	IBOutlet NSPopUpButton *availableResources;
 	IBOutlet NSTextField *timeOfLastActivity;
 	IBOutlet NSTextField *status;
 	IBOutlet NSTextField *statusRecieved;
@@ -31,5 +38,7 @@ extern NSString* const JIMBuddieInfoControllerShowUserNotification;
 - (void)resetAllFieldsAndResetAvailableResources:(BOOL)resetResources;
 - (void)refreshAllFieldsWithResource:(XMPPResource *)resource;
 
+- (IBAction)setGroup:(id)sender;
 - (IBAction)setResource:(id)sender;
+
 @end

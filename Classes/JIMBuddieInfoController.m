@@ -22,8 +22,7 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 		if (![NSBundle loadNibNamed:@"JIMBuddieInfoController" owner:self])
 			NSLog(@"Error loading Nib for document!");
 		
-		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-		[nc addObserver:self selector:@selector(showBuddieInfo:) name:JIMBuddieInfoControllerShowUserNotification object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showBuddieInfo:) name:JIMBuddieInfoControllerShowUserNotification object:nil];
 	}
 	return self;
 }
@@ -55,6 +54,11 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 		[self resetAllFieldsAndResetAvailableResources:YES];
 		[self refreshAllFieldsWithResource:[xmppUser primaryResource]];
 		
+		if([xmppUser.groupNames count] == 0)
+			[availableGroups selectItemWithTitle:@"Not grouped"];
+		else
+			[availableGroups selectItemWithTitle:[xmppUser.groupNames anyObject]];
+		
 		XMPPJID *toJID;
 		if([[availableResources titleOfSelectedItem] isEqualToString:@"Highest Priority"])
 			toJID = xmppUser.primaryResource.jid;
@@ -76,6 +80,10 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 }
 
 #pragma mark Buttons
+- (IBAction)setGroup:(id)sender
+{
+}
+
 - (IBAction)setResource:(id)sender
 {
 	[self resetAllFieldsAndResetAvailableResources:NO];
@@ -112,10 +120,9 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 }
 
 #pragma mark Notifications
-
 - (void)showBuddieInfo:(NSNotification *)aNotification
 {
-	[self setXmppUser:[aNotification object]];
+	self.xmppUser = [aNotification object];
 }
 
 - (void)infoQueryDidReceiveResult:(NSNotification *)note
@@ -173,7 +180,6 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 }
 
 #pragma mark NSWindow Delegate
-
 - (void)windowWillClose:(NSNotification *)notification
 {
 	self.xmppUser = nil;
@@ -187,9 +193,13 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 		[availableResources removeAllItems];
 		[availableResources addItemWithTitle:@"Highest Priority"];
 		
-		XMPPResource *oneResource;
-		for (oneResource in [xmppUser sortedResources])
+		for (XMPPResource *oneResource in [xmppUser sortedResources])
 			[availableResources addItemWithTitle:[[oneResource jid] fullString]];
+		
+		[availableGroups removeAllItems];
+		
+		for(JIMGroup *oneGroup in [rosterManager.groups sortedArrayUsingSelector:@selector(compareByName:)])
+			[availableGroups addItemWithTitle:oneGroup.name];
 	}
 	
 	[timeOfLastActivity setStringValue:@"Not available"];

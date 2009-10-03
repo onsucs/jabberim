@@ -3439,6 +3439,14 @@
 					</object>
 					<int key="connectionID">1147</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">rosterManager</string>
+						<reference key="source" ref="354565642"/>
+						<reference key="destination" ref="978853982"/>
+					</object>
+					<int key="connectionID">1148</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -5943,7 +5951,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1147</int>
+			<int key="maxID">1148</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -6070,19 +6078,30 @@
 					<string key="className">JIMBuddieInfoController</string>
 					<string key="superclassName">NSObject</string>
 					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">setResource:</string>
-						<string key="NS.object.0">id</string>
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>setGroup:</string>
+							<string>setResource:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>availableGroups</string>
 							<string>availableResources</string>
 							<string>clientID</string>
 							<string>clientOS</string>
 							<string>clientVersion</string>
 							<string>contactInfoPanel</string>
 							<string>priority</string>
+							<string>rosterManager</string>
 							<string>status</string>
 							<string>statusRecieved</string>
 							<string>timeOfLastActivity</string>
@@ -6090,11 +6109,13 @@
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSPopUpButton</string>
+							<string>NSPopUpButton</string>
 							<string>NSTextField</string>
 							<string>NSTextField</string>
 							<string>NSTextField</string>
 							<string>NSPanel</string>
 							<string>NSTextField</string>
+							<string>JIMRosterManager</string>
 							<string>NSTextField</string>
 							<string>NSTextField</string>
 							<string>NSTextField</string>

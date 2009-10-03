@@ -7,12 +7,15 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <JIMBuddieInfoController.h>
+
 #import <JIMAccountManager.h>
-#import <JIMAccount.h>
 #import <JIMChatManager.h>
-#import <JIMOutlineCell.h>
+#import <JIMBuddieInfoController.h>
+
+#import <JIMAccount.h>
 #import <JIMGroup.h>
+
+#import <JIMOutlineCell.h>
 
 @interface JIMRosterManager : NSWindowController {
 	IBOutlet NSWindow *addContactWindow;
@@ -41,6 +44,8 @@
 	
 	NSMutableArray *groups;
 }
+
+@property (readonly) NSMutableArray *groups;
 
 - (IBAction)chatroomAccountButton:(id)sender;
 - (IBAction)setStatus:(id)sender;
