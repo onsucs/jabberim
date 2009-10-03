@@ -172,13 +172,16 @@ NSString* const XMPPChatSessionDidBecomeGroupChatNotification = @"XMPPChatSessio
 - (NSString *)chatLogDirectory
 {
 	// ~/Library/Logs/<bundle>/chatlogs
+	
+	// No, there is a better place for logs:
+	// ~/Library/Application Support/<App Name>/Chatlogs
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
 	if ([paths count] > 0)
 	{
 		return [[[[paths objectAtIndex:0] 
-				  stringByAppendingPathComponent:@"Logs"]
-				 stringByAppendingPathComponent:[[NSBundle mainBundle] bundleIdentifier]]
-				stringByAppendingPathComponent:@"chatlogs"];
+				  stringByAppendingPathComponent:@"Application Support"]
+				 stringByAppendingPathComponent:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"]]
+				stringByAppendingPathComponent:@"Chatlogs"];
 	}
 	
 	NSAssert(NO, @"Could not find application suport directory.");
