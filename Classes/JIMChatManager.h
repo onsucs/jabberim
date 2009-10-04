@@ -8,7 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 #import <XMPP/XMPP.h>
-#import <JIMChatController.h>
+
+#import <JIMChatViewController.h>
 #import <JIMCell.h>
 
 extern NSString* const JIMChatManagerCreateNewChat;

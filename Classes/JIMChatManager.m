@@ -52,8 +52,8 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 - (IBAction)stopChat:(id)sender
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-	[nc removeObserver:self name:XMPPUserDidChangePresenceNotification object:[(JIMChatController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatSession].chatPartner];
-	[nc removeObserver:self name:XMPPUserDidChangeNameNotification object:[(JIMChatController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatSession].chatPartner];
+	[nc removeObserver:self name:XMPPUserDidChangePresenceNotification object:[(JIMChatViewController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatSession].chatPartner];
+	[nc removeObserver:self name:XMPPUserDidChangeNameNotification object:[(JIMChatViewController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatSession].chatPartner];
 	
 	[chatControllerArray removeObjectAtIndex:[chatControllerTable selectedRow]];
 	[chatControllerTable reloadData];
@@ -64,7 +64,7 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 
 - (IBAction)performInvite:(id)sender
 {
-	if([[(JIMChatController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatSession] isGroupChat])
+	if([[(JIMChatViewController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatSession] isGroupChat])
 	{
 		[NSApp beginSheet:inviteUserWindow modalForWindow:chatWindow modalDelegate:self didEndSelector:@selector(inviteUserSheetDidEnd: returnCode: contextInfo:) contextInfo:nil];
 		[NSApp runModalForWindow:inviteUserWindow];
@@ -115,7 +115,7 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
 {
-	JIMChatController *chatController = [chatControllerArray objectAtIndex:rowIndex];
+	JIMChatViewController *chatController = [chatControllerArray objectAtIndex:rowIndex];
 	JIMCell *itemCell = [tableColumn dataCell];
 	
 	if([[tableColumn identifier] isEqualToString:@"Name"])
@@ -166,9 +166,9 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 {
 	if([[tableColumn identifier] isEqualToString:@"Name"])
 	{
-		if([[(JIMChatController *)[chatControllerArray objectAtIndex:rowIndex] chatSession].chatPartner isKindOfClass:[XMPPUser class]])
+		if([[(JIMChatViewController *)[chatControllerArray objectAtIndex:rowIndex] chatSession].chatPartner isKindOfClass:[XMPPUser class]])
 		{
-			XMPPUser *user = [(JIMChatController *)[chatControllerArray objectAtIndex:rowIndex] chatSession].chatPartner;
+			XMPPUser *user = [(JIMChatViewController *)[chatControllerArray objectAtIndex:rowIndex] chatSession].chatPartner;
 			
 			if([user isOnline])
 				[cell setEnabled:YES];
@@ -183,18 +183,19 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 	if([chatControllerArray count] == 0)
 		return;
 	
-	self.selectedChatView = [(JIMChatController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatView];
+	self.selectedChatView = [(JIMChatViewController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] view];
+	[chatWindow setTitle:[[(JIMChatViewController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatSession] sessionName]];
 }
 
 #pragma mark Notifications
 - (void)createChat:(NSNotification *)note
 {
 	id<XMPPChatPartner> chatPartner = [note object];
-	for(JIMChatController *oneChatController in chatControllerArray)
+	for(JIMChatViewController *oneChatController in chatControllerArray)
 		if([oneChatController.chatSession.chatPartner.jid isEqual:chatPartner.jid])
 		{
 			[chatControllerTable selectRow:[chatControllerArray indexOfObject:oneChatController] byExtendingSelection:NO];
-			[chatWindow makeFirstResponder:oneChatController.chatView];
+			[chatWindow makeFirstResponder:oneChatController.view];
 			[chatWindow makeKeyAndOrderFront:self];
 			return;
 		}
@@ -204,7 +205,7 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 	{
 		XMPPUser *user = [note object];
 		
-		JIMChatController *newChatController = [[JIMChatController alloc] initWithChatPartner:user message:nil];
+		JIMChatViewController *newChatController = [[JIMChatViewController alloc] initWithChatPartner:user message:nil];
 		
 		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 		[nc addObserver:self selector:@selector(userDidChange:) name:XMPPUserDidChangePresenceNotification object:user];
@@ -213,9 +214,9 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 		[chatControllerArray addObject:newChatController];
 		[chatControllerTable reloadData];
 		
-		self.selectedChatView = newChatController.chatView;
+		self.selectedChatView = newChatController.view;
 		[chatControllerTable selectRowIndexes:[NSIndexSet indexSetWithIndex:[chatControllerArray indexOfObject:newChatController]] byExtendingSelection:NO];
-		[chatWindow makeFirstResponder:newChatController.chatView];
+		[chatWindow makeFirstResponder:newChatController.view];
 		[chatWindow makeKeyAndOrderFront:self];
 		[newChatController release];
 	}
@@ -223,13 +224,13 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 	{
 		XMPPRoom *room = [note object];
 		
-		JIMChatController *newChatController = [[JIMChatController alloc] initWithChatPartner:room message:nil];
+		JIMChatViewController *newChatController = [[JIMChatViewController alloc] initWithChatPartner:room message:nil];
 		[chatControllerArray addObject:newChatController];
 		[chatControllerTable reloadData];
 		
-		self.selectedChatView = newChatController.chatView;
+		self.selectedChatView = newChatController.view;
 		[chatControllerTable selectRowIndexes:[NSIndexSet indexSetWithIndex:[chatControllerArray indexOfObject:newChatController]] byExtendingSelection:NO];
-		[chatWindow makeFirstResponder:newChatController.chatView];
+		[chatWindow makeFirstResponder:newChatController.view];
 		[chatWindow makeKeyAndOrderFront:self];
 		[newChatController release];
 	}
@@ -243,13 +244,13 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 	if(![searchedChatSession isGroupChat])
 	{
 		//Check whether we already have an open chat session
-		for(JIMChatController *oneChatController in chatControllerArray)
+		for(JIMChatViewController *oneChatController in chatControllerArray)
 			if([[oneChatController.chatSession uniqueIdentifier] isEqualToString:[searchedChatSession uniqueIdentifier]])
 				return;
 		
 		//Create new Chat
 		XMPPUser *newUser = [[XMPPUserManager sharedManager] userForJID:searchedChatSession.currentJID service:searchedChatSession.service];
-		JIMChatController *newChatController = [[JIMChatController alloc] initWithChatPartner:newUser message:[note chatMessage]];
+		JIMChatViewController *newChatController = [[JIMChatViewController alloc] initWithChatPartner:newUser message:[note chatMessage]];
 		[[NSNotificationCenter defaultCenter] removeObserver:self name:XMPPChatSessionDidReceiveMessageNotification object:newChatController.chatSession];
 		[chatControllerArray addObject:newChatController];
 		[newChatController release];
@@ -296,7 +297,7 @@ NSString* const JIMChatManagerCreateNewChat = @"JIMChatManagerCreateNewChat";
 	{
 		if ([[inviteUserJID stringValue] length] > 0)
 		{
-			[[(JIMChatController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatSession] inviteJID:[XMPPJID jidWithString:[inviteUserJID stringValue]] withReason:[inviteUserReason stringValue]];
+			[[(JIMChatViewController *)[chatControllerArray objectAtIndex:[chatControllerTable selectedRow]] chatSession] inviteJID:[XMPPJID jidWithString:[inviteUserJID stringValue]] withReason:[inviteUserReason stringValue]];
 			[inviteUserJID setStringValue:@""];
 			[inviteUserReason setStringValue:@""];
 		}

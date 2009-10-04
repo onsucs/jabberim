@@ -1,28 +1,31 @@
 //
-//  JIMChatController.m
+//  JIMChatViewController.m
 //  JabberIM
 //
-//  Created by Roland Moers on 09.08.09.
+//  Created by Roland Moers on 04.10.09.
 //  Copyright 2009 Roland Moers. All rights reserved.
 //
 
-#import "JIMChatController.h"
+#import "JIMChatViewController.h"
 
 extern NSSound *newMessageRecievedSound;
 extern NSSound *newMessageSendSound;
 
-@implementation JIMChatController
+@interface JIMChatViewController ()
+@property (readwrite, retain) XMPPChatSession *chatSession;
+- (void)observeRoom;
+@end
 
-@synthesize chatView;
+@implementation JIMChatViewController
+
 @synthesize chatSession;
 
 #pragma mark Init and Dealloc
-- (id)initWithChatPartner:(id<XMPPChatPartner>)aPartner message:(XMPPChatMessage *)aMessage
+- (id)initWithChatPartner:(id<XMPPChatPartner>)aPartner message:(XMPPChatMessage *)aMessage;
 {
-	if((self = [super init]))
+	if((self = [super initWithNibName:@"JIMChatViewController" bundle:[NSBundle mainBundle]]))
 	{
-		if (![NSBundle loadNibNamed:@"JIMChatController" owner:self])
-			NSLog(@"Error loading Nib for document!");
+		[self loadView];
 		
 		JIMSmallCell *buddieCell = [[[JIMSmallCell alloc] init] autorelease];
 		[[chatMembersTable tableColumnWithIdentifier:@"Name"] setDataCell:buddieCell];
@@ -32,6 +35,7 @@ extern NSSound *newMessageSendSound;
 		NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 		[nc addObserver:self selector:@selector(chatDidSendMessage:) name:XMPPChatSessionDidSendMessageNotification object:self.chatSession];
 		[nc addObserver:self selector:@selector(chatDidReceiveMessage:) name:XMPPChatSessionDidReceiveMessageNotification object:self.chatSession];
+		
 		if ([self.chatSession isGroupChat])
 		{
 			[self observeRoom];
@@ -46,14 +50,15 @@ extern NSSound *newMessageSendSound;
 				[availableResources addItemWithTitle:[[aResource jid] fullString]];
 			
 			[chatSplitView setPosition:[chatSplitView maxPossiblePositionOfDividerAtIndex:0] ofDividerAtIndex:0];
+			
+			for(XMPPChatMessage *oneMessage in self.chatSession.messages)
+				[chatTextView appendMessage:oneMessage];
+			
+			[chatTextView appendString:@"Chatting with resource: Highest Priority"];
 		}
 		
-		[oldMessagesField setString:@""];
-		NSAttributedString *as = [[[NSAttributedString alloc] initWithString:@"Chatting with resource: Highest Priority" attributes:nil] autorelease];
-		[self appendMessage:as alignment:NSCenterTextAlignment];
-		
 		if(aMessage)
-			[self appendMessage:[aMessage attributedBody] alignment:NSLeftTextAlignment];
+			[chatTextView appendMessage:aMessage];
 	}
 	return self;
 }
@@ -71,12 +76,10 @@ extern NSSound *newMessageSendSound;
 #pragma mark Buttons
 - (IBAction)setResource:(id)sender
 {
-	NSAttributedString *as = [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"Changed resource to: %@", [sender titleOfSelectedItem]] attributes:nil] autorelease];
-	[self appendMessage:as alignment:NSCenterTextAlignment];
-	
+	[chatTextView appendString:[NSString stringWithFormat:@"Changed resource to: %@", [sender titleOfSelectedItem]]];
 }
 
-- (IBAction)performSendMessage:(id)sender
+- (IBAction)sendMessage:(id)sender
 {
 	if ([[sender stringValue] length] > 0)
 	{
@@ -89,45 +92,6 @@ extern NSSound *newMessageSendSound;
 		}
 		[sender setStringValue:@""];
 	}
-}
-
-- (void)appendMessage:(NSAttributedString *)messageStr alignment:(NSTextAlignment)alignment
-{
-	NSMutableAttributedString *paragraph = [[messageStr mutableCopy] autorelease];
-	[paragraph appendAttributedString:[[[NSAttributedString alloc] initWithString:@"\n"] autorelease]];	
-	NSMutableParagraphStyle *mps = [[[NSMutableParagraphStyle alloc] init] autorelease];
-	[mps setAlignment:alignment];
-	NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithCapacity:2];
-	[attributes setObject:mps forKey:NSParagraphStyleAttributeName];
-	[attributes setObject:[NSColor colorWithCalibratedRed:250 green:250 blue:250 alpha:1] forKey:NSBackgroundColorAttributeName]; //FIXME: Not sure why this isn't doing anything
-	
-	[paragraph addAttributes:attributes range:NSMakeRange(0, [paragraph length])];
-	
-	[[oldMessagesField textStorage] appendAttributedString:paragraph];
-	[self scrollToBottom];
-}
-
-- (void)appendMessage:(NSAttributedString *)messageStr fromUserAsString:(NSString *)userStr alignment:(NSTextAlignment)alignment
-{
-	NSMutableAttributedString *paragraph = [[messageStr mutableCopy] autorelease];
-	
-	if(userStr)
-	{
-		NSMutableString *mutableParagraph = [paragraph mutableString];
-		[mutableParagraph insertString:[NSString stringWithFormat:@"%@: ", userStr] atIndex:0];
-	}
-	
-	[paragraph appendAttributedString:[[[NSAttributedString alloc] initWithString:@"\n\n"] autorelease]];	
-	NSMutableParagraphStyle *mps = [[[NSMutableParagraphStyle alloc] init] autorelease];
-	[mps setAlignment:alignment];
-	NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithCapacity:2];
-	[attributes setObject:mps forKey:NSParagraphStyleAttributeName];
-	[attributes setObject:[NSColor colorWithCalibratedRed:250 green:250 blue:250 alpha:1] forKey:NSBackgroundColorAttributeName]; //FIXME: Not sure why this isn't doing anything
-	
-	[paragraph addAttributes:attributes range:NSMakeRange(0, [paragraph length])];
-	
-	[[oldMessagesField textStorage] appendAttributedString:paragraph];
-	[self scrollToBottom];
 }
 
 #pragma mark Chat Members Table
@@ -166,22 +130,16 @@ extern NSSound *newMessageSendSound;
 	return nil;
 }
 
-#pragma mark Chat Session Delegate
+#pragma mark XMPPChatSession Delegate
 - (void)chatDidSendMessage:(NSNotification *)note
 {
-	XMPPChatMessage *message = (XMPPChatMessage *)[note chatMessage];
-	NSAttributedString *messageStr = [message attributedBody];
-	[self appendMessage:messageStr fromUserAsString:[message fromDisplayName] alignment:NSRightTextAlignment];
-	
+	[chatTextView appendMessage:[note chatMessage]];
 	[newMessageSendSound play];
 }
 
 - (void)chatDidReceiveMessage:(NSNotification *)note
 {
-	XMPPChatMessage *message = (XMPPChatMessage *)[note chatMessage];
-	NSAttributedString *messageStr = [message attributedBody];
-	[self appendMessage:messageStr fromUserAsString:[message fromDisplayName] alignment:NSLeftTextAlignment];
-	
+	[chatTextView appendMessage:[note chatMessage]];
 	[newMessageRecievedSound play];
 }
 
@@ -192,6 +150,7 @@ extern NSSound *newMessageSendSound;
 	[self observeRoom];
 }
 
+#pragma mark XMPPUser Delegate
 - (void)userDidChange:(NSNotification *)note
 {
 	NSString *selectedItem = [availableResources titleOfSelectedItem];
@@ -213,7 +172,7 @@ extern NSSound *newMessageSendSound;
 	switch ([(XMPPUser*)[note object] chatState])
 	{
 		case XMPPChatStateInactive:
-			chatStateString = [NSString stringWithFormat:@"%@ is ignoring us", user.displayName];
+			chatStateString = [NSString stringWithFormat:@"%@ is ignoring you", user.displayName];
 			break;
 		case XMPPChatStateGone:
 			chatStateString = [NSString stringWithFormat:@"%@ has made a run for it", user.displayName];
@@ -225,12 +184,10 @@ extern NSSound *newMessageSendSound;
 	}
 	
 	if(chatStateString)
-	{
-		NSAttributedString *as = [[[NSAttributedString alloc] initWithString:chatStateString attributes:nil] autorelease];
-		[self appendMessage:as alignment:NSCenterTextAlignment];
-	}
+		[chatTextView appendString:chatStateString];
 }
 
+#pragma mark XMPPRoom Delegate
 - (void)roomDidAddOccupant:(NSNotification *)note
 {
 	[chatMembersTable reloadData];
@@ -241,20 +198,7 @@ extern NSSound *newMessageSendSound;
 	[chatMembersTable reloadData];
 }
 
-#pragma mark Others
-- (void)scrollToBottom
-{
-	NSScrollView *scrollView = [oldMessagesField enclosingScrollView];
-	NSPoint newScrollOrigin;
-	
-	if ([[scrollView documentView] isFlipped])
-		newScrollOrigin = NSMakePoint(0.0F, NSMaxY([[scrollView documentView] frame]));
-	else
-		newScrollOrigin = NSMakePoint(0.0F, 0.0F);
-	
-	[[scrollView documentView] scrollPoint:newScrollOrigin];
-}
-
+#pragma mark Private
 - (void)observeRoom
 {
 	NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
