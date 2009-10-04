@@ -132,8 +132,8 @@
 					PBXFileDataSource_Warnings_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 276334356;
-			PBXWorkspaceStateSaveDate = 276334356;
+			PBXPerProjectTemplateStateSaveDate = 276346101;
+			PBXWorkspaceStateSaveDate = 276346101;
 		};
 		perUserProjectItems = {
 			CA094845103BEF7500D1D6CC /* PBXTextBookmark */ = CA094845103BEF7500D1D6CC /* PBXTextBookmark */;
@@ -240,8 +240,6 @@
 			CA9BE9131078A6DF00F49CF2 /* PBXTextBookmark */ = CA9BE9131078A6DF00F49CF2 /* PBXTextBookmark */;
 			CA9BE9141078A6DF00F49CF2 /* PBXTextBookmark */ = CA9BE9141078A6DF00F49CF2 /* PBXTextBookmark */;
 			CA9BE9271078A97500F49CF2 /* PBXTextBookmark */ = CA9BE9271078A97500F49CF2 /* PBXTextBookmark */;
-			CA9BE9281078A97500F49CF2 /* PBXTextBookmark */ = CA9BE9281078A97500F49CF2 /* PBXTextBookmark */;
-			CA9BE9291078A97500F49CF2 /* PBXTextBookmark */ = CA9BE9291078A97500F49CF2 /* PBXTextBookmark */;
 			CAAA4F0B106E2D4F00565266 /* PBXTextBookmark */ = CAAA4F0B106E2D4F00565266 /* PBXTextBookmark */;
 			CAAB9AE5107267EF00D72D11 /* PBXTextBookmark */ = CAAB9AE5107267EF00D72D11 /* PBXTextBookmark */;
 			CAAB9AE7107267EF00D72D11 /* PBXTextBookmark */ = CAAB9AE7107267EF00D72D11 /* PBXTextBookmark */;
@@ -283,6 +281,8 @@
 			CAF9010A1034192B006C944A /* PBXBookmark */ = CAF9010A1034192B006C944A /* PBXBookmark */;
 			CAF9010B1034192B006C944A /* PBXBookmark */ = CAF9010B1034192B006C944A /* PBXBookmark */;
 			CAF9010D1034192B006C944A /* PBXBookmark */ = CAF9010D1034192B006C944A /* PBXBookmark */;
+			CAFD40E41078B53E00C86390 /* PBXTextBookmark */ = CAFD40E41078B53E00C86390 /* PBXTextBookmark */;
+			CAFD40E51078B53E00C86390 /* PBXTextBookmark */ = CAFD40E51078B53E00C86390 /* PBXTextBookmark */;
 		};
 		sourceControlManager = CAD2FFDB1030A1EF00F355F0 /* Source Control */;
 		userBuildSettings = {
@@ -1887,9 +1887,9 @@
 	};
 	CA9BE8AC10788C8F00F49CF2 /* JIMChatViewController.m */ = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1265, 2847}}";
-			sepNavSelRange = "{324, 0}";
-			sepNavVisRange = "{3, 684}";
+			sepNavIntBoundsRect = "{{0, 0}, {1566, 2756}}";
+			sepNavSelRange = "{2300, 0}";
+			sepNavVisRange = "{1643, 1225}";
 		};
 	};
 	CA9BE8AE10788CC300F49CF2 /* JIMChatTextView.h */ = {
@@ -1988,6 +1988,7 @@
 	};
 	CA9BE8DF10789F8C00F49CF2 /* NSViewController.h */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = NSViewController.h;
 		path = /Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/AppKit.framework/Versions/C/Headers/NSViewController.h;
 		sourceTree = "<absolute>";
@@ -2004,6 +2005,7 @@
 	};
 	CA9BE8E110789F8C00F49CF2 /* NSTextView.h */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = NSTextView.h;
 		path = /Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/AppKit.framework/Versions/C/Headers/NSTextView.h;
 		sourceTree = "<absolute>";
@@ -2020,6 +2022,7 @@
 	};
 	CA9BE8E310789F8C00F49CF2 /* NSTextStorage.h */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = NSTextStorage.h;
 		path = /Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/AppKit.framework/Versions/C/Headers/NSTextStorage.h;
 		sourceTree = "<absolute>";
@@ -2036,6 +2039,7 @@
 	};
 	CA9BE8E510789F8C00F49CF2 /* NSAttributedString.h */ = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = NSAttributedString.h;
 		path = /Developer/SDKs/MacOSX10.5.sdk/System/Library/Frameworks/Foundation.framework/Versions/C/Headers/NSAttributedString.h;
 		sourceTree = "<absolute>";
@@ -2179,26 +2183,6 @@
 		rType = 0;
 		vrLen = 1663;
 		vrLoc = 1267;
-	};
-	CA9BE9281078A97500F49CF2 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = CA9BE8AC10788C8F00F49CF2 /* JIMChatViewController.m */;
-		name = "JIMChatViewController.m: 15";
-		rLen = 0;
-		rLoc = 324;
-		rType = 0;
-		vrLen = 950;
-		vrLoc = 0;
-	};
-	CA9BE9291078A97500F49CF2 /* PBXTextBookmark */ = {
-		isa = PBXTextBookmark;
-		fRef = CA9BE8AC10788C8F00F49CF2 /* JIMChatViewController.m */;
-		name = "JIMChatViewController.m: 15";
-		rLen = 0;
-		rLoc = 324;
-		rType = 0;
-		vrLen = 950;
-		vrLoc = 0;
 	};
 	CAAA4F0B106E2D4F00565266 /* PBXTextBookmark */ = {
 		isa = PBXTextBookmark;
@@ -2730,5 +2714,25 @@
 		name = ISThingsToEat.m;
 		path = "/Users/CooperRS/Projekte/Mac OS X/iSnake/ISThingsToEat.m";
 		sourceTree = "<absolute>";
+	};
+	CAFD40E41078B53E00C86390 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = CA9BE8AC10788C8F00F49CF2 /* JIMChatViewController.m */;
+		name = "JIMChatViewController.m: 56";
+		rLen = 0;
+		rLoc = 2517;
+		rType = 0;
+		vrLen = 947;
+		vrLoc = 3;
+	};
+	CAFD40E51078B53E00C86390 /* PBXTextBookmark */ = {
+		isa = PBXTextBookmark;
+		fRef = CA9BE8AC10788C8F00F49CF2 /* JIMChatViewController.m */;
+		name = "JIMChatViewController.m: 59";
+		rLen = 0;
+		rLoc = 2300;
+		rType = 0;
+		vrLen = 1225;
+		vrLoc = 1643;
 	};
 }

@@ -230,8 +230,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -303,7 +301,7 @@
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 117}, {282, 625}}</string>
+							<string>{{0, 0}, {282, 625}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -333,6 +331,8 @@
 					<key>Dock</key>
 					<array>
 						<dict>
+							<key>BecomeActive</key>
+							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
@@ -350,7 +350,7 @@
 										<key>_historyCapacity</key>
 										<integer>0</integer>
 										<key>bookmark</key>
-										<string>CA9BE9291078A97500F49CF2</string>
+										<string>CAFD40E51078B53E00C86390</string>
 										<key>history</key>
 										<array>
 											<string>CA45190C1032CFD700ED538D</string>
@@ -498,7 +498,7 @@
 											<string>CA9BE9131078A6DF00F49CF2</string>
 											<string>CA9BE9141078A6DF00F49CF2</string>
 											<string>CA9BE9271078A97500F49CF2</string>
-											<string>CA9BE9281078A97500F49CF2</string>
+											<string>CAFD40E41078B53E00C86390</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -510,14 +510,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {1046, 455}}</string>
+								<string>{{0, 0}, {1046, 443}}</string>
 								<key>RubberWindowFrame</key>
 								<string>47 172 1350 684 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>455pt</string>
+							<string>443pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -530,14 +530,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 460}, {1046, 183}}</string>
+								<string>{{0, 448}, {1046, 195}}</string>
 								<key>RubberWindowFrame</key>
 								<string>47 172 1350 684 0 0 1440 878 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
 							<key>Proportion</key>
-							<string>183pt</string>
+							<string>195pt</string>
 						</dict>
 					</array>
 					<key>Proportion</key>
@@ -556,9 +556,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>CA9BE89A1078871900F49CF2</string>
+				<string>CAFD40E61078B53E00C86390</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>CA9BE89B1078871900F49CF2</string>
+				<string>CAFD40E71078B53E00C86390</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -694,10 +694,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>CA9BE8F410789F8C00F49CF2</string>
-		<string>CA9BE8F510789F8C00F49CF2</string>
-		<string>1C78EAAD065D492600B07095</string>
-		<string>1CD10A99069EF8BA00B06720</string>
 		<string>CAD201FF1030A44800F355F0</string>
 		<string>/Users/CooperRS/Projekte/Mac OS X/JabberIM/trunk/JabberIM.xcodeproj</string>
 	</array>
@@ -718,14 +714,12 @@
 					<key>Dock</key>
 					<array>
 						<dict>
-							<key>BecomeActive</key>
-							<true/>
 							<key>ContentConfiguration</key>
 							<dict>
 								<key>PBXProjectModuleGUID</key>
 								<string>1CD0528F0623707200166675</string>
 								<key>PBXProjectModuleLabel</key>
-								<string>JIMChatViewController.m</string>
+								<string></string>
 								<key>StatusBarVisibility</key>
 								<true/>
 							</dict>
@@ -781,7 +775,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>CAD201FF1030A44800F355F0</string>
-				<string>CA9BE89C1078871900F49CF2</string>
+				<string>CAFD40E81078B53E00C86390</string>
 				<string>1CD0528F0623707200166675</string>
 				<string>XCMainBuildResultsModuleGUID</string>
 			</array>
@@ -901,13 +895,13 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1CD10A99069EF8BA00B06720</string>
-				<string>CA9BE8A11078875900F49CF2</string>
+				<string>CAFFED261078B018007F382A</string>
 				<string>1C162984064C10D400B95A72</string>
-				<string>CA9BE8A21078875900F49CF2</string>
-				<string>CA9BE8A31078875900F49CF2</string>
-				<string>CA9BE8A41078875900F49CF2</string>
-				<string>CA9BE8A51078875900F49CF2</string>
-				<string>CA9BE8A61078875900F49CF2</string>
+				<string>CAFFED271078B018007F382A</string>
+				<string>CAFFED281078B018007F382A</string>
+				<string>CAFFED291078B018007F382A</string>
+				<string>CAFFED2A1078B018007F382A</string>
+				<string>CAFFED2B1078B018007F382A</string>
 			</array>
 			<key>ToolbarConfiguration</key>
 			<string>xcode.toolbar.config.debugV3</string>
@@ -1063,7 +1057,7 @@
 			<key>TableOfContents</key>
 			<array>
 				<string>1C78EAAD065D492600B07095</string>
-				<string>CA9BE8A71078875900F49CF2</string>
+				<string>CAFFED2C1078B018007F382A</string>
 				<string>1C78EAAC065D492600B07095</string>
 			</array>
 			<key>ToolbarConfiguration</key>

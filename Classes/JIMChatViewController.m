@@ -50,12 +50,18 @@ extern NSSound *newMessageSendSound;
 				[availableResources addItemWithTitle:[[aResource jid] fullString]];
 			
 			[chatSplitView setPosition:[chatSplitView maxPossiblePositionOfDividerAtIndex:0] ofDividerAtIndex:0];
-			
-			for(XMPPChatMessage *oneMessage in self.chatSession.messages)
-				[chatTextView appendMessage:oneMessage];
-			
-			[chatTextView appendString:@"Chatting with resource: Highest Priority"];
 		}
+		
+		int numberOfRecentMessages;
+		if([[NSUserDefaults standardUserDefaults] objectForKey:@"numberOfRecentMessages"])
+			numberOfRecentMessages = [[[NSUserDefaults standardUserDefaults] objectForKey:@"numberOfRecentMessages"] intValue];
+		else
+			numberOfRecentMessages = 5;
+
+		for(XMPPChatMessage *oneMessage in [self.chatSession.messages objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange([self.chatSession.messages count]-numberOfRecentMessages, numberOfRecentMessages)]])
+			[chatTextView appendMessage:oneMessage];
+		
+		[chatTextView appendString:@"Chatting with resource: Highest Priority"];
 		
 		if(aMessage)
 			[chatTextView appendMessage:aMessage];
