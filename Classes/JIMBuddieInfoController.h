@@ -22,15 +22,12 @@ extern NSString* const JIMBuddieInfoControllerShowUserNotification;
 	IBOutlet NSPanel *contactInfoPanel;
 	IBOutlet NSPopUpButton *availableGroups;
 	IBOutlet NSPopUpButton *availableResources;
-	IBOutlet NSTextField *timeOfLastActivity;
-	IBOutlet NSTextField *status;
-	IBOutlet NSTextField *statusRecieved;
-	IBOutlet NSTextField *priority;
-	IBOutlet NSTextField *clientID;
-	IBOutlet NSTextField *clientVersion;
-	IBOutlet NSTextField *clientOS;
+	IBOutlet NSTextView *buddieInfoTextView;
 	
 	XMPPUser *xmppUser;
+	
+	NSMutableDictionary *categoryAttributes;
+	NSMutableDictionary *contentAttributes;
 }
 
 @property (retain) XMPPUser *xmppUser;
@@ -40,5 +37,9 @@ extern NSString* const JIMBuddieInfoControllerShowUserNotification;
 
 - (IBAction)setGroup:(id)sender;
 - (IBAction)setResource:(id)sender;
+
+- (void)addCategoryString:(NSString *)string;
+- (void)addContentString:(NSString *)string;
+- (void)addCategoryString:(NSString *)categoryStr withContent:(NSString *)contentStr;
 
 @end

@@ -37,15 +37,35 @@
 
 - (void)appendString:(NSString *)string alignment:(NSTextAlignment)alignment;
 {
-	NSMutableAttributedString *paragraph = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@", string]] autorelease];
-	[paragraph appendAttributedString:[[[NSAttributedString alloc] initWithString:@"\n\n"] autorelease]];	
+	NSMutableAttributedString *paragraph;
+	if(alignment == NSCenterTextAlignment)
+	{
+		paragraph = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\n%@", string]] autorelease];
+		[paragraph appendAttributedString:[[[NSAttributedString alloc] initWithString:@"\n\n"] autorelease]];
+	}
+	else
+	{
+		paragraph = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@", string]] autorelease];
+		[paragraph appendAttributedString:[[[NSAttributedString alloc] initWithString:@"\n"] autorelease]];
+	}
+
 	
 	NSMutableParagraphStyle *mutableParagraphStyle = [[[NSMutableParagraphStyle alloc] init] autorelease];
 	[mutableParagraphStyle setAlignment:alignment];
 	
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithCapacity:2];
 	[attributes setObject:mutableParagraphStyle forKey:NSParagraphStyleAttributeName];
-	[attributes setObject:[NSColor colorWithCalibratedRed:250 green:250 blue:250 alpha:1] forKey:NSBackgroundColorAttributeName]; //FIXME: Not sure why this isn't doing anything
+	
+	if(alignment == NSCenterTextAlignment)
+	{
+		[attributes setObject:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
+		[attributes setObject:[NSFont systemFontOfSize:11.0] forKey:NSFontAttributeName];
+	}
+	else
+	{
+		[attributes setObject:[NSColor blackColor] forKey:NSForegroundColorAttributeName];
+		[attributes setObject:[NSFont boldSystemFontOfSize:13.0] forKey:NSFontAttributeName];
+	}
 	
 	[paragraph addAttributes:attributes range:NSMakeRange(0, [paragraph length])];
 	
@@ -74,7 +94,7 @@
 	
 	NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithCapacity:2];
 	[attributes setObject:mutableParagraphStyle forKey:NSParagraphStyleAttributeName];
-	[attributes setObject:[NSColor colorWithCalibratedRed:250 green:250 blue:250 alpha:1] forKey:NSBackgroundColorAttributeName]; //FIXME: Not sure why this isn't doing anything
+	[attributes setObject:[NSFont systemFontOfSize:12.0] forKey:NSFontAttributeName];
 	
 	[paragraph addAttributes:attributes range:NSMakeRange(0, [paragraph length])];
 	

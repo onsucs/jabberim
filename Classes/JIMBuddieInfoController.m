@@ -23,6 +23,22 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 			NSLog(@"Error loading Nib for document!");
 		
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showBuddieInfo:) name:JIMBuddieInfoControllerShowUserNotification object:nil];
+		
+		NSMutableParagraphStyle *categoryMutableParagraphStyle = [[[NSMutableParagraphStyle alloc] init] autorelease];
+		[categoryMutableParagraphStyle setAlignment:NSLeftTextAlignment];
+		
+		categoryAttributes = [[NSMutableDictionary alloc] initWithCapacity:3];
+		[categoryAttributes setObject:categoryMutableParagraphStyle forKey:NSParagraphStyleAttributeName];
+		[categoryAttributes setObject:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
+		[categoryAttributes setObject:[NSFont systemFontOfSize:13.0] forKey:NSFontAttributeName];
+		
+		NSMutableParagraphStyle *contentMutableParagraphStyle = [[[NSMutableParagraphStyle alloc] init] autorelease];
+		[contentMutableParagraphStyle setAlignment:NSRightTextAlignment];
+		
+		contentAttributes = [[NSMutableDictionary alloc] initWithCapacity:3];
+		[contentAttributes setObject:contentMutableParagraphStyle forKey:NSParagraphStyleAttributeName];
+		[contentAttributes setObject:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
+		[contentAttributes setObject:[NSFont systemFontOfSize:13.0] forKey:NSFontAttributeName];
 	}
 	return self;
 }
@@ -30,6 +46,9 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 - (void)dealloc
 {
 	[xmppUser release];
+	
+	[categoryAttributes release];
+	[contentAttributes release];
 	
 	[super dealloc];
 }
@@ -133,15 +152,17 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 	if([iqStanza elementForName:@"query" xmlns:@"jabber:iq:version"])
 	{
 		if([[iqStanza elementForName:@"query"] elementForName:@"name"])
-			[clientID setStringValue:[[[iqStanza elementForName:@"query"] elementForName:@"name"] stringValue]];
+		{
+			[self addCategoryString:@"Client ID:" withContent:[[[iqStanza elementForName:@"query"] elementForName:@"name"] stringValue]];
+		}
 		if([[iqStanza elementForName:@"query"] elementForName:@"version"])
-			[clientVersion setStringValue:[[[iqStanza elementForName:@"query"] elementForName:@"version"] stringValue]];
+			[self addCategoryString:@"Client Version:" withContent:[[[iqStanza elementForName:@"query"] elementForName:@"version"] stringValue]];
 		if([[iqStanza elementForName:@"query"] elementForName:@"os"])
-			[clientOS setStringValue:[[[iqStanza elementForName:@"query"] elementForName:@"os"] stringValue]];
+			[self addCategoryString:@"Operating System:" withContent:[[[iqStanza elementForName:@"query"] elementForName:@"os"] stringValue]];
 	}
 	else if([iqStanza elementForName:@"query" xmlns:@"jabber:iq:last"])
 		if([[iqStanza elementForName:@"query"] attributeForName:@"seconds"])
-			[timeOfLastActivity setStringValue:[[[iqStanza elementForName:@"query"] attributeForName:@"seconds"] stringValue]];
+			[self addCategoryString:@"Last Activity:" withContent:[[[iqStanza elementForName:@"query"] attributeForName:@"seconds"] stringValue]];
 	
 	[[note object] release];
 }
@@ -203,33 +224,50 @@ NSString* const JIMBuddieInfoControllerShowUserNotification = @"JIMBuddieInfoCon
 			[availableGroups addItemWithTitle:oneGroup.name];
 	}
 	
-	[timeOfLastActivity setStringValue:@"Not available"];
-	[status setStringValue:@"Not available"];
-	[statusRecieved setStringValue:@"Not available"];
-	[priority setStringValue:@"Not available"];
-	[clientID setStringValue:@"Not available"];
-	[clientVersion setStringValue:@"Not available"];
-	[clientOS setStringValue:@"Not available"];
+	[buddieInfoTextView setString:@""];
 }
 
 - (void)refreshAllFieldsWithResource:(XMPPResource *)resource
 {
 	if([xmppUser isOnline])
 	{
-		[priority setStringValue:[NSString stringWithFormat:@"%i", [resource  priority]]];
+		[self addCategoryString:@"Status:"];
 		
 		if(resource.statusString)
-			[status setStringValue:resource.statusString];
+			[self addContentString:resource.statusString];
 		else
-			[status setStringValue:@"Online"];
+			[self addContentString:@"Online"];
 		
-		[statusRecieved setObjectValue:resource.lastPresenceUpdate];
+		[self addCategoryString:@"Recieved:" withContent:[resource.lastPresenceUpdate description]];
+		[self addCategoryString:@"Priority:" withContent:[NSString stringWithFormat:@"%i", [resource  priority]]];
 	}
 	else
-		[status setStringValue:@"Offline"];
+		[self addCategoryString:@"Status" withContent:@"Offline"];
 	
 	//if([xmppUser error])
 	//[status setStringValue:[xmppUser error]];
+}
+
+- (void)addCategoryString:(NSString *)string
+{
+	NSMutableAttributedString *paragraph = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", string]] autorelease];
+	[paragraph addAttributes:categoryAttributes range:NSMakeRange(0, [paragraph length])];
+	
+	[[buddieInfoTextView textStorage] appendAttributedString:paragraph];
+}
+
+- (void)addContentString:(NSString *)string
+{
+	NSMutableAttributedString *paragraph = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@\n", string]] autorelease];
+	[paragraph addAttributes:contentAttributes range:NSMakeRange(0, [paragraph length])];
+	
+	[[buddieInfoTextView textStorage] appendAttributedString:paragraph];
+}
+
+- (void)addCategoryString:(NSString *)categoryStr withContent:(NSString *)contentStr
+{
+	[self addCategoryString:categoryStr];
+	[self addContentString:contentStr];
 }
 
 @end
