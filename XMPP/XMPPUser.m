@@ -160,6 +160,7 @@ NSString* const XMPPUsersKey = @"users";
 	XMPPRosterInfoQuery *query = [[[XMPPRosterInfoQuery alloc] initWithType:XMPPIQTypeSet service:self.service] autorelease];
 	XMPPRosterItemElement *item = [[[XMPPRosterItemElement alloc] initWithJID:self.jid] autorelease];
 	item.nickname = aNickname;
+	item.groupNames = _groupNames;
 	[query addItem:item];
 	[query setDelegate:self];
 	[query send];
