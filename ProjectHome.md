@@ -1,0 +1,1 @@
+JabberIM is a jabber client for Mac OS X designed to be as user friendly as possible. Makes use of an enhanced version of XMPP Framework also hosted on Google Code
